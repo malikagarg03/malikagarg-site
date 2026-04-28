@@ -1,178 +1,116 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Malika Garg</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    * { box-sizing: border-box; }
-
     body {
       margin: 0;
-      min-height: 100vh;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top left, #38bdf8 0, transparent 30%),
-        radial-gradient(circle at bottom right, #a78bfa 0, transparent 30%),
-        #020617;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
-
-    .card {
-      width: 100%;
-      max-width: 920px;
-      padding: 42px;
-      border-radius: 28px;
-      background: rgba(15, 23, 42, 0.78);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
-      backdrop-filter: blur(18px);
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: rgba(56, 189, 248, 0.14);
-      color: #7dd3fc;
-      font-size: 14px;
-      margin-bottom: 22px;
-    }
-
-    h1 {
-      font-size: clamp(42px, 7vw, 76px);
-      line-height: 1;
-      margin: 0 0 18px;
-      letter-spacing: -2px;
-    }
-
-    .gradient-text {
-      background: linear-gradient(90deg, #38bdf8, #c084fc, #f472b6);
-      -webkit-background-clip: text;
-      color: transparent;
-    }
-
-    p {
-      max-width: 660px;
-      color: #cbd5e1;
-      font-size: 18px;
-      line-height: 1.7;
-      margin: 0 0 32px;
-    }
-
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-bottom: 34px;
-    }
-
-    a {
-      text-decoration: none;
-    }
-
-    .primary {
-      padding: 14px 20px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #38bdf8, #8b5cf6);
-      color: white;
-      font-weight: 700;
-      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.25);
-    }
-
-    .secondary {
-      padding: 14px 20px;
-      border-radius: 14px;
+      background: #020617;
       color: #e2e8f0;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      background: rgba(255, 255, 255, 0.06);
+      font-family: monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
+    .terminal {
+      width: 90%;
+      max-width: 700px;
     }
 
-    .mini-card {
-      padding: 18px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+    .line {
+      margin: 8px 0;
     }
 
-    .mini-card span {
-      font-size: 24px;
+    .prompt {
+      color: #38bdf8;
     }
 
-    .mini-card h3 {
-      margin: 12px 0 6px;
+    input {
+      background: none;
+      border: none;
+      color: white;
+      font-family: monospace;
       font-size: 16px;
+      width: 80%;
+      outline: none;
     }
 
-    .mini-card small {
+    .output {
+      margin-top: 20px;
       color: #94a3b8;
-      line-height: 1.5;
     }
 
-    @media (max-width: 720px) {
-      .card {
-        padding: 28px;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      p {
-        font-size: 16px;
-      }
+    .link {
+      color: #a78bfa;
+      cursor: pointer;
     }
   </style>
 </head>
 
 <body>
-  <main class="card">
-    <div class="badge">Personal workspace · tools · dashboards</div>
 
-    <h1>
-      Hi, I’m <span class="gradient-text">Malika</span>.
-    </h1>
+<div class="terminal">
+  <div class="line">
+    <span class="prompt">></span> Welcome to malikagarg.xyz
+  </div>
 
-    <p>
-      This is a small digital space where I build useful pages, dashboards,
-      experiments, notes and tools — one practical project at a time.
-    </p>
+  <div class="line">
+    <span class="prompt">></span> Type <span class="link">help</span> to begin
+  </div>
 
-    <div class="buttons">
-      <a class="primary" href="/rtgs-diesel-dashboard/">Open Diesel Dashboard</a>
-      <a class="secondary" href="#">More projects coming soon</a>
-    </div>
+  <div class="line">
+    <span class="prompt">></span>
+    <input id="command" autofocus placeholder="Enter command..." />
+  </div>
 
-    <section class="grid">
-      <div class="mini-card">
-        <span>📊</span>
-        <h3>Dashboards</h3>
-        <small>Simple visual pages for monitoring and decision-making.</small>
-      </div>
+  <div class="output" id="output"></div>
+</div>
 
-      <div class="mini-card">
-        <span>🛠️</span>
-        <h3>Tools</h3>
-        <small>Small utilities that make repeated work easier.</small>
-      </div>
+<script>
+  const input = document.getElementById("command");
+  const output = document.getElementById("output");
 
-      <div class="mini-card">
-        <span>📝</span>
-        <h3>Notes</h3>
-        <small>Structured thinking, references and experiments.</small>
-      </div>
-    </section>
-  </main>
+  input.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      const cmd = input.value.trim().toLowerCase();
+      handleCommand(cmd);
+      input.value = "";
+    }
+  });
+
+  function handleCommand(cmd) {
+    if (cmd === "help") {
+      output.innerHTML = `
+        Available commands:<br>
+        - diesel → Open Diesel Dashboard<br>
+        - about → About this site<br>
+        - clear → Clear screen
+      `;
+    }
+
+    else if (cmd === "diesel") {
+      window.location.href = "/rtgs-diesel-dashboard/";
+    }
+
+    else if (cmd === "about") {
+      output.innerHTML = `
+        This is a small space for tools, dashboards and experiments.
+      `;
+    }
+
+    else if (cmd === "clear") {
+      output.innerHTML = "";
+    }
+
+    else {
+      output.innerHTML = "Command not found. Type 'help'.";
+    }
+  }
+</script>
+
 </body>
 </html>
