@@ -15,170 +15,381 @@
     }
 
     .container {
-      max-width: 900px;
+      max-width: 1000px;
       margin: auto;
     }
 
-    h1 {
-      margin-bottom: 5px;
+    .hero {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      padding: 28px;
+      border-radius: 20px;
+      margin-bottom: 24px;
     }
 
-    .subtitle {
-      color: #64748b;
-      margin-bottom: 20px;
+    .hero h1 {
+      margin: 0 0 8px;
+    }
+
+    .hero p {
+      margin: 0;
+      opacity: 0.9;
     }
 
     .section {
-      margin-bottom: 40px;
+      background: white;
+      padding: 20px;
+      border-radius: 18px;
+      margin-bottom: 24px;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
     }
 
     iframe {
       width: 100%;
-      height: 600px;
+      height: 1060px;
       border: none;
-      border-radius: 10px;
-      background: white;
+      border-radius: 12px;
     }
 
-    .card {
-      background: white;
-      padding: 15px;
-      margin-bottom: 12px;
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .stat {
+      background: #f1f5f9;
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .stat .number {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .stat .label {
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    input {
+      flex: 1;
+      min-width: 220px;
+      padding: 12px;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      border-left: 5px solid #2563eb;
+      border: 1px solid #cbd5e1;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 12px 14px;
+      border: none;
+      border-radius: 12px;
+      background: #e2e8f0;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    button.active {
+      background: #2563eb;
+      color: white;
+    }
+
+    .refresh {
+      background: #0f172a;
+      color: white;
+    }
+
+    .entry {
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      background: #ffffff;
+    }
+
+    .entry-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: bold;
     }
 
     .category {
-      font-size: 12px;
-      color: #0369a1;
-      background: #e0f2fe;
-      display: inline-block;
-      padding: 3px 8px;
-      border-radius: 999px;
-      margin-bottom: 6px;
+      background: #dbeafe;
+      color: #1d4ed8;
     }
 
-    .timestamp {
-      font-size: 11px;
+    .priority-low {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .priority-medium {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+
+    .priority-high {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .name {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .message {
+      color: #334155;
+      line-height: 1.5;
+    }
+
+    .time {
       color: #94a3b8;
-      margin-top: 8px;
+      font-size: 12px;
+      margin-top: 10px;
     }
 
-    .priority {
-      font-size: 13px;
-      color: #475569;
-      margin-top: 6px;
+    .status {
+      color: #64748b;
+      padding: 12px;
+      background: #f1f5f9;
+      border-radius: 12px;
+    }
+
+    @media (max-width: 700px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      iframe {
+        height: 1150px;
+      }
     }
   </style>
 </head>
 
 <body>
+  <div class="container">
 
-<div class="container">
+    <div class="hero">
+      <h1>Simple Data Entry Experiment</h1>
+      <p>Submit entries through Google Form and view them live from Google Sheet.</p>
+    </div>
 
-  <h1>Simple Data Entry Experiment</h1>
-  <p class="subtitle">Submit entries and view them live below.</p>
+    <div class="section">
+      <h2>Submit Entry</h2>
 
-  <!-- FORM SECTION -->
-  <div class="section">
-    <h2>Submit Entry</h2>
+      <iframe 
+        src="https://docs.google.com/forms/d/e/1FAIpQLSds2FKDSAoN9cFJEPRGQF-5lRpotPSMEvbdhTyb8WhINSDpig/viewform?embedded=true">
+        Loading…
+      </iframe>
+    </div>
 
-    <iframe 
-  src="https://docs.google.com/forms/d/e/1FAIpQLSds2FKDSAoN9cFJEPRGQF-5lRpotPSMEvbdhTyb8WhINSDpig/viewform?embedded=true" 
-  width="100%" 
-  height="1060" 
-  frameborder="0" 
-  marginheight="0" 
-  marginwidth="0">
-  Loading…
-</iframe>
+    <div class="section">
+      <h2>Live Entries</h2>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="number" id="totalCount">0</div>
+          <div class="label">Total Entries</div>
+        </div>
+        <div class="stat">
+          <div class="number" id="highCount">0</div>
+          <div class="label">High Priority</div>
+        </div>
+        <div class="stat">
+          <div class="number" id="latestCategory">-</div>
+          <div class="label">Latest Category</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <input id="searchBox" placeholder="Search name or message..." oninput="renderEntries()" />
+
+        <button class="filter active" onclick="setFilter('All', this)">All</button>
+        <button class="filter" onclick="setFilter('Idea', this)">Idea</button>
+        <button class="filter" onclick="setFilter('Issue', this)">Issue</button>
+        <button class="filter" onclick="setFilter('Observation', this)">Observation</button>
+        <button class="filter" onclick="setFilter('Random', this)">Random</button>
+
+        <button class="refresh" onclick="loadEntries()">Refresh</button>
+      </div>
+
+      <div id="lastUpdated" class="time"></div>
+      <div id="entries" class="status">Loading entries...</div>
+    </div>
+
   </div>
 
-  <!-- DATA SECTION -->
-  <div class="section">
-    <h2>Entries</h2>
-    <div id="entries">Loading...</div>
-  </div>
+  <script>
+    const csvUrl = "https://docs.google.com/spreadsheets/d/1yH6B8V4krpZ3z8e70p884m9E4VTWnk-CY0n7FzdfQzA/gviz/tq?tqx=out:csv";
 
-</div>
+    let allEntries = [];
+    let currentFilter = "All";
 
-<script>
-  const csvUrl = "https://docs.google.com/spreadsheets/d/1yH6B8V4krpZ3z8e70p884m9E4VTWnk-CY0n7FzdfQzA/gviz/tq?tqx=out:csv";
+    function parseCSV(text) {
+      const rows = [];
+      let row = [];
+      let cell = "";
+      let insideQuotes = false;
 
-  function parseCSV(text) {
-    const rows = [];
-    let row = [];
-    let cell = "";
-    let insideQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const nextChar = text[i + 1];
 
-    for (let i = 0; i < text.length; i++) {
-      const char = text[i];
-      const nextChar = text[i + 1];
-
-      if (char === '"' && insideQuotes && nextChar === '"') {
-        cell += '"';
-        i++;
-      } else if (char === '"') {
-        insideQuotes = !insideQuotes;
-      } else if (char === "," && !insideQuotes) {
-        row.push(cell);
-        cell = "";
-      } else if ((char === "\n" || char === "\r") && !insideQuotes) {
-        if (cell || row.length) {
+        if (char === '"' && insideQuotes && nextChar === '"') {
+          cell += '"';
+          i++;
+        } else if (char === '"') {
+          insideQuotes = !insideQuotes;
+        } else if (char === "," && !insideQuotes) {
           row.push(cell);
-          rows.push(row);
-          row = [];
           cell = "";
+        } else if ((char === "\n" || char === "\r") && !insideQuotes) {
+          if (cell || row.length) {
+            row.push(cell);
+            rows.push(row);
+            row = [];
+            cell = "";
+          }
+        } else {
+          cell += char;
         }
-      } else {
-        cell += char;
       }
+
+      if (cell || row.length) {
+        row.push(cell);
+        rows.push(row);
+      }
+
+      return rows;
     }
 
-    if (cell || row.length) {
-      row.push(cell);
-      rows.push(row);
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
     }
 
-    return rows;
-  }
+    function loadEntries() {
+      document.getElementById("entries").innerHTML = "Loading entries...";
 
-  fetch(csvUrl)
-    .then(res => res.text())
-    .then(text => {
-      const rows = parseCSV(text);
+      fetch(csvUrl)
+        .then(res => res.text())
+        .then(text => {
+          const rows = parseCSV(text);
 
-      if (rows.length <= 1) {
-        document.getElementById("entries").innerHTML = "No entries yet.";
+          allEntries = rows.slice(1).map(row => ({
+            timestamp: row[0] || "",
+            name: row[1] || "Anonymous",
+            category: row[2] || "Uncategorised",
+            message: row[3] || "",
+            priority: row[4] || ""
+          })).reverse();
+
+          updateStats();
+          renderEntries();
+
+          document.getElementById("lastUpdated").innerText =
+            "Last refreshed: " + new Date().toLocaleTimeString();
+        })
+        .catch(() => {
+          document.getElementById("entries").innerHTML =
+            "Could not load data. Make sure your Google Sheet is published.";
+        });
+    }
+
+    function updateStats() {
+      document.getElementById("totalCount").innerText = allEntries.length;
+
+      const highCount = allEntries.filter(e =>
+        e.priority.toLowerCase() === "high"
+      ).length;
+
+      document.getElementById("highCount").innerText = highCount;
+      document.getElementById("latestCategory").innerText =
+        allEntries.length ? allEntries[0].category : "-";
+    }
+
+    function setFilter(filter, button) {
+      currentFilter = filter;
+
+      document.querySelectorAll(".filter").forEach(btn =>
+        btn.classList.remove("active")
+      );
+
+      button.classList.add("active");
+      renderEntries();
+    }
+
+    function renderEntries() {
+      const search = document.getElementById("searchBox").value.toLowerCase();
+
+      const filtered = allEntries.filter(entry => {
+        const matchesFilter =
+          currentFilter === "All" || entry.category === currentFilter;
+
+        const matchesSearch =
+          entry.name.toLowerCase().includes(search) ||
+          entry.message.toLowerCase().includes(search);
+
+        return matchesFilter && matchesSearch;
+      });
+
+      if (!filtered.length) {
+        document.getElementById("entries").innerHTML =
+          "<div class='status'>No matching entries found.</div>";
         return;
       }
 
-      const data = rows.slice(1).reverse();
-
-      document.getElementById("entries").innerHTML = data.map(row => {
-        const timestamp = row[0] || "";
-        const name = row[1] || "Anonymous";
-        const category = row[2] || "";
-        const message = row[3] || "";
-        const priority = row[4] || "";
+      document.getElementById("entries").innerHTML = filtered.map(entry => {
+        const priorityClass =
+          entry.priority.toLowerCase() === "high" ? "priority-high" :
+          entry.priority.toLowerCase() === "medium" ? "priority-medium" :
+          "priority-low";
 
         return `
-          <div class="card">
-            <div class="category">${category}</div>
-            <strong>${name}</strong>
-            <p>${message}</p>
-            <div class="priority">Priority: ${priority}</div>
-            <div class="timestamp">${timestamp}</div>
+          <div class="entry">
+            <div class="entry-top">
+              <span class="badge category">${escapeHtml(entry.category)}</span>
+              <span class="badge ${priorityClass}">${escapeHtml(entry.priority || "No priority")}</span>
+            </div>
+
+            <div class="name">${escapeHtml(entry.name)}</div>
+            <div class="message">${escapeHtml(entry.message)}</div>
+            <div class="time">${escapeHtml(entry.timestamp)}</div>
           </div>
         `;
       }).join("");
-    })
-    .catch(() => {
-      document.getElementById("entries").innerHTML =
-        "Could not load data. Make sure your Google Sheet is published.";
-    });
-</script>
+    }
 
+    loadEntries();
+    setInterval(loadEntries, 10000);
+  </script>
 </body>
 </html>
