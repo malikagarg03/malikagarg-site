@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Google Sheet Experiment</title>
+  <title>Data Entry Experiment</title>
 
   <style>
     body {
@@ -11,161 +11,169 @@
       font-family: Arial, sans-serif;
       background: #f8fafc;
       color: #0f172a;
-      padding: 24px;
+      padding: 20px;
     }
 
     .container {
-      max-width: 850px;
+      max-width: 900px;
       margin: auto;
     }
 
     h1 {
-      margin-bottom: 8px;
+      margin-bottom: 5px;
     }
 
     .subtitle {
       color: #64748b;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
-    .button {
-      display: inline-block;
-      background: #2563eb;
-      color: white;
-      padding: 12px 18px;
+    .section {
+      margin-bottom: 40px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
       border-radius: 10px;
-      text-decoration: none;
-      font-weight: bold;
-      margin-bottom: 24px;
+      background: white;
     }
 
     .card {
       background: white;
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 14px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      padding: 15px;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       border-left: 5px solid #2563eb;
     }
 
     .category {
-      display: inline-block;
-      background: #e0f2fe;
-      color: #0369a1;
-      padding: 4px 8px;
-      border-radius: 999px;
       font-size: 12px;
-      margin-bottom: 8px;
+      color: #0369a1;
+      background: #e0f2fe;
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      margin-bottom: 6px;
+    }
+
+    .timestamp {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 8px;
     }
 
     .priority {
       font-size: 13px;
       color: #475569;
-      margin-top: 8px;
-    }
-
-    .timestamp {
-      font-size: 12px;
-      color: #94a3b8;
-      margin-top: 10px;
-    }
-
-    .empty {
-      color: #64748b;
-      background: white;
-      padding: 18px;
-      border-radius: 12px;
+      margin-top: 6px;
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>Simple Data Entry Experiment</h1>
-    <p class="subtitle">Entries submitted through Google Form and displayed from Google Sheet.</p>
 
-    <a class="button" href="https://forms.gle/zsdm8JFno36ywWCN8" target="_blank">
-      ➕ Submit New Entry
-    </a>
+<div class="container">
 
-    <div id="entries" class="empty">Loading entries...</div>
+  <h1>Simple Data Entry Experiment</h1>
+  <p class="subtitle">Submit entries and view them live below.</p>
+
+  <!-- FORM SECTION -->
+  <div class="section">
+    <h2>Submit Entry</h2>
+
+    <iframe 
+      src="https://docs.google.com/forms/d/e/1FAIpQLSfZsdm8JFno36ywWCN8/viewform?embedded=true">
+      Loading…
+    </iframe>
   </div>
 
-  <script>
-    const sheetCsvUrl = "https://docs.google.com/spreadsheets/d/1yH6B8V4krpZ3z8e70p884m9E4VTWnk-CY0n7FzdfQzA/gviz/tq?tqx=out:csv";
+  <!-- DATA SECTION -->
+  <div class="section">
+    <h2>Entries</h2>
+    <div id="entries">Loading...</div>
+  </div>
 
-    function parseCSV(text) {
-      const rows = [];
-      let row = [];
-      let cell = "";
-      let insideQuotes = false;
+</div>
 
-      for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        const nextChar = text[i + 1];
+<script>
+  const csvUrl = "https://docs.google.com/spreadsheets/d/1yH6B8V4krpZ3z8e70p884m9E4VTWnk-CY0n7FzdfQzA/gviz/tq?tqx=out:csv";
 
-        if (char === '"' && insideQuotes && nextChar === '"') {
-          cell += '"';
-          i++;
-        } else if (char === '"') {
-          insideQuotes = !insideQuotes;
-        } else if (char === "," && !insideQuotes) {
-          row.push(cell);
-          cell = "";
-        } else if ((char === "\n" || char === "\r") && !insideQuotes) {
-          if (cell || row.length) {
-            row.push(cell);
-            rows.push(row);
-            row = [];
-            cell = "";
-          }
-        } else {
-          cell += char;
-        }
-      }
+  function parseCSV(text) {
+    const rows = [];
+    let row = [];
+    let cell = "";
+    let insideQuotes = false;
 
-      if (cell || row.length) {
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      const nextChar = text[i + 1];
+
+      if (char === '"' && insideQuotes && nextChar === '"') {
+        cell += '"';
+        i++;
+      } else if (char === '"') {
+        insideQuotes = !insideQuotes;
+      } else if (char === "," && !insideQuotes) {
         row.push(cell);
-        rows.push(row);
+        cell = "";
+      } else if ((char === "\n" || char === "\r") && !insideQuotes) {
+        if (cell || row.length) {
+          row.push(cell);
+          rows.push(row);
+          row = [];
+          cell = "";
+        }
+      } else {
+        cell += char;
       }
-
-      return rows;
     }
 
-    fetch(sheetCsvUrl)
-      .then(response => response.text())
-      .then(csvText => {
-        const rows = parseCSV(csvText);
+    if (cell || row.length) {
+      row.push(cell);
+      rows.push(row);
+    }
 
-        if (rows.length <= 1) {
-          document.getElementById("entries").innerHTML = "No entries yet.";
-          return;
-        }
+    return rows;
+  }
 
-        const data = rows.slice(1).reverse();
+  fetch(csvUrl)
+    .then(res => res.text())
+    .then(text => {
+      const rows = parseCSV(text);
 
-        document.getElementById("entries").innerHTML = data.map(row => {
-          const timestamp = row[0] || "";
-          const name = row[1] || "Anonymous";
-          const category = row[2] || "Uncategorised";
-          const message = row[3] || "";
-          const priority = row[4] || "";
+      if (rows.length <= 1) {
+        document.getElementById("entries").innerHTML = "No entries yet.";
+        return;
+      }
 
-          return `
-            <div class="card">
-              <div class="category">${category}</div>
-              <h3>${name}</h3>
-              <p>${message}</p>
-              <div class="priority">Priority: ${priority}</div>
-              <div class="timestamp">${timestamp}</div>
-            </div>
-          `;
-        }).join("");
-      })
-      .catch(error => {
-        document.getElementById("entries").innerHTML =
-          "Could not load Google Sheet data. Please check whether the sheet is shared or published correctly.";
-      });
-  </script>
+      const data = rows.slice(1).reverse();
+
+      document.getElementById("entries").innerHTML = data.map(row => {
+        const timestamp = row[0] || "";
+        const name = row[1] || "Anonymous";
+        const category = row[2] || "";
+        const message = row[3] || "";
+        const priority = row[4] || "";
+
+        return `
+          <div class="card">
+            <div class="category">${category}</div>
+            <strong>${name}</strong>
+            <p>${message}</p>
+            <div class="priority">Priority: ${priority}</div>
+            <div class="timestamp">${timestamp}</div>
+          </div>
+        `;
+      }).join("");
+    })
+    .catch(() => {
+      document.getElementById("entries").innerHTML =
+        "Could not load data. Make sure your Google Sheet is published.";
+    });
+</script>
+
 </body>
 </html>
