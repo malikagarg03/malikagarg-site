@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Incident Response — Prompt Generator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      padding: 24px 16px 60px;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* Intro block */
+    .intro {
+      background: #1e3a5f;
+      color: #fff;
+      border-radius: 14px;
+      padding: 28px 24px;
+      margin-bottom: 24px;
+    }
+
+    .intro h1 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      line-height: 1.3;
+    }
+
+    .intro p {
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: #cbd5e1;
+      margin-bottom: 10px;
+    }
+
+    .intro p:last-child {
+      margin-bottom: 0;
+    }
+
+    .intro strong {
+      color: #fff;
+    }
+
+    .dont-know-note {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.875rem;
+      color: #0369a1;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    /* Form */
+    .form-section {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 22px 20px;
+      margin-bottom: 14px;
+    }
+
+    .form-section-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #94a3b8;
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #1e293b;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      color: #0f172a;
+      background: #fff;
+      transition: border-color 0.15s;
+      appearance: none;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748b' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 13px center;
+      padding-right: 34px;
+    }
+
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-generate {
+      width: 100%;
+      padding: 14px;
+      background: #1e3a5f;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.15s;
+    }
+
+    .btn-generate:hover {
+      background: #162d4a;
+    }
+
+    /* Output */
+    .output-section {
+      display: none;
+      margin-top: 24px;
+    }
+
+    .output-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #64748b;
+      margin-bottom: 10px;
+    }
+
+    .output-box {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 18px;
+      font-size: 0.88rem;
+      line-height: 1.75;
+      color: #1e293b;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .btn-copy {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #0f172a;
+      transition: background 0.15s;
+    }
+
+    .btn-copy:hover {
+      background: #e2e8f0;
+    }
+
+    .btn-copy.copied {
+      background: #dcfce7;
+      border-color: #86efac;
+      color: #166534;
+    }
+
+    header {
+      background: #1e3a5f;
+      color: #fff;
+      padding: 20px 0 18px;
+      margin-bottom: 0;
+    }
+
+    header .inner {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    header .tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #94a3b8;
+      margin-bottom: 4px;
+    }
+
+    header h1 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    @media (max-width: 500px) {
+      .row-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .intro h1 {
+        font-size: 1.15rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="inner">
+      <div class="tag">Prompt Library</div>
+      <h1>Incident Response Prompt Generator</h1>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <div class="intro" style="border-radius: 0 0 14px 14px; margin-bottom: 24px;">
+      <h1>Dear Officer,</h1>
+      <p>
+        You have just received a call. Something is unfolding. Before you act — <strong>take one breath.</strong>
+      </p>
+      <p>
+        You have handled difficult situations before. What makes the difference in the first few minutes
+        is not speed alone — it is clarity. A clear mind gives clearer orders.
+      </p>
+      <p>
+        This page will help you take 60 seconds to structure what you know.
+        It will then build a prompt you can paste into an AI tool like ChatGPT
+        to get calm, structured advice on what to focus on, what risks you may be missing,
+        and what to do next.
+      </p>
+      <p>
+        <strong>You do not need to have all the answers right now. That is normal. Fill in what you know and go.</strong>
+      </p>
+    </div>
+
+    <div class="dont-know-note">
+      <strong>You don't need complete information.</strong> Write <em>"I don't know"</em> wherever you're unsure — that itself is useful context for the AI.
+    </div>
+
+    <!-- Section 1: What happened -->
+    <div class="form-section">
+      <div class="form-section-title">The Situation</div>
+
+      <div class="form-group">
+        <label for="nature">What kind of incident is this?</label>
+        <input type="text" id="nature" placeholder="e.g. murder, riot, accident, kidnapping, communal tension">
+      </div>
+
+      <div class="form-group">
+        <label for="what-happened">What happened?</label>
+        <textarea id="what-happened" placeholder="Brief description — what you were told or observed so far"></textarea>
+      </div>
+
+      <div class="row-2">
+        <div class="form-group">
+          <label for="where">Where?</label>
+          <input type="text" id="where" placeholder="Location or area">
+        </div>
+
+        <div class="form-group">
+          <label for="ongoing">Still ongoing?</label>
+          <select id="ongoing">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="I don't know">I don't know</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Ground situation -->
+    <div class="form-section">
+      <div class="form-section-title">On the Ground</div>
+
+      <div class="form-group">
+        <label for="on-ground">Who is already there?</label>
+        <textarea id="on-ground" placeholder="Units, officers, or agencies present or on their way"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="actions-taken">What has been done so far?</label>
+        <textarea id="actions-taken" placeholder="Cordons, reinforcements, coordination, briefings..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="escalation">Any risk of escalation?</label>
+        <textarea id="escalation" placeholder="Crowd gathering? Weapons? Communal angle? Risk of retaliation?"></textarea>
+      </div>
+    </div>
+
+    <!-- Section 3: Your thinking -->
+    <div class="form-section">
+      <div class="form-section-title">Your Thinking</div>
+
+      <div class="form-group">
+        <label for="main-concern">What is your main concern right now?</label>
+        <textarea id="main-concern" placeholder="What is weighing on your mind most at this moment?"></textarea>
+      </div>
+    </div>
+
+    <button class="btn-generate" onclick="generatePrompt()">Generate AI Prompt</button>
+
+    <div class="output-section" id="output-section">
+      <div class="output-label">Your Prompt — Copy and paste into ChatGPT</div>
+      <div class="output-box" id="output-box"></div>
+      <button class="btn-copy" id="btn-copy" onclick="copyPrompt()">Copy Prompt</button>
+    </div>
+
+  </div>
+
+  <script>
+    function val(id) {
+      return document.getElementById(id).value.trim() || 'I don\'t know';
+    }
+
+    function generatePrompt() {
+      const nature       = val('nature');
+      const whatHappened = val('what-happened');
+      const where        = val('where');
+      const ongoing      = val('ongoing');
+      const onGround     = val('on-ground');
+      const actionsTaken = val('actions-taken');
+      const escalation   = val('escalation');
+      const mainConcern  = val('main-concern');
+
+      const prompt =
+`You are an experienced incident command advisor for a senior police officer. I am a Superintendent of Police handling a live incident. I am in the first critical window — the period where early decisions shape everything that follows.
+
+My objective right now is to establish control and prevent irreversible damage. I am not investigating. I am commanding.
+
+--- WHAT I KNOW ---
+
+Type of incident: ${nature}
+What happened: ${whatHappened}
+Location: ${where}
+Still ongoing: ${ongoing}
+
+Who is on the ground: ${onGround}
+Actions taken so far: ${actionsTaken}
+Escalation risk: ${escalation}
+
+My main concern: ${mainConcern}
+
+--- THE THREE RISKS I AM TRYING TO PREVENT ---
+
+1. Loss of control on the ground — crowd, retaliation, panic, disorder
+2. Loss or contamination of evidence — disturbed scene, delayed handling
+3. Wrong or uncontrolled messaging — rumours, premature statements, loss of authority
+
+--- ADVISE ME ---
+
+1. What should I focus on immediately to establish control?
+2. Which of the three risks above is most urgent right now — and what do I do about it?
+3. What clear instructions should I give to the officer on the ground in the next 5 minutes?
+4. What should I NOT do in the next 30 minutes?
+5. On messaging — what should I say, what should I hold back?
+
+Be brief and direct. No storytelling. Practical advice only.`;
+
+      const outputBox     = document.getElementById('output-box');
+      const outputSection = document.getElementById('output-section');
+      const copyBtn       = document.getElementById('btn-copy');
+
+      outputBox.textContent = prompt;
+      outputSection.style.display = 'block';
+      copyBtn.textContent = 'Copy Prompt';
+      copyBtn.classList.remove('copied');
+
+      outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function copyPrompt() {
+      const text = document.getElementById('output-box').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('btn-copy');
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy Prompt';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+
+</body>
+</html>
