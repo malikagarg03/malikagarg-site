@@ -1,116 +1,164 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Malika Garg</title>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <title>Malika Garg</title>
   <style>
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
-      background: #020617;
-      color: #e2e8f0;
-      font-family: monospace;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      padding: 0;
     }
 
-    .terminal {
-      width: 90%;
-      max-width: 700px;
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
     }
 
-    .line {
-      margin: 8px 0;
+    header {
+      background: #1e3a5f;
+      color: #fff;
+      padding: 48px 24px;
+      text-align: center;
     }
 
-    .prompt {
-      color: #38bdf8;
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
     }
 
-    input {
-      background: none;
-      border: none;
-      color: white;
-      font-family: monospace;
-      font-size: 16px;
-      width: 80%;
-      outline: none;
-    }
-
-    .output {
-      margin-top: 20px;
+    header p {
+      font-size: 1rem;
       color: #94a3b8;
     }
 
-    .link {
-      color: #a78bfa;
-      cursor: pointer;
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section {
+      padding: 40px 0;
+    }
+
+    .section h2 {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      margin-bottom: 16px;
+    }
+
+    .about-text {
+      font-size: 1rem;
+      color: #334155;
+      line-height: 1.7;
+      max-width: 600px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+      border-color: #94a3b8;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #0f172a;
+    }
+
+    .card-desc {
+      font-size: 0.875rem;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    footer {
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.5rem;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
-
 <body>
 
-<div class="terminal">
-  <div class="line">
-    <span class="prompt">></span> Welcome to malikagarg.xyz
+  <header>
+    <h1>Malika Garg</h1>
+    <p>malikagarg.xyz</p>
+  </header>
+
+  <div class="container">
+
+    <div class="section">
+      <h2>About</h2>
+      <p class="about-text">
+        Building small tools and dashboards for real-world use. Focus on simplicity, speed, and usability.
+      </p>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section">
+      <h2>Projects</h2>
+      <div class="cards">
+
+        <a class="card" href="/rtgs-diesel-dashboard/">
+          <div class="card-title">RTGS Diesel Dashboard</div>
+          <div class="card-desc">Petrol pump dry-out tracking across Andhra Pradesh. Snapshot timeline and district breakdown by OMC.</div>
+        </a>
+
+        <a class="card" href="/google-sheet-experiment/">
+          <div class="card-title">Data Entry Experiment</div>
+          <div class="card-desc">Submit entries via Google Form and view them live. Search, filter by category, and priority tracking.</div>
+        </a>
+
+      </div>
+    </div>
+
   </div>
 
-  <div class="line">
-    <span class="prompt">></span> Type <span class="link">help</span> to begin
-  </div>
-
-  <div class="line">
-    <span class="prompt">></span>
-    <input id="command" autofocus placeholder="Enter command..." />
-  </div>
-
-  <div class="output" id="output"></div>
-</div>
-
-<script>
-  const input = document.getElementById("command");
-  const output = document.getElementById("output");
-
-  input.addEventListener("keydown", function(e) {
-    if (e.key === "Enter") {
-      const cmd = input.value.trim().toLowerCase();
-      handleCommand(cmd);
-      input.value = "";
-    }
-  });
-
-  function handleCommand(cmd) {
-    if (cmd === "help") {
-      output.innerHTML = `
-        Available commands:<br>
-        - diesel → Open Diesel Dashboard<br>
-        - about → About this site<br>
-        - clear → Clear screen
-      `;
-    }
-
-    else if (cmd === "diesel") {
-      window.location.href = "/rtgs-diesel-dashboard/";
-    }
-
-    else if (cmd === "about") {
-      output.innerHTML = `
-        This is a small space for tools, dashboards and experiments.
-      `;
-    }
-
-    else if (cmd === "clear") {
-      output.innerHTML = "";
-    }
-
-    else {
-      output.innerHTML = "Command not found. Type 'help'.";
-    }
-  }
-</script>
+  <footer>
+    malikagarg.xyz
+  </footer>
 
 </body>
 </html>
