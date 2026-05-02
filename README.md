@@ -22,26 +22,9 @@ usability
 
 Path: /
 
--   Personal landing page with About, Quick Links, and Projects sections
+-   Personal landing page
+-   Section order: About → Tools → Writing → Projects → Quick Links
 -   Quick Links loaded dynamically from `links.json`
-
-------------------------------------------------------------------------
-
-### Google Sheet Experiment
-
-Path: /google-sheet-experiment/
-
--   Interactive data entry + live display
--   Used to test input → display workflows
-
-------------------------------------------------------------------------
-
-### RTGS Diesel Dashboard
-
-Path: /rtgs-diesel-dashboard/
-
--   Static dashboard prototype
--   Used to experiment with monitoring and visualization
 
 ------------------------------------------------------------------------
 
@@ -52,6 +35,53 @@ URL: https://my-digital-garden-taupe-xi.vercel.app
 -   Personal notes and knowledge base published from Obsidian
 -   Hosted separately on Vercel (not part of this repo)
 -   Linked from the homepage as a project card
+
+------------------------------------------------------------------------
+
+### RTGS Diesel Dashboard 1
+
+URL: https://rtgs-deisel-dashboard.netlify.app
+
+-   Main petrol pump dry-out tracking dashboard for Andhra Pradesh
+-   Hosted separately on Netlify (not part of this repo)
+
+------------------------------------------------------------------------
+
+### RTGS Diesel Dashboard 2
+
+Path: /rtgs-diesel-dashboard/
+
+-   Static dashboard prototype with snapshot timeline
+-   District breakdown by OMC (IOCL, HPCL, BPCL)
+
+------------------------------------------------------------------------
+
+### Incident Response Prompt Generator
+
+Path: /prompt-library/incident-response.html
+
+-   Tool for police officers handling a live incident
+-   Structures thinking in 60 seconds and generates an AI prompt
+-   Prompt can be sent to ChatGPT, Claude, Gemini, or Perplexity
+
+------------------------------------------------------------------------
+
+### Google Sheet Experiment
+
+Path: /google-sheet-experiment/
+
+-   Interactive data entry + live display
+-   Used to test input → display workflows
+-   Not linked from homepage (accessible directly by URL)
+
+------------------------------------------------------------------------
+
+### Substack
+
+URL: https://substack.com/@malikagarg03/posts
+
+-   Essays and posts
+-   Hosted on Substack, linked from the homepage Writing section
 
 ------------------------------------------------------------------------
 
@@ -80,6 +110,7 @@ Input → Data → Processing → Display
 -   No backend
 -   Not for sensitive data
 -   Focus on experimentation
+-   GA4 analytics active on all pages (Measurement ID stored in `.analytics`, gitignored)
 
 ------------------------------------------------------------------------
 
