@@ -15,32 +15,61 @@
       font-family: 'Segoe UI', Arial, sans-serif;
       background: #f8fafc;
       color: #0f172a;
-      padding: 24px 16px 60px;
+      padding: 0;
     }
 
+    /* ── Header ── */
+    header {
+      background: #1e3a5f;
+      color: #fff;
+      padding: 18px 0 16px;
+    }
+
+    header .inner {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    header .tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #94a3b8;
+      margin-bottom: 3px;
+    }
+
+    header h1 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* ── Container ── */
     .container {
       max-width: 680px;
       margin: 0 auto;
+      padding: 24px 20px 60px;
     }
 
-    /* Intro block */
+    /* ── Intro card ── */
     .intro {
       background: #1e3a5f;
       color: #fff;
       border-radius: 14px;
-      padding: 28px 24px;
-      margin-bottom: 24px;
+      padding: 26px 22px;
+      margin-bottom: 16px;
     }
 
-    .intro h1 {
-      font-size: 1.3rem;
+    .intro h2 {
+      font-size: 1.2rem;
       font-weight: 700;
-      margin-bottom: 14px;
-      line-height: 1.3;
+      margin-bottom: 12px;
     }
 
     .intro p {
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       line-height: 1.7;
       color: #cbd5e1;
       margin-bottom: 10px;
@@ -54,39 +83,71 @@
       color: #fff;
     }
 
+    /* ── "I don't know" note ── */
     .dont-know-note {
       background: #f0f9ff;
       border: 1px solid #bae6fd;
       border-radius: 10px;
-      padding: 12px 16px;
-      font-size: 0.875rem;
+      padding: 11px 15px;
+      font-size: 0.855rem;
       color: #0369a1;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
       line-height: 1.5;
     }
 
-    /* Form */
+    /* ── Role bar ── */
+    .role-bar {
+      margin-bottom: 18px;
+    }
+
+    .role-bar label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 6px;
+    }
+
+    .role-bar input {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: #0f172a;
+      background: #fff;
+    }
+
+    .role-bar input:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+
+    /* ── Form sections ── */
     .form-section {
       background: #fff;
       border: 1px solid #e2e8f0;
       border-radius: 12px;
-      padding: 22px 20px;
+      padding: 20px;
       margin-bottom: 14px;
     }
 
     .form-section-title {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.09em;
       color: #94a3b8;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       padding-bottom: 10px;
       border-bottom: 1px solid #f1f5f9;
     }
 
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .form-group:last-child {
@@ -95,7 +156,7 @@
 
     label {
       display: block;
-      font-size: 0.875rem;
+      font-size: 0.855rem;
       font-weight: 600;
       margin-bottom: 5px;
       color: #1e293b;
@@ -125,7 +186,7 @@
 
     textarea {
       resize: vertical;
-      min-height: 80px;
+      min-height: 78px;
     }
 
     select {
@@ -142,6 +203,7 @@
       gap: 12px;
     }
 
+    /* ── Generate button ── */
     .btn-generate {
       width: 100%;
       padding: 14px;
@@ -152,7 +214,7 @@
       font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
-      margin-top: 8px;
+      margin-top: 6px;
       transition: background 0.15s;
     }
 
@@ -160,14 +222,14 @@
       background: #162d4a;
     }
 
-    /* Output */
+    /* ── Output section ── */
     .output-section {
       display: none;
       margin-top: 24px;
     }
 
     .output-label {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.09em;
@@ -180,71 +242,81 @@
       border: 1px solid #e2e8f0;
       border-radius: 10px;
       padding: 18px;
-      font-size: 0.88rem;
+      font-size: 0.875rem;
       line-height: 1.75;
       color: #1e293b;
       white-space: pre-wrap;
       word-break: break-word;
     }
 
-    .btn-copy {
+    .copy-confirm {
+      display: none;
+      align-items: center;
+      gap: 6px;
       margin-top: 10px;
-      padding: 10px 20px;
-      background: #f1f5f9;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 0.875rem;
+      font-size: 0.855rem;
       font-weight: 600;
-      cursor: pointer;
-      color: #0f172a;
-      transition: background 0.15s;
-    }
-
-    .btn-copy:hover {
-      background: #e2e8f0;
-    }
-
-    .btn-copy.copied {
-      background: #dcfce7;
-      border-color: #86efac;
       color: #166534;
     }
 
-    header {
-      background: #1e3a5f;
-      color: #fff;
-      padding: 20px 0 18px;
-      margin-bottom: 0;
+    .copy-confirm.visible {
+      display: flex;
     }
 
-    header .inner {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 0 16px;
-    }
-
-    header .tag {
-      font-size: 0.7rem;
+    /* ── AI open buttons ── */
+    .open-label {
+      font-size: 0.68rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       color: #94a3b8;
-      margin-bottom: 4px;
+      margin-top: 18px;
+      margin-bottom: 10px;
     }
 
-    header h1 {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #fff;
+    .ai-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
     }
+
+    .ai-btn {
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-size: 0.855rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: opacity 0.15s;
+      display: inline-block;
+    }
+
+    .ai-btn:hover {
+      opacity: 0.85;
+    }
+
+    .ai-chatgpt  { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
+    .ai-claude   { background: #ffedd5; color: #7c2d12; border-color: #fdba74; }
+    .ai-gemini   { background: #dbeafe; color: #1e3a8a; border-color: #93c5fd; }
+    .ai-perplexity { background: #ede9fe; color: #4c1d95; border-color: #c4b5fd; }
+    .ai-share    { background: #f1f5f9; color: #0f172a; border-color: #cbd5e1; }
 
     @media (max-width: 500px) {
       .row-2 {
         grid-template-columns: 1fr;
       }
 
-      .intro h1 {
-        font-size: 1.15rem;
+      header h1 {
+        font-size: 1.05rem;
+      }
+
+      .ai-buttons {
+        flex-direction: column;
+      }
+
+      .ai-btn {
+        text-align: center;
       }
     }
   </style>
@@ -260,8 +332,8 @@
 
   <div class="container">
 
-    <div class="intro" style="border-radius: 0 0 14px 14px; margin-bottom: 24px;">
-      <h1>Dear Officer,</h1>
+    <div class="intro">
+      <h2>Dear Officer,</h2>
       <p>
         You have just received a call. Something is unfolding. Before you act — <strong>take one breath.</strong>
       </p>
@@ -270,10 +342,9 @@
         is not speed alone — it is clarity. A clear mind gives clearer orders.
       </p>
       <p>
-        This page will help you take 60 seconds to structure what you know.
-        It will then build a prompt you can paste into an AI tool like ChatGPT
-        to get calm, structured advice on what to focus on, what risks you may be missing,
-        and what to do next.
+        This page will help you take 60 seconds to structure what you know. It will then build a prompt
+        you can send directly to an AI tool — ChatGPT, Claude, Gemini, or Perplexity — and get calm,
+        structured advice on what to focus on, what risks you may be missing, and what to do next.
       </p>
       <p>
         <strong>You do not need to have all the answers right now. That is normal. Fill in what you know and go.</strong>
@@ -284,7 +355,13 @@
       <strong>You don't need complete information.</strong> Write <em>"I don't know"</em> wherever you're unsure — that itself is useful context for the AI.
     </div>
 
-    <!-- Section 1: What happened -->
+    <!-- Role -->
+    <div class="role-bar">
+      <label for="role">Your role / designation</label>
+      <input type="text" id="role" placeholder="e.g. Inspector, DSP, SP, Collector, IPS Officer">
+    </div>
+
+    <!-- Section 1: The Situation -->
     <div class="form-section">
       <div class="form-section-title">The Situation</div>
 
@@ -315,7 +392,7 @@
       </div>
     </div>
 
-    <!-- Section 2: Ground situation -->
+    <!-- Section 2: On the Ground -->
     <div class="form-section">
       <div class="form-section-title">On the Ground</div>
 
@@ -335,7 +412,7 @@
       </div>
     </div>
 
-    <!-- Section 3: Your thinking -->
+    <!-- Section 3: Your Thinking -->
     <div class="form-section">
       <div class="form-section-title">Your Thinking</div>
 
@@ -347,20 +424,36 @@
 
     <button class="btn-generate" onclick="generatePrompt()">Generate AI Prompt</button>
 
+    <!-- Output -->
     <div class="output-section" id="output-section">
-      <div class="output-label">Your Prompt — Copy and paste into ChatGPT</div>
+      <div class="output-label">Your Prompt</div>
       <div class="output-box" id="output-box"></div>
-      <button class="btn-copy" id="btn-copy" onclick="copyPrompt()">Copy Prompt</button>
+
+      <div class="copy-confirm" id="copy-confirm">
+        <span>✓</span><span>Prompt copied to clipboard</span>
+      </div>
+
+      <div class="open-label">Open in →</div>
+      <div class="ai-buttons">
+        <a class="ai-btn ai-chatgpt"    href="https://chatgpt.com"           target="_blank" rel="noopener">ChatGPT</a>
+        <a class="ai-btn ai-claude"     href="https://claude.ai"             target="_blank" rel="noopener">Claude</a>
+        <a class="ai-btn ai-gemini"     href="https://gemini.google.com"     target="_blank" rel="noopener">Gemini</a>
+        <a class="ai-btn ai-perplexity" href="https://www.perplexity.ai"     target="_blank" rel="noopener">Perplexity</a>
+        <button class="ai-btn ai-share" id="btn-share" style="display:none" onclick="sharePrompt()">Share via apps…</button>
+      </div>
     </div>
 
   </div>
 
   <script>
     function val(id) {
-      return document.getElementById(id).value.trim() || 'I don\'t know';
+      return document.getElementById(id).value.trim() || "I don't know";
     }
 
+    let generatedPrompt = '';
+
     function generatePrompt() {
+      const role         = document.getElementById('role').value.trim() || 'senior police officer';
       const nature       = val('nature');
       const whatHappened = val('what-happened');
       const where        = val('where');
@@ -370,8 +463,8 @@
       const escalation   = val('escalation');
       const mainConcern  = val('main-concern');
 
-      const prompt =
-`You are an experienced incident command advisor for a senior police officer. I am a Superintendent of Police handling a live incident. I am in the first critical window — the period where early decisions shape everything that follows.
+      generatedPrompt =
+`You are an experienced incident command advisor. I am a ${role} handling a live incident. I am in the first critical window — the period where early decisions shape everything that follows.
 
 My objective right now is to establish control and prevent irreversible damage. I am not investigating. I am commanding.
 
@@ -399,34 +492,36 @@ My main concern: ${mainConcern}
 1. What should I focus on immediately to establish control?
 2. Which of the three risks above is most urgent right now — and what do I do about it?
 3. What clear instructions should I give to the officer on the ground in the next 5 minutes?
-4. What should I NOT do in the next 30 minutes?
-5. On messaging — what should I say, what should I hold back?
+4. How should I brief my senior officers right now — what to say, how much detail, and what NOT to say to them yet?
+5. What should I NOT do in the next 30 minutes?
+6. On messaging — what should I say publicly, what should I hold back, and who controls the narrative?
+7. End with a prioritised checklist of the 5–7 most important actions I must take in the next 30 minutes, in order.
 
-Be brief and direct. No storytelling. Practical advice only.`;
+Be brief and direct. Use headers and bullet points. No storytelling. Practical advice only.`;
 
-      const outputBox     = document.getElementById('output-box');
+      document.getElementById('output-box').textContent = generatedPrompt;
+
       const outputSection = document.getElementById('output-section');
-      const copyBtn       = document.getElementById('btn-copy');
-
-      outputBox.textContent = prompt;
       outputSection.style.display = 'block';
-      copyBtn.textContent = 'Copy Prompt';
-      copyBtn.classList.remove('copied');
+
+      // Auto-copy
+      navigator.clipboard.writeText(generatedPrompt).then(() => {
+        const confirm = document.getElementById('copy-confirm');
+        confirm.classList.add('visible');
+      }).catch(() => {});
+
+      // Show share button on mobile
+      if (navigator.share) {
+        document.getElementById('btn-share').style.display = 'inline-block';
+      }
 
       outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    function copyPrompt() {
-      const text = document.getElementById('output-box').textContent;
-      navigator.clipboard.writeText(text).then(() => {
-        const btn = document.getElementById('btn-copy');
-        btn.textContent = 'Copied!';
-        btn.classList.add('copied');
-        setTimeout(() => {
-          btn.textContent = 'Copy Prompt';
-          btn.classList.remove('copied');
-        }, 2000);
-      });
+    function sharePrompt() {
+      if (navigator.share && generatedPrompt) {
+        navigator.share({ text: generatedPrompt }).catch(() => {});
+      }
     }
   </script>
 
