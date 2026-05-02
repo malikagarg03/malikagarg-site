@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Incident Response — Prompt Generator</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YZEYRQBYKC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YZEYRQBYKC');
+  </script>
   <style>
     * {
       box-sizing: border-box;
@@ -567,6 +574,11 @@ Be brief and direct. Use headers and bullet points. No storytelling. Practical a
 
       const outputSection = document.getElementById('output-section');
       outputSection.style.display = 'block';
+
+      // Track prompt generation
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'generate_prompt', { event_category: 'incident_response' });
+      }
 
       // Auto-copy
       navigator.clipboard.writeText(generatedPrompt).catch(() => {
