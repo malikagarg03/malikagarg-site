@@ -83,6 +83,26 @@
       color: #fff;
     }
 
+    .intro ul {
+      padding-left: 18px;
+      margin: 0;
+    }
+
+    .intro ul li {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      line-height: 1.7;
+      margin-bottom: 8px;
+    }
+
+    .intro ul li:last-child {
+      margin-bottom: 0;
+    }
+
+    .intro ul li strong {
+      color: #fff;
+    }
+
     /* ── "I don't know" note ── */
     .dont-know-note {
       background: #f0f9ff;
@@ -249,18 +269,59 @@
       word-break: break-word;
     }
 
-    .copy-confirm {
-      display: none;
-      align-items: center;
-      gap: 6px;
-      margin-top: 10px;
+    .next-steps {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin-top: 14px;
+    }
+
+    .next-steps-title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #166534;
+      margin-bottom: 10px;
+    }
+
+    .next-steps ul {
+      padding-left: 18px;
+      margin: 0;
+    }
+
+    .next-steps ul li {
+      font-size: 0.875rem;
+      color: #14532d;
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+
+    .next-steps ul li:last-child {
+      margin-bottom: 0;
+    }
+
+    .btn-recopy {
+      margin-top: 14px;
+      padding: 9px 18px;
+      background: #fff;
+      border: 1px solid #86efac;
+      border-radius: 8px;
       font-size: 0.855rem;
       font-weight: 600;
       color: #166534;
+      cursor: pointer;
+      transition: background 0.15s;
     }
 
-    .copy-confirm.visible {
-      display: flex;
+    .btn-recopy:hover {
+      background: #dcfce7;
+    }
+
+    .btn-recopy.copied {
+      background: #dcfce7;
+      color: #14532d;
     }
 
     /* ── AI open buttons ── */
@@ -334,21 +395,13 @@
 
     <div class="intro">
       <h2>Dear Officer,</h2>
-      <p>
-        You have just received a call. Something is unfolding. Before you act — <strong>take one breath.</strong>
-      </p>
-      <p>
-        You have handled difficult situations before. What makes the difference in the first few minutes
-        is not speed alone — it is clarity. A clear mind gives clearer orders.
-      </p>
-      <p>
-        This page will help you take 60 seconds to structure what you know. It will then build a prompt
-        you can send directly to an AI tool — ChatGPT, Claude, Gemini, or Perplexity — and get calm,
-        structured advice on what to focus on, what risks you may be missing, and what to do next.
-      </p>
-      <p>
-        <strong>You do not need to have all the answers right now. That is normal. Fill in what you know and go.</strong>
-      </p>
+      <ul>
+        <li>You have just received a call. Something is unfolding. <strong>Take one breath before you react.</strong></li>
+        <li>You have handled difficult situations before. What makes the difference in these first minutes is not speed alone — it is clarity.</li>
+        <li>Fill in what you know below. This page will build a structured prompt for an AI tool that will advise you on what to do next.</li>
+        <li>You do not need to have all the answers. <strong>Write "I don't know" wherever you're unsure — that is fine.</strong></li>
+        <li>The whole thing takes 60 seconds. Then go.</li>
+      </ul>
     </div>
 
     <div class="dont-know-note">
@@ -426,21 +479,32 @@
 
     <!-- Output -->
     <div class="output-section" id="output-section">
+
       <div class="output-label">Your Prompt</div>
       <div class="output-box" id="output-box"></div>
 
-      <div class="copy-confirm" id="copy-confirm">
-        <span>✓</span><span>Prompt copied to clipboard</span>
+      <div class="next-steps">
+        <div class="next-steps-title">What to do now</div>
+        <ul>
+          <li id="copy-status">✓ Your prompt has been <strong>automatically copied</strong> to your clipboard.</li>
+          <li>If it did not copy, use the button below to copy it manually.</li>
+          <li>Open any AI tool using the buttons below — ChatGPT, Claude, Gemini, or Perplexity.</li>
+          <li>Once it opens, <strong>paste the prompt</strong> — on mobile: long press → Paste. On desktop: Ctrl+V (or Cmd+V on Mac).</li>
+          <li>Read the response and act on it.</li>
+        </ul>
+
+        <button class="btn-recopy" id="btn-recopy" onclick="recopyPrompt()">Copy Prompt Again</button>
+
+        <div class="open-label" style="margin-top: 18px;">Open in →</div>
+        <div class="ai-buttons">
+          <a class="ai-btn ai-chatgpt"    href="https://chatgpt.com"           target="_blank" rel="noopener">ChatGPT</a>
+          <a class="ai-btn ai-claude"     href="https://claude.ai"             target="_blank" rel="noopener">Claude</a>
+          <a class="ai-btn ai-gemini"     href="https://gemini.google.com"     target="_blank" rel="noopener">Gemini</a>
+          <a class="ai-btn ai-perplexity" href="https://www.perplexity.ai"     target="_blank" rel="noopener">Perplexity</a>
+          <button class="ai-btn ai-share" id="btn-share" style="display:none" onclick="sharePrompt()">Share via apps…</button>
+        </div>
       </div>
 
-      <div class="open-label">Open in →</div>
-      <div class="ai-buttons">
-        <a class="ai-btn ai-chatgpt"    href="https://chatgpt.com"           target="_blank" rel="noopener">ChatGPT</a>
-        <a class="ai-btn ai-claude"     href="https://claude.ai"             target="_blank" rel="noopener">Claude</a>
-        <a class="ai-btn ai-gemini"     href="https://gemini.google.com"     target="_blank" rel="noopener">Gemini</a>
-        <a class="ai-btn ai-perplexity" href="https://www.perplexity.ai"     target="_blank" rel="noopener">Perplexity</a>
-        <button class="ai-btn ai-share" id="btn-share" style="display:none" onclick="sharePrompt()">Share via apps…</button>
-      </div>
     </div>
 
   </div>
@@ -505,10 +569,10 @@ Be brief and direct. Use headers and bullet points. No storytelling. Practical a
       outputSection.style.display = 'block';
 
       // Auto-copy
-      navigator.clipboard.writeText(generatedPrompt).then(() => {
-        const confirm = document.getElementById('copy-confirm');
-        confirm.classList.add('visible');
-      }).catch(() => {});
+      navigator.clipboard.writeText(generatedPrompt).catch(() => {
+        document.getElementById('copy-status').textContent =
+          '⚠ Could not auto-copy. Use the "Copy Prompt Again" button below.';
+      });
 
       // Show share button on mobile
       if (navigator.share) {
@@ -516,6 +580,19 @@ Be brief and direct. Use headers and bullet points. No storytelling. Practical a
       }
 
       outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function recopyPrompt() {
+      if (!generatedPrompt) return;
+      navigator.clipboard.writeText(generatedPrompt).then(() => {
+        const btn = document.getElementById('btn-recopy');
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy Prompt Again';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
     }
 
     function sharePrompt() {
