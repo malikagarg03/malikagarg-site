@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 3 — The Five Senses! 👀</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #F0FFF8;
+    --teal:    #00B4A6;
+    --green:   #56C870;
+    --yellow:  #FFD166;
+    --orange:  #FF9A3C;
+    --pink:    #FF6B9D;
+    --purple:  #9B59B6;
+    --blue:    #3498DB;
+    --red:     #E74C3C;
+    --dark:    #2D3436;
+    --mid:     #636E72;
+    --card:    #ffffff;
+    --radius:  20px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 10% 20%, #c8fff4 0%, transparent 40%),
+      radial-gradient(circle at 90% 80%, #ffe8f8 0%, transparent 40%);
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #00B4A6 0%, #56C870 100%);
+    padding: 30px 20px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute; bottom: -1px; left: 0; right: 0; height: 22px;
+    background: var(--bg);
+    clip-path: ellipse(55% 100% at 50% 100%);
+  }
+  .bubbles {
+    position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+  }
+  .bubble {
+    position: absolute; border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    animation: rise 4s ease-in-out infinite;
+  }
+  @keyframes rise {
+    0%,100% { transform: translateY(0) scale(1); opacity: 0.5; }
+    50%      { transform: translateY(-12px) scale(1.05); opacity: 0.8; }
+  }
+  .header h1 {
+    font-family: 'Baloo 2', cursive; font-size: 2.5rem;
+    font-weight: 800; color: white; position: relative;
+    text-shadow: 0 3px 12px rgba(0,0,0,0.15);
+  }
+  .header p {
+    color: rgba(255,255,255,0.92); font-size: 1.05rem;
+    font-weight: 600; margin-top: 5px; position: relative;
+  }
+
+  /* SCORE BAR */
+  .score-bar {
+    background: white; margin: 0 16px;
+    border-radius: 0 0 18px 18px; padding: 13px 22px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 4px 16px rgba(0,180,166,0.13);
+  }
+  .greeting { font-size: 1rem; color: var(--mid); font-weight: 700; }
+  .score-pill {
+    background: var(--yellow); border-radius: 40px; padding: 6px 18px;
+    font-family: 'Baloo 2', cursive; font-weight: 800;
+    font-size: 1.1rem; color: var(--dark);
+  }
+
+  /* PROGRESS */
+  .progress-wrap { max-width: 740px; margin: 0 auto; padding: 12px 16px 0; }
+  .progress-bar-bg { background: #DDD; border-radius: 20px; height: 10px; overflow: hidden; }
+  .progress-bar-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--teal), var(--green));
+    border-radius: 20px; transition: width 0.5s ease;
+  }
+  .progress-label { font-size: 0.85rem; color: var(--mid); font-weight: 600; margin-top: 4px; text-align: right; }
+
+  /* MAIN */
+  .main { max-width: 740px; margin: 0 auto; padding: 22px 16px 0; }
+
+  /* SECTION */
+  .section {
+    background: var(--card); border-radius: var(--radius);
+    margin-bottom: 24px; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    animation: slideUp 0.4s ease both;
+  }
+  .section:nth-child(1){animation-delay:0.05s}
+  .section:nth-child(2){animation-delay:0.13s}
+  .section:nth-child(3){animation-delay:0.21s}
+  .section:nth-child(4){animation-delay:0.29s}
+  .section:nth-child(5){animation-delay:0.37s}
+  @keyframes slideUp {
+    from { opacity:0; transform:translateY(24px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .section-header {
+    padding: 14px 22px; display: flex; align-items: center; gap: 12px;
+  }
+  .section-header .emoji { font-size: 1.7rem; }
+  .section-header h2 { font-family:'Baloo 2',cursive; font-size:1.25rem; font-weight:800; color:white; }
+  .section-header p  { color:rgba(255,255,255,0.9); font-size:0.9rem; font-weight:600; }
+  .section-body { padding: 22px; }
+
+  /* ── PART 1: SENSE CARDS ── */
+  .sense-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 14px; margin-bottom: 10px;
+  }
+  .sense-card {
+    border-radius: 18px; padding: 18px 10px;
+    text-align: center; cursor: pointer;
+    transition: all 0.22s; user-select: none;
+    border: 3px solid transparent;
+    position: relative;
+  }
+  .sense-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+  .sense-card .s-emoji { font-size: 2.4rem; display: block; margin-bottom: 6px; }
+  .sense-card .s-name  { font-weight: 800; font-size: 1rem; color: var(--dark); }
+  .sense-card .s-organ { font-size: 0.8rem; color: var(--mid); margin-top: 3px; font-weight: 600; }
+  .sense-card.flipped  { transform: rotateY(180deg) scale(0.96); opacity: 0; pointer-events: none; }
+  .sense-card.correct-card { border-color: #4CAF50; background: #F0FFF4 !important; }
+  .sense-card.wrong-card   { animation: wobble 0.45s ease; }
+  @keyframes wobble {
+    0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)}
+  }
+
+  .drop-zone {
+    border-radius: 16px; padding: 12px 14px;
+    border: 2.5px dashed #CCC; background: #FAFAFA;
+    min-height: 52px; text-align: center;
+    font-size: 0.95rem; font-weight: 700; color: #999;
+    transition: all 0.2s; margin-top: 4px;
+    cursor: pointer;
+  }
+  .drop-zone.has-answer { border-style: solid; border-color: #4CAF50; background: #F0FFF4; color: #2E7D32; font-size: 1rem; }
+  .drop-zone.wrong-drop { border-color: #E53935; background: #FFEBEE; color: #C62828; animation: wobble 0.4s; }
+
+  /* ── PART 2: MATCH SENSE TO BODY PART ── */
+  .match2-cols { display: flex; gap: 14px; flex-wrap: wrap; }
+  .match2-col  { flex:1; min-width:140px; display:flex; flex-direction:column; gap:10px; }
+  .match2-item {
+    border-radius: 50px; padding: 12px 16px;
+    font-size: 1rem; font-weight: 700; text-align: center;
+    cursor: pointer; transition: all 0.2s;
+    border: 3px solid transparent; user-select: none;
+  }
+  .match2-item:hover:not(.matched2) { transform: scale(1.04); }
+  .match2-item.selected2 { transform: scale(1.05); box-shadow: 0 0 0 4px rgba(0,180,166,0.25); }
+  .match2-item.matched2  { opacity: 0.7; cursor: default; }
+  .match2-item.matched2::after { content:'✓'; margin-left:6px; }
+  .match2-item.wf2 { animation: wobble 0.4s ease; }
+  .left2  { color: #00796B; }
+  .right2 { background: #F5F5F5; color: var(--dark); border: 2.5px dashed #CCC; }
+  .right2.matched2 { background: #E8F5E9; border-color: #81C784; border-style: solid; color: #2E7D32; }
+  #match2-feedback { text-align:center; min-height:26px; margin-top:10px; font-size:1rem; font-weight:700; }
+
+  /* ── PART 3: FILL BLANK ── */
+  .word-bank2 {
+    background: var(--yellow); border-radius: 14px;
+    padding: 12px 18px; margin-bottom: 20px;
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  }
+  .wb2-label { font-weight:800; font-size:1rem; color:var(--dark); }
+  .word-chip2 {
+    background: white; border-radius: 30px; padding: 6px 16px;
+    font-size: 1rem; font-weight: 700; color: var(--teal);
+    cursor: pointer; border: 2.5px solid var(--teal); transition: all 0.2s;
+    user-select: none;
+  }
+  .word-chip2:hover:not(.used2) { background: var(--teal); color: white; transform: translateY(-2px); }
+  .word-chip2.selected2c { background: var(--teal); color: white; box-shadow: 0 0 0 4px rgba(0,180,166,0.25); }
+  .word-chip2.used2 { opacity:0.38; cursor:default; text-decoration:line-through; }
+
+  .fill2-row {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 18px; font-size:1.1rem; font-weight:600; color:var(--dark); line-height:1.8;
+  }
+  .num2 {
+    background: var(--teal); color: white; border-radius: 50%;
+    width:30px; height:30px; display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:0.95rem; flex-shrink:0;
+  }
+  .blank2 {
+    display: inline-block; min-width:130px; padding: 5px 12px;
+    border: none; border-bottom: 3px solid var(--teal);
+    background: #E0FAF8; border-radius: 8px 8px 0 0;
+    font-size:1.05rem; font-weight:700; color: var(--teal);
+    text-align:center; cursor:pointer; transition:all 0.2s;
+    font-family:'Nunito',sans-serif;
+  }
+  .blank2:empty::before { content:'tap a word'; font-size:0.8rem; color:#aaa; font-weight:400; }
+  .blank2.b2-correct { background:#E8F5E9; border-bottom-color:#4CAF50; color:#2E7D32; }
+  .blank2.b2-wrong   { background:#FFEBEE; border-bottom-color:#E53935; color:#C62828; animation:wobble 0.5s; }
+
+  /* ── PART 4: TRUE FALSE ── */
+  .tf2-row {
+    display:flex; align-items:center; gap:14px;
+    margin-bottom:16px; flex-wrap:wrap;
+  }
+  .tf2-num {
+    width:34px; height:34px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:1rem; color:white;
+  }
+  .tf2-q  { flex:1; font-size:1.05rem; font-weight:600; color:var(--dark); min-width:200px; }
+  .tf2-btns { display:flex; gap:8px; }
+  .tf2-btn {
+    padding:8px 20px; border-radius:30px; font-size:1rem;
+    font-weight:800; cursor:pointer; border:2.5px solid transparent;
+    transition:all 0.2s; font-family:'Nunito',sans-serif;
+  }
+  .t2-true  { background:#E8F5E9; color:#2E7D32; border-color:#81C784; }
+  .t2-false { background:#FFEBEE; color:#C62828; border-color:#EF9A9A; }
+  .tf2-btn:hover:not(:disabled) { transform:scale(1.08); box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+  .tf2-btn.sc2 { background:#4CAF50!important; color:white!important; border-color:#4CAF50!important; }
+  .tf2-btn.sw2 { background:#E53935!important; color:white!important; border-color:#E53935!important; animation:wobble 0.4s; }
+  .tf2-btn.sa2 { background:#A5D6A7; color:#1B5E20; border-color:#66BB6A; }
+
+  /* ── PART 5: SENSE EXPLORER ── */
+  .explorer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+  }
+  .explorer-card {
+    border-radius: 16px; padding: 18px 16px;
+    border: 2.5px solid transparent; cursor: pointer;
+    transition: all 0.22s; user-select: none;
+  }
+  .explorer-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+  .explorer-card.done2 { border-color: #4CAF50; }
+  .explorer-top  { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .ex-emoji      { font-size:2rem; }
+  .ex-title      { font-family:'Baloo 2',cursive; font-size:1.05rem; font-weight:800; color:var(--dark); }
+  .ex-text       { font-size:0.95rem; font-weight:600; color:var(--mid); line-height:1.4; }
+  .ex-check      {
+    width:26px; height:26px; border-radius:50%;
+    border:2.5px solid #CCC; display:flex; align-items:center; justify-content:center;
+    font-size:0.95rem; transition:all 0.2s; margin-top:10px; margin-left:auto;
+  }
+  .explorer-card.done2 .ex-check { background:#4CAF50; border-color:#4CAF50; color:white; }
+
+  /* FUN FACT */
+  .fun-fact {
+    background: linear-gradient(135deg,#FFF9C4,#E8F5E9);
+    border: 3px solid var(--yellow); border-radius: var(--radius);
+    padding: 20px 24px; margin-bottom: 24px;
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .fun-fact .icon { font-size:2.5rem; flex-shrink:0; }
+  .fun-fact h3 { font-family:'Baloo 2',cursive; font-size:1.2rem; font-weight:800; color:var(--dark); }
+  .fun-fact p  { font-size:1rem; color:var(--dark); margin-top:4px; line-height:1.5; }
+
+  /* FINAL */
+  .score-display {
+    text-align:center; padding:22px;
+    font-family:'Baloo 2',cursive; font-size:1.3rem;
+    font-weight:800; color:var(--dark);
+  }
+  .result-stars { font-size:2.4rem; letter-spacing:4px; margin-bottom:8px; }
+
+  /* COMPLETION BANNER */
+  .series-complete {
+    background: linear-gradient(135deg, #FFD166, #FF9A3C);
+    border-radius: var(--radius); padding: 24px;
+    text-align: center; margin-bottom: 24px;
+    display: none;
+    animation: popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both;
+  }
+  @keyframes popIn {
+    from { transform:scale(0.7); opacity:0; }
+    to   { transform:scale(1);   opacity:1; }
+  }
+  .series-complete h2 { font-family:'Baloo 2',cursive; font-size:1.8rem; font-weight:800; color:white; text-shadow:0 2px 8px rgba(0,0,0,0.15); }
+  .series-complete p  { color:rgba(255,255,255,0.92); font-size:1rem; font-weight:600; margin-top:6px; }
+  .series-badge { font-size:3.5rem; display:block; margin:10px auto; }
+
+  /* CONFETTI */
+  .confetti-piece {
+    position:fixed; top:-20px; width:12px; height:12px;
+    border-radius:3px; pointer-events:none; z-index:999;
+    animation:confettiFall 2.8s ease-in forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform:translateY(0) rotate(0deg); opacity:1; }
+    100% { transform:translateY(110vh) rotate(720deg); opacity:0; }
+  }
+
+  /* PART 1 layout */
+  .p1-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .p1-sense-col { display:flex; flex-direction:column; gap:8px; align-items:center; }
+  .sense-top-card {
+    border-radius: 16px; padding: 14px 8px;
+    text-align:center; font-size:0.9rem; font-weight:700;
+    color:var(--dark); width:100%;
+    cursor:pointer; user-select:none; transition: all 0.2s;
+    border: 3px solid transparent;
+  }
+  .sense-top-card:hover { transform:scale(1.05); }
+  .sense-top-card .big-e { font-size:2rem; display:block; margin-bottom:4px; }
+  .sense-top-card.stc-selected { transform:scale(1.08); box-shadow:0 0 0 4px rgba(0,180,166,0.3); }
+  .sense-top-card.stc-matched  { opacity:0.65; cursor:default; }
+  .sense-top-card.stc-matched::after { content:' ✓'; }
+
+  .organ-drop {
+    width:100%; border-radius:12px; padding:10px 6px;
+    border: 2.5px dashed #CCC; background:#FAFAFA;
+    text-align:center; font-size:0.82rem; font-weight:700; color:#AAA;
+    min-height:44px; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:all 0.2s;
+  }
+  .organ-drop.od-matched { border-style:solid; border-color:#4CAF50; background:#F0FFF4; color:#2E7D32; font-size:0.9rem; }
+  .organ-drop.od-wrong   { border-color:#E53935; background:#FFEBEE; color:#C62828; animation:wobble 0.4s; }
+
+  .organ-bank {
+    display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:10px;
+  }
+  .organ-chip {
+    background:white; border-radius:30px; padding:7px 16px;
+    font-size:0.95rem; font-weight:700; color:var(--purple);
+    cursor:pointer; border:2.5px solid var(--purple); transition:all 0.2s;
+    user-select:none;
+  }
+  .organ-chip:hover:not(.oc-used) { background:var(--purple); color:white; transform:translateY(-2px); }
+  .organ-chip.oc-selected { background:var(--purple); color:white; box-shadow:0 0 0 4px rgba(155,89,182,0.25); }
+  .organ-chip.oc-used { opacity:0.35; cursor:default; text-decoration:line-through; }
+  #p1-feedback { text-align:center; min-height:24px; font-size:0.95rem; font-weight:700; margin-top:6px; }
+
+  @media(max-width:560px){
+    .header h1 { font-size:1.8rem; }
+    .p1-grid { grid-template-columns:repeat(3,1fr); }
+    .match2-cols { flex-direction:column; }
+    .explorer-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="bubbles">
+    <div class="bubble" style="width:60px;height:60px;top:10px;left:8%;animation-delay:0s"></div>
+    <div class="bubble" style="width:40px;height:40px;top:20px;right:12%;animation-delay:0.7s"></div>
+    <div class="bubble" style="width:30px;height:30px;bottom:20px;left:25%;animation-delay:1.2s"></div>
+    <div class="bubble" style="width:50px;height:50px;bottom:15px;right:28%;animation-delay:0.4s"></div>
+  </div>
+  <h1>👀 The Five Senses! 👂</h1>
+  <p>Day 3 — How do we experience the world around us?</p>
+</div>
+
+<div class="score-bar">
+  <div class="greeting">👋 Last day, explorer — let's finish strong!</div>
+  <div class="score-pill" id="score-pill">⭐ Score: 0 / 14</div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progress-fill"></div>
+  </div>
+  <div class="progress-label" id="progress-label">0 of 14 answered</div>
+</div>
+
+<div class="main">
+
+  <!-- ══ PART 1: MATCH SENSE → BODY PART ══ -->
+  <div class="section">
+    <div class="section-header" style="background:linear-gradient(135deg,#00B4A6,#00796B);">
+      <span class="emoji">🎯</span>
+      <div><h2>Part 1 — Which part do you use?</h2><p>Tap a sense, then tap the body part it uses!</p></div>
+    </div>
+    <div class="section-body">
+
+      <!-- 5 sense cards on top -->
+      <div class="p1-grid">
+        <div class="p1-sense-col">
+          <div class="sense-top-card stc" data-sense="sight" style="background:#FFF3E0;">
+            <span class="big-e">👀</span>Sight
+          </div>
+          <div class="organ-drop od" data-for="sight" data-correct="eyes">drop here</div>
+        </div>
+        <div class="p1-sense-col">
+          <div class="sense-top-card stc" data-sense="hearing" style="background:#E3F2FD;">
+            <span class="big-e">👂</span>Hearing
+          </div>
+          <div class="organ-drop od" data-for="hearing" data-correct="ears">drop here</div>
+        </div>
+        <div class="p1-sense-col">
+          <div class="sense-top-card stc" data-sense="smell" style="background:#FCE4EC;">
+            <span class="big-e">👃</span>Smell
+          </div>
+          <div class="organ-drop od" data-for="smell" data-correct="nose">drop here</div>
+        </div>
+        <div class="p1-sense-col">
+          <div class="sense-top-card stc" data-sense="taste" style="background:#E8F5E9;">
+            <span class="big-e">👅</span>Taste
+          </div>
+          <div class="organ-drop od" data-for="taste" data-correct="tongue">drop here</div>
+        </div>
+        <div class="p1-sense-col">
+          <div class="sense-top-card stc" data-sense="touch" style="background:#EDE7F6;">
+            <span class="big-e">🖐️</span>Touch
+          </div>
+          <div class="organ-drop od" data-for="touch" data-correct="skin">drop here</div>
+        </div>
+      </div>
+
+      <!-- organ chips bank -->
+      <div class="organ-bank">
+        <span class="organ-chip" data-organ="tongue">👅 tongue</span>
+        <span class="organ-chip" data-organ="skin">🖐️ skin</span>
+        <span class="organ-chip" data-organ="nose">👃 nose</span>
+        <span class="organ-chip" data-organ="eyes">👀 eyes</span>
+        <span class="organ-chip" data-organ="ears">👂 ears</span>
+      </div>
+      <div id="p1-feedback"></div>
+    </div>
+  </div>
+
+  <!-- ══ PART 2: MATCH SENSE TO EXAMPLE ══ -->
+  <div class="section">
+    <div class="section-header" style="background:linear-gradient(135deg,#9B59B6,#6C3483);">
+      <span class="emoji">🔗</span>
+      <div><h2>Part 2 — Match the Sense!</h2><p>Tap a sense, then tap its example!</p></div>
+    </div>
+    <div class="section-body">
+      <div class="match2-cols">
+        <div class="match2-col">
+          <div class="match2-item left2" data-m2="sight"   style="background:#FFF3E0;">👀 Sight</div>
+          <div class="match2-item left2" data-m2="hearing" style="background:#E3F2FD;">👂 Hearing</div>
+          <div class="match2-item left2" data-m2="smell"   style="background:#FCE4EC;">👃 Smell</div>
+          <div class="match2-item left2" data-m2="taste"   style="background:#E8F5E9;">👅 Taste</div>
+          <div class="match2-item left2" data-m2="touch"   style="background:#EDE7F6;">🖐️ Touch</div>
+        </div>
+        <div class="match2-col">
+          <div class="match2-item right2" data-a2="touch"  >Feeling if something is hot or cold</div>
+          <div class="match2-item right2" data-a2="sight"  >Seeing colours and shapes</div>
+          <div class="match2-item right2" data-a2="taste"  >Knowing if food is sweet or sour</div>
+          <div class="match2-item right2" data-a2="smell"  >Noticing flowers or food cooking</div>
+          <div class="match2-item right2" data-a2="hearing">Listening to music or someone talk</div>
+        </div>
+      </div>
+      <div id="match2-feedback"></div>
+    </div>
+  </div>
+
+  <!-- ══ PART 3: FILL BLANK ══ -->
+  <div class="section">
+    <div class="section-header" style="background:linear-gradient(135deg,#FF9A3C,#E65100);">
+      <span class="emoji">✏️</span>
+      <div><h2>Part 3 — Fill in the Blank!</h2><p>Tap a word, then tap the blank!</p></div>
+    </div>
+    <div class="section-body">
+      <div class="word-bank2">
+        <span class="wb2-label">Word Bank:</span>
+        <span class="word-chip2" data-w2="eyes">eyes</span>
+        <span class="word-chip2" data-w2="ears">ears</span>
+        <span class="word-chip2" data-w2="nose">nose</span>
+        <span class="word-chip2" data-w2="tongue">tongue</span>
+      </div>
+      <div class="fill2-row">
+        <span class="num2">1</span>
+        <span>We see with our</span>
+        <span class="blank2" data-c2="eyes" id="fb1"></span>
+      </div>
+      <div class="fill2-row">
+        <span class="num2">2</span>
+        <span>We hear sounds with our</span>
+        <span class="blank2" data-c2="ears" id="fb2"></span>
+      </div>
+      <div class="fill2-row">
+        <span class="num2">3</span>
+        <span>We smell things with our</span>
+        <span class="blank2" data-c2="nose" id="fb3"></span>
+      </div>
+      <div class="fill2-row">
+        <span class="num2">4</span>
+        <span>We taste food with our</span>
+        <span class="blank2" data-c2="tongue" id="fb4"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PART 4: TRUE / FALSE ══ -->
+  <div class="section">
+    <div class="section-header" style="background:linear-gradient(135deg,#FF6B9D,#C0392B);">
+      <span class="emoji">🤔</span>
+      <div><h2>Part 4 — True or False?</h2><p>Tap the right answer!</p></div>
+    </div>
+    <div class="section-body">
+      <div class="tf2-row">
+        <div class="tf2-num" style="background:#00B4A6;">1</div>
+        <div class="tf2-q">We use our eyes to smell flowers.</div>
+        <div class="tf2-btns">
+          <button class="tf2-btn t2-true"  data-tq="tq1" data-tv="true"  data-tc="false">TRUE</button>
+          <button class="tf2-btn t2-false" data-tq="tq1" data-tv="false" data-tc="false">FALSE</button>
+        </div>
+      </div>
+      <div class="tf2-row">
+        <div class="tf2-num" style="background:#9B59B6;">2</div>
+        <div class="tf2-q">Our skin helps us feel things we touch.</div>
+        <div class="tf2-btns">
+          <button class="tf2-btn t2-true"  data-tq="tq2" data-tv="true"  data-tc="true">TRUE</button>
+          <button class="tf2-btn t2-false" data-tq="tq2" data-tv="false" data-tc="true">FALSE</button>
+        </div>
+      </div>
+      <div class="tf2-row">
+        <div class="tf2-num" style="background:#FF9A3C;">3</div>
+        <div class="tf2-q">We have 5 senses in total.</div>
+        <div class="tf2-btns">
+          <button class="tf2-btn t2-true"  data-tq="tq3" data-tv="true"  data-tc="true">TRUE</button>
+          <button class="tf2-btn t2-false" data-tq="tq3" data-tv="false" data-tc="true">FALSE</button>
+        </div>
+      </div>
+      <div class="tf2-row">
+        <div class="tf2-num" style="background:#56C870;color:#2D3436;">4</div>
+        <div class="tf2-q">The tongue helps us hear music.</div>
+        <div class="tf2-btns">
+          <button class="tf2-btn t2-true"  data-tq="tq4" data-tv="true"  data-tc="false">TRUE</button>
+          <button class="tf2-btn t2-false" data-tq="tq4" data-tv="false" data-tc="false">FALSE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PART 5: SENSE EXPLORER ══ -->
+  <div class="section">
+    <div class="section-header" style="background:linear-gradient(135deg,#56C870,#1B7A34);">
+      <span class="emoji">🌍</span>
+      <div><h2>Part 5 — Sense Explorer!</h2><p>Try each one and tap when done!</p></div>
+    </div>
+    <div class="section-body">
+      <div class="explorer-grid">
+        <div class="explorer-card" style="background:#FFF3E0;" onclick="doExplore(this)">
+          <div class="explorer-top">
+            <span class="ex-emoji">👀</span>
+            <span class="ex-title">Sight</span>
+          </div>
+          <div class="ex-text">Close one eye and look around. Does the world look different? Try reading something with one eye!</div>
+          <div class="ex-check">✓</div>
+        </div>
+        <div class="explorer-card" style="background:#E3F2FD;" onclick="doExplore(this)">
+          <div class="explorer-top">
+            <span class="ex-emoji">👂</span>
+            <span class="ex-title">Hearing</span>
+          </div>
+          <div class="ex-text">Cover your ears tightly and listen. Then uncover them. Wow — what sounds can you hear now?</div>
+          <div class="ex-check">✓</div>
+        </div>
+        <div class="explorer-card" style="background:#FCE4EC;" onclick="doExplore(this)">
+          <div class="explorer-top">
+            <span class="ex-emoji">👃</span>
+            <span class="ex-title">Smell</span>
+          </div>
+          <div class="ex-text">Find something in your house with a nice smell — fruit, soap, or flowers. Take a big sniff!</div>
+          <div class="ex-check">✓</div>
+        </div>
+        <div class="explorer-card" style="background:#E8F5E9;" onclick="doExplore(this)">
+          <div class="explorer-top">
+            <span class="ex-emoji">👅</span>
+            <span class="ex-title">Taste</span>
+          </div>
+          <div class="ex-text">Ask a grown-up for something sweet AND something sour to taste. Which do you prefer?</div>
+          <div class="ex-check">✓</div>
+        </div>
+        <div class="explorer-card" style="background:#EDE7F6;" onclick="doExplore(this)">
+          <div class="explorer-top">
+            <span class="ex-emoji">🖐️</span>
+            <span class="ex-title">Touch</span>
+          </div>
+          <div class="ex-text">Touch 3 different things nearby. Find one smooth, one rough, and one soft. Which felt nicest?</div>
+          <div class="ex-check">✓</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FUN FACT -->
+  <div class="fun-fact">
+    <div class="icon">🤯</div>
+    <div>
+      <h3>Amazing Fun Fact!</h3>
+      <p>Your tongue has about <strong>10,000 taste buds</strong> on it — and they get replaced every 2 weeks! Also, your nose can smell over <strong>1 trillion different smells.</strong> Your body is incredible! 🌟</p>
+    </div>
+  </div>
+
+  <!-- SERIES COMPLETE BANNER -->
+  <div class="series-complete" id="series-complete">
+    <span class="series-badge">🏅</span>
+    <h2>🎉 You finished all 3 days! 🎉</h2>
+    <p>You've explored Major Organs, Bones & Muscles, and the Five Senses!<br>You are a true Body Explorer champion! 🧠❤️🦴👀</p>
+  </div>
+
+  <!-- FINAL SCORE -->
+  <div class="section" id="final-section" style="display:none;">
+    <div class="section-header" style="background:linear-gradient(135deg,#FFD166,#FF9A3C);">
+      <span class="emoji">🏆</span>
+      <div><h2>Your Result!</h2><p>Amazing work, Body Explorer!</p></div>
+    </div>
+    <div class="score-display" id="final-score-display"></div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+const TOTAL = 14; // 5 match1 + 5 match2 + 4 fill
+let score = 0, answered = 0;
+
+function updScore(pts, ans) {
+  score    += pts;
+  answered += ans;
+  document.getElementById('score-pill').textContent = `⭐ Score: ${score} / ${TOTAL}`;
+  const pct = Math.round(answered / TOTAL * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${answered} of ${TOTAL} answered`;
+  if (answered >= TOTAL) setTimeout(showFinal, 400);
+}
+
+// ── CONFETTI ──────────────────────────────────────────
+function confetti(big) {
+  const cols = ['#00B4A6','#56C870','#FFD166','#9B59B6','#FF9A3C','#3498DB','#FF6B9D'];
+  const count = big ? 60 : 36;
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.background = cols[Math.floor(Math.random() * cols.length)];
+    el.style.animationDelay = Math.random() * 0.8 + 's';
+    el.style.width = el.style.height = (Math.random() * 8 + 8) + 'px';
+    el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3200);
+  }
+}
+
+// ── PART 1: SENSE → ORGAN ─────────────────────────────
+let selectedOrgan = null;
+const p1done = {};
+
+document.querySelectorAll('.organ-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    if (chip.classList.contains('oc-used')) return;
+    document.querySelectorAll('.organ-chip').forEach(c => c.classList.remove('oc-selected'));
+    chip.classList.add('oc-selected');
+    selectedOrgan = chip.dataset.organ;
+  });
+});
+
+document.querySelectorAll('.organ-drop').forEach(drop => {
+  drop.addEventListener('click', () => {
+    if (!selectedOrgan) {
+      setFb('p1-feedback', '👇 First tap an organ from the bank below!', '#E65100'); return;
+    }
+    if (drop.classList.contains('od-matched')) return;
+
+    const correct = drop.dataset.correct;
+    if (selectedOrgan === correct) {
+      drop.textContent = '✓ ' + selectedOrgan;
+      drop.classList.add('od-matched');
+      document.querySelectorAll('.organ-chip').forEach(c => {
+        if (c.dataset.organ === selectedOrgan) c.classList.add('oc-used');
+      });
+      setFb('p1-feedback', '✅ That\'s right!', '#27AE60');
+      confetti();
+      if (!p1done[correct]) { p1done[correct] = true; updScore(1, 1); }
+    } else {
+      drop.classList.add('od-wrong');
+      setTimeout(() => drop.classList.remove('od-wrong'), 500);
+      setFb('p1-feedback', '❌ Not quite — try another!', '#E74C3C');
+    }
+    document.querySelectorAll('.organ-chip').forEach(c => c.classList.remove('oc-selected'));
+    selectedOrgan = null;
+  });
+});
+
+// ── PART 2: SENSE → EXAMPLE ───────────────────────────
+let selLeft2 = null;
+const m2done = {};
+
+document.querySelectorAll('.left2').forEach(el => {
+  el.addEventListener('click', () => {
+    if (el.classList.contains('matched2')) return;
+    document.querySelectorAll('.left2').forEach(e => e.classList.remove('selected2'));
+    document.querySelectorAll('.right2:not(.matched2)').forEach(e => e.classList.remove('selected2'));
+    el.classList.add('selected2');
+    selLeft2 = el;
+    setFb('match2-feedback', '👉 Now tap what matches it on the right!', '#6C3483');
+  });
+});
+
+document.querySelectorAll('.right2').forEach(el => {
+  el.addEventListener('click', () => {
+    if (!selLeft2) { setFb('match2-feedback', '👈 First tap a sense on the left!', '#E74C3C'); return; }
+    if (el.classList.contains('matched2')) return;
+
+    if (selLeft2.dataset.m2 === el.dataset.a2) {
+      selLeft2.classList.add('matched2');
+      el.classList.add('matched2');
+      selLeft2.style.opacity = '0.68';
+      setFb('match2-feedback', '✅ Brilliant match!', '#27AE60');
+      confetti();
+      const key = selLeft2.dataset.m2;
+      if (!m2done[key]) { m2done[key] = true; updScore(1, 1); }
+    } else {
+      [selLeft2, el].forEach(e => {
+        e.classList.add('wf2');
+        setTimeout(() => e.classList.remove('wf2'), 480);
+      });
+      setFb('match2-feedback', '❌ Not right — try again!', '#E74C3C');
+    }
+    document.querySelectorAll('.left2').forEach(e => e.classList.remove('selected2'));
+    document.querySelectorAll('.right2').forEach(e => e.classList.remove('selected2'));
+    selLeft2 = null;
+  });
+});
+
+// ── PART 3: FILL BLANK ────────────────────────────────
+let selWord2 = null;
+
+document.querySelectorAll('.word-chip2').forEach(chip => {
+  chip.addEventListener('click', () => {
+    if (chip.classList.contains('used2')) return;
+    document.querySelectorAll('.word-chip2').forEach(c => c.classList.remove('selected2c'));
+    chip.classList.add('selected2c');
+    selWord2 = chip.dataset.w2;
+  });
+});
+
+document.querySelectorAll('.blank2').forEach(slot => {
+  slot.addEventListener('click', () => {
+    if (!selWord2 || slot.dataset.filled2) return;
+    const correct = slot.dataset.c2;
+    slot.textContent = selWord2;
+    slot.dataset.filled2 = '1';
+    document.querySelectorAll('.word-chip2').forEach(c => {
+      if (c.dataset.w2 === selWord2) c.classList.add('used2');
+    });
+    if (selWord2 === correct) {
+      slot.classList.add('b2-correct');
+      confetti();
+      updScore(1, 1);
+    } else {
+      slot.classList.add('b2-wrong');
+      updScore(0, 1);
+      setTimeout(() => {
+        slot.textContent = correct;
+        slot.classList.remove('b2-wrong');
+        slot.classList.add('b2-correct');
+      }, 1500);
+    }
+    document.querySelectorAll('.word-chip2').forEach(c => c.classList.remove('selected2c'));
+    selWord2 = null;
+  });
+});
+
+// ── PART 4: TRUE / FALSE ─────────────────────────────
+document.querySelectorAll('.tf2-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const q = btn.dataset.tq;
+    const sibs = document.querySelectorAll(`.tf2-btn[data-tq="${q}"]`);
+    if ([...sibs].some(s => s.disabled)) return;
+    sibs.forEach(s => {
+      s.disabled = true;
+      if (s.dataset.tv === s.dataset.tc) s.classList.add('sa2');
+    });
+    const ok = btn.dataset.tv === btn.dataset.tc;
+    btn.classList.add(ok ? 'sc2' : 'sw2');
+    if (ok) confetti();
+    updScore(ok ? 1 : 0, 1);
+  });
+});
+
+// ── PART 5: EXPLORER ─────────────────────────────────
+function doExplore(el) {
+  el.classList.toggle('done2');
+}
+
+// ── HELPERS ───────────────────────────────────────────
+function setFb(id, msg, col) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.color = col;
+}
+
+// ── FINAL ─────────────────────────────────────────────
+function showFinal() {
+  const sec = document.getElementById('final-section');
+  sec.style.display = 'block';
+  sec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  const pct = score / TOTAL;
+  const stars = pct >= 0.9 ? '⭐⭐⭐' : pct >= 0.6 ? '⭐⭐' : '⭐';
+  const msg   = pct >= 0.9 ? "🎉 You're a Senses Superstar!"
+              : pct >= 0.6 ? "👍 Really well done! Keep it up!"
+              : "💪 Good effort! Review and try again!";
+
+  document.getElementById('final-score-display').innerHTML = `
+    <div class="result-stars">${stars}</div>
+    <div style="font-size:1.5rem;margin:10px 0;">${score} out of ${TOTAL} correct!</div>
+    <div style="font-size:1.05rem;font-weight:600;color:var(--mid);">${msg}</div>
+  `;
+
+  // show series complete banner
+  setTimeout(() => {
+    const banner = document.getElementById('series-complete');
+    banner.style.display = 'block';
+    banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    confetti(true);
+    setTimeout(() => confetti(true), 800);
+    setTimeout(() => confetti(true), 1600);
+  }, 800);
+}
+</script>
+</body>
+</html>
