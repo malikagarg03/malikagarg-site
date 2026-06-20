@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smallest First Pilot — Prompt Generator</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YZEYRQBYKC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YZEYRQBYKC');
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      padding: 0;
+    }
+
+    /* ── Header ── */
+    header {
+      background: #1e3a5f;
+      color: #fff;
+      padding: 18px 0 16px;
+    }
+
+    header .inner {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    header .tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #94a3b8;
+      margin-bottom: 3px;
+    }
+
+    header h1 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* ── Container ── */
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 24px 20px 60px;
+    }
+
+    /* ── Intro card ── */
+    .intro {
+      background: #1e3a5f;
+      color: #fff;
+      border-radius: 14px;
+      padding: 26px 22px;
+      margin-bottom: 16px;
+    }
+
+    .intro h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .intro p {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: #cbd5e1;
+      margin-bottom: 10px;
+    }
+
+    .intro p:last-child {
+      margin-bottom: 0;
+    }
+
+    .intro strong {
+      color: #fff;
+    }
+
+    .intro ul {
+      padding-left: 18px;
+      margin: 0;
+    }
+
+    .intro ul li {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      line-height: 1.7;
+      margin-bottom: 8px;
+    }
+
+    .intro ul li:last-child {
+      margin-bottom: 0;
+    }
+
+    .intro ul li strong {
+      color: #fff;
+    }
+
+    /* ── "I don't know" note ── */
+    .dont-know-note {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 10px;
+      padding: 11px 15px;
+      font-size: 0.855rem;
+      color: #0369a1;
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+
+    /* ── Role bar ── */
+    .role-bar {
+      margin-bottom: 18px;
+    }
+
+    .role-bar label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 6px;
+    }
+
+    .role-bar input {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: #0f172a;
+      background: #fff;
+    }
+
+    .role-bar input:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+
+    /* ── Form sections ── */
+    .form-section {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+
+    .form-section-title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #94a3b8;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 0.855rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #1e293b;
+    }
+
+    .label-optional {
+      font-weight: 400;
+      color: #94a3b8;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      color: #0f172a;
+      background: #fff;
+      transition: border-color 0.15s;
+      appearance: none;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 78px;
+    }
+
+    .field-hint {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-top: 5px;
+    }
+
+    /* ── Checkboxes ── */
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #1e293b;
+      cursor: pointer;
+      margin-bottom: 0;
+      line-height: 1.5;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      margin-top: 2px;
+      cursor: pointer;
+      accent-color: #1e3a5f;
+    }
+
+    .other-text-input {
+      display: none;
+      margin-top: 8px;
+      margin-left: 26px;
+    }
+
+    /* ── Generate button ── */
+    .btn-generate {
+      width: 100%;
+      padding: 14px;
+      background: #1e3a5f;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: background 0.15s;
+    }
+
+    .btn-generate:hover {
+      background: #162d4a;
+    }
+
+    /* ── Output section ── */
+    .output-section {
+      display: none;
+      margin-top: 24px;
+    }
+
+    .output-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #64748b;
+      margin-bottom: 10px;
+    }
+
+    .output-box {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 18px;
+      font-size: 0.875rem;
+      line-height: 1.75;
+      color: #1e293b;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .next-steps {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin-top: 14px;
+    }
+
+    .next-steps-title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #166534;
+      margin-bottom: 10px;
+    }
+
+    .next-steps ul {
+      padding-left: 18px;
+      margin: 0;
+    }
+
+    .next-steps ul li {
+      font-size: 0.875rem;
+      color: #14532d;
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+
+    .next-steps ul li:last-child {
+      margin-bottom: 0;
+    }
+
+    .btn-recopy {
+      margin-top: 14px;
+      padding: 9px 18px;
+      background: #fff;
+      border: 1px solid #86efac;
+      border-radius: 8px;
+      font-size: 0.855rem;
+      font-weight: 600;
+      color: #166534;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-recopy:hover {
+      background: #dcfce7;
+    }
+
+    .btn-recopy.copied {
+      background: #dcfce7;
+      color: #14532d;
+    }
+
+    /* ── AI open buttons ── */
+    .open-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #94a3b8;
+      margin-top: 18px;
+      margin-bottom: 10px;
+    }
+
+    .ai-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .ai-btn {
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-size: 0.855rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: opacity 0.15s;
+      display: inline-block;
+    }
+
+    .ai-btn:hover {
+      opacity: 0.85;
+    }
+
+    .ai-chatgpt    { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
+    .ai-claude     { background: #ffedd5; color: #7c2d12; border-color: #fdba74; }
+    .ai-gemini     { background: #dbeafe; color: #1e3a8a; border-color: #93c5fd; }
+    .ai-perplexity { background: #ede9fe; color: #4c1d95; border-color: #c4b5fd; }
+    .ai-share      { background: #f1f5f9; color: #0f172a; border-color: #cbd5e1; }
+
+    @media (max-width: 500px) {
+      header h1 {
+        font-size: 1.05rem;
+      }
+
+      .ai-buttons {
+        flex-direction: column;
+      }
+
+      .ai-btn {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="inner">
+      <div class="tag">Prompt Library</div>
+      <h1>Smallest First Pilot Prompt Generator</h1>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <div class="intro">
+      <h2>Start Smaller Than You Think</h2>
+      <ul>
+        <li>You've decided this is worth trying. Good — now make it small enough to actually attempt.</li>
+        <li>In your first posting you won't have a tech team or a real budget. That's fine. The smallest version of a good idea can still work.</li>
+        <li>Fill in what you know below. This will build a structured prompt to help you design a small, fast pilot.</li>
+        <li><strong>You don't need complete answers.</strong> Write "I don't know" wherever you're unsure.</li>
+        <li>Takes about 90 seconds.</li>
+        <li>Whatever you type stays with you. There is no server behind this tool — your inputs never leave your device and are not stored, logged, or seen by anyone else. <strong>Feel free to be honest about what you know.</strong></li>
+      </ul>
+    </div>
+
+    <div class="dont-know-note">
+      <strong>You don't need complete answers.</strong> Write <em>"I don't know"</em> wherever you're unsure — that itself is useful context for the AI.
+    </div>
+
+    <!-- Role -->
+    <div class="role-bar">
+      <label for="role">Your role / posting</label>
+      <input type="text" id="role" placeholder="e.g. ASP, DSP, Circle Inspector, IPS Officer Trainee">
+    </div>
+
+    <!-- Section 1: The Pilot -->
+    <div class="form-section">
+      <div class="form-section-title">The Pilot</div>
+
+      <div class="form-group">
+        <label for="idea">The idea, in your own words</label>
+        <textarea id="idea" placeholder="What do you want to try?"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="station">Which single station or unit could you realistically try this in first?</label>
+        <input type="text" id="station" placeholder="Pick one — not the district, one station">
+      </div>
+    </div>
+
+    <!-- Section 2: Your Constraints -->
+    <div class="form-section">
+      <div class="form-section-title">Your Constraints</div>
+
+      <div class="form-group">
+        <label>What do you NOT have? <span class="label-optional">(select all that apply)</span></label>
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" class="constraint-cb" value="A dedicated tech team">
+            A dedicated tech team
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="constraint-cb" value="Budget">
+            Budget
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="constraint-cb" value="Authority to mandate use">
+            Authority to mandate use
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="constraint-cb" value="Much spare time">
+            Much spare time
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="constraint-cb" value="Certainty I'll stay in this post long enough to see it through">
+            Certainty I'll stay in this post long enough to see it through
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" class="constraint-cb" id="cb-other" value="Other" onchange="toggleOtherInput(this)">
+            Other
+          </label>
+          <div class="other-text-input" id="other-text-wrap">
+            <input type="text" id="other-text" placeholder="Describe the constraint">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Quick Check -->
+    <div class="form-section">
+      <div class="form-section-title">Quick Check</div>
+
+      <div class="form-group">
+        <label for="measure">What could you realistically measure in two weeks? <span class="label-optional">(optional)</span></label>
+        <textarea id="measure" placeholder="Doesn't have to be perfect. A rough signal is enough."></textarea>
+      </div>
+    </div>
+
+    <button class="btn-generate" onclick="generatePrompt()">Generate Prompt</button>
+
+    <!-- Output -->
+    <div class="output-section" id="output-section">
+
+      <div class="output-label">Your Prompt</div>
+      <div class="output-box" id="output-box"></div>
+
+      <div class="next-steps">
+        <div class="next-steps-title">What to do now</div>
+        <ul>
+          <li id="copy-status">✓ Your prompt has been <strong>automatically copied</strong> to your clipboard.</li>
+          <li>If it did not copy, use the button below to copy it manually.</li>
+          <li>Open any AI tool using the buttons below — ChatGPT, Claude, Gemini, or Perplexity.</li>
+          <li>Once it opens, <strong>paste the prompt</strong> — on mobile: long press → Paste. On desktop: Ctrl+V (or Cmd+V on Mac).</li>
+          <li>Read the response and decide what to try first.</li>
+        </ul>
+
+        <button class="btn-recopy" id="btn-recopy" onclick="recopyPrompt()">Copy Prompt Again</button>
+
+        <div class="open-label" style="margin-top: 18px;">Open in →</div>
+        <div class="ai-buttons">
+          <a class="ai-btn ai-chatgpt"    href="https://chatgpt.com"           target="_blank" rel="noopener">ChatGPT</a>
+          <a class="ai-btn ai-claude"     href="https://claude.ai"             target="_blank" rel="noopener">Claude</a>
+          <a class="ai-btn ai-gemini"     href="https://gemini.google.com"     target="_blank" rel="noopener">Gemini</a>
+          <a class="ai-btn ai-perplexity" href="https://www.perplexity.ai"     target="_blank" rel="noopener">Perplexity</a>
+          <button class="ai-btn ai-share" id="btn-share" style="display:none" onclick="sharePrompt()">Share via apps…</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    function val(id) {
+      return document.getElementById(id).value.trim() || "I don't know";
+    }
+
+    function toggleOtherInput(cb) {
+      document.getElementById('other-text-wrap').style.display = cb.checked ? 'block' : 'none';
+    }
+
+    let generatedPrompt = '';
+
+    function generatePrompt() {
+      const role    = document.getElementById('role').value.trim() || 'a police officer';
+      const idea    = val('idea');
+      const station = val('station');
+      const measure = document.getElementById('measure').value.trim() || 'Not specified';
+
+      const checkedBoxes = Array.from(document.querySelectorAll('.constraint-cb:checked')).map(cb => cb.value);
+      const otherText = document.getElementById('other-text').value.trim();
+      const constraintList = checkedBoxes.map(v => {
+        if (v === 'Other' && otherText) return `Other: ${otherText}`;
+        return v;
+      });
+      const constraints = constraintList.length > 0 ? constraintList.join('; ') : 'None specified';
+
+      generatedPrompt =
+`You are acting as a practical collaborator. This person has already decided their idea is worth trying — your job is not to evaluate whether it is a good idea. Your job is to help them design the smallest possible version they can realistically pilot in one station, given the constraints they have stated.
+
+I am ${role} and I want to pilot the following idea:
+
+--- THE IDEA ---
+
+${idea}
+
+Target location for the pilot: ${station}
+What I do not currently have: ${constraints}
+What I could realistically measure within two weeks: ${measure}
+
+--- PLEASE HELP ME WITH THE FOLLOWING ---
+
+Work through each section in order:
+
+1. Smallest possible version
+   What is the minimum version of this idea that could be tried in one station, within the constraints I have stated? Be specific about what to include. Name concretely what can be done without a tech team, budget, or authority to mandate participation.
+
+2. What to deliberately leave out
+   What aspects that might seem essential should be excluded from this first version? Why?
+
+3. A two-week signal
+   Suggest a simple, realistic way to tell — within two weeks — whether this is worth continuing. It does not need to be a rigorous measurement. A rough signal that one person could track informally is enough.
+
+4. One realistic next step if it works
+   If the pilot goes well and people want more of it, what is one realistic way this could earn its way to a second station — without being pushed by authority or mandate? Think about how demand would pull it forward naturally.
+
+Keep every suggestion grounded in the constraints I have stated. Do not suggest anything that requires budget, a dedicated tech person, or sustained time beyond what a single officer in a busy posting could manage.`;
+
+      document.getElementById('output-box').textContent = generatedPrompt;
+
+      const outputSection = document.getElementById('output-section');
+      outputSection.style.display = 'block';
+
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'generate_prompt', { event_category: 'smallest_first_pilot' });
+      }
+
+      navigator.clipboard.writeText(generatedPrompt).catch(() => {
+        document.getElementById('copy-status').textContent =
+          '⚠ Could not auto-copy. Use the "Copy Prompt Again" button below.';
+      });
+
+      if (navigator.share) {
+        document.getElementById('btn-share').style.display = 'inline-block';
+      }
+
+      outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function recopyPrompt() {
+      if (!generatedPrompt) return;
+      navigator.clipboard.writeText(generatedPrompt).then(() => {
+        const btn = document.getElementById('btn-recopy');
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy Prompt Again';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    function sharePrompt() {
+      if (navigator.share && generatedPrompt) {
+        navigator.share({ text: generatedPrompt }).catch(() => {});
+      }
+    }
+  </script>
+
+</body>
+</html>
