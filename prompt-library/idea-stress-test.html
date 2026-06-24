@@ -437,6 +437,11 @@
         <label for="who-helps">Who does this actually help?</label>
         <input type="text" id="who-helps" placeholder="Be specific — not 'the department,' but the actual person">
       </div>
+
+      <div class="form-group">
+        <label for="legal-basis">Does this require any legal authority or procedural basis to act? <span class="label-optional">(optional)</span></label>
+        <textarea id="legal-basis" placeholder="e.g. Can an officer actually do something when this system alerts them? Is there a legal or procedural basis for the action? Write 'I don't know' if unsure."></textarea>
+      </div>
     </div>
 
     <!-- Section 2: Context -->
@@ -444,8 +449,8 @@
       <div class="form-section-title">Context</div>
 
       <div class="form-group">
-        <label for="what-exists">What exists today?</label>
-        <textarea id="what-exists" placeholder="Formal systems, informal workarounds, anything people already do to deal with this. Write 'nothing that I know of' if that's true."></textarea>
+        <label for="what-exists">What already exists for this?</label>
+        <textarea id="what-exists" placeholder="Formal systems, informal workarounds, registers, WhatsApp groups — anything people already do to handle this problem. If this system would sit alongside something that already exists rather than replace it, note that here."></textarea>
       </div>
 
       <div class="form-group">
@@ -518,10 +523,15 @@
       const role           = document.getElementById('role').value.trim() || 'a police officer';
       const idea           = val('idea');
       const whoHelps       = val('who-helps');
+      const legalBasis     = document.getElementById('legal-basis').value.trim();
       const whatExists     = val('what-exists');
       const confidence     = document.getElementById('confidence').value;
       const confidenceNote = document.getElementById('confidence-note').value.trim();
       const worry          = document.getElementById('worry').value.trim();
+
+      const legalBasisLine = legalBasis
+        ? legalBasis
+        : '(Not stated — please flag this as a gap in your response)';
 
       const confidenceLine = confidenceNote
         ? `${confidence} — ${confidenceNote}`
@@ -530,31 +540,51 @@
       const worryLine = worry || 'Not stated';
 
       generatedPrompt =
-`You are acting as a rigorous, honest critic of a new initiative. Your role is not to be encouraging — it is to find the weak points clearly and directly, so this person can address them before they commit time, goodwill, or budget.
+`I am ${role}. I have an idea I want to think through carefully before I commit to it.
 
-I am ${role} and I am considering the following idea:
+Here is the idea: ${idea}
 
---- THE IDEA ---
+Who I think it helps: ${whoHelps}
 
-${idea}
+Legal/procedural basis to act on what this system surfaces: ${legalBasisLine}
 
-Who it is meant to help (as I understand it): ${whoHelps}
-What already exists today to address this need: ${whatExists}
-How confident I am that people will actually use it: ${confidenceLine}
+What already exists for this (systems, registers, informal workarounds): ${whatExists}
+
+My confidence that people will actually use it: ${confidenceLine}
+
 My biggest worry about it: ${worryLine}
 
---- PLEASE EVALUATE AGAINST THESE SIX CHECKS ---
+Please evaluate this idea honestly and directly — not encouragingly. This is for an Indian Police Service officer, likely in a district posting. Push back where you see problems. Do not give generic startup or product advice. Evaluate through the lens of how Indian police stations actually work.
 
-Go through each check in order. For each one, state clearly whether you see a strength, a gap, or a red flag. Do not combine checks or skip any. Be direct, not diplomatic.
+Structure your response around these eight checks:
 
-1. Problem — Whose pain is this, really? Would anyone miss this if it disappeared tomorrow?
-2. Burden — Does this save time or create new work, on net? For whom specifically?
-3. Users — Has anyone who would actually use this shaped the design, or were they only informed about it after the design was already set?
-4. Adoption — Would people use this because it is genuinely useful, or only because someone in authority is currently watching?
-5. Sustainability — If the person who built this is transferred tomorrow, does it keep running? Who owns it then?
-6. Measurement — What would tell you, after six months, whether this actually worked? Is that measurable with the resources likely available?
+1. WHOSE PROBLEM IS THIS?
+Is the problem felt by the person who will actually use the system day to day — the IO, the constable, the SHO — or mainly by a senior officer who wants visibility? If only a senior benefits, the system will likely die when that officer is transferred. Be specific about who gains and who carries the burden.
 
-After the six checks, end with a short summary: what is the single strongest point of this idea, what is the single weakest, and what is the one thing to resolve before going further.`;
+2. DOES IT HELP OR ADD WORK — AND DOES IT DUPLICATE?
+Does this make an existing task easier, or does it create a new one? Does it force officers to maintain two parallel records — one in this system, and one in the existing station register or CCTNS? A new workflow that sits alongside an old one rather than replacing it doubles the work and usually dies. Flag this clearly if you see it.
+
+3. LEGAL AND PROCEDURAL BASIS
+Based on the information given — does this system generate alerts, flags, or actions that officers would need a legal basis to act on? If the legal/procedural basis field is blank or unclear, flag this as a gap that must be answered before building. Quoting a specific example: facial recognition that alerts officers to a criminal's location doesn't mean they can stop that person — there has to be a lawful basis for intervention.
+
+4. WERE USERS ACTUALLY CONSULTED?
+Does this seem designed around how officers and constables actually work in a thana — or around how someone imagines they work? What assumptions might be wrong about field realities: shift patterns, connectivity, device availability, competing priorities, hierarchy?
+
+5. IS IT EASY TO USE?
+Is access likely to be a problem — does this require a specific device, a control room, a login that times out? Is it simple enough that a tired, distracted constable at the end of a long shift would actually use it? Every extra step is a small tax. Too many taxes and the system gets abandoned.
+
+6. ADOPTION — WHAT WILL ACTUALLY DRIVE IT?
+Even if well designed, adoption doesn't happen on its own. What would realistically drive people to use this — genuine utility, or instruction from above? If a senior officer's transfer would stop usage, that's not adoption, that's compliance. What would need to be true for officers to use this without being told to?
+
+7. PROVING THE OUTCOME
+How would you know this is actually working — not just that it launched, but that the real outcome happened? Identify the difference between the launch metric (system is live, data is entered, alerts are sent) and the actual outcome (case solved, vehicle recovered, problem reduced). If you can't close that loop and document it, you can't prove the system did anything.
+
+8. THINKING AHEAD — COULD THIS OUTLAST YOU?
+You probably cannot institutionalise this right now, and that's completely normal. But ask: is this being built in a way that could be institutionalised later — with a proper budget, a vendor contract, and an owner who isn't you personally? Or does it depend on a single cooperative developer, a personal relationship, or your continued presence? Flag what would need to be in place eventually, without expecting it on day one.
+
+End your response with:
+THE WEAKEST PART OF THIS IDEA RIGHT NOW IS:
+[one sentence, direct, no hedging]`;
 
       document.getElementById('output-box').textContent = generatedPrompt;
 
