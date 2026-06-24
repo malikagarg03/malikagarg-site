@@ -508,7 +508,12 @@
 
       <div class="form-group">
         <label for="measure">What could you realistically measure in two weeks? <span class="label-optional">(optional)</span></label>
-        <textarea id="measure" placeholder="Doesn't have to be perfect. A rough signal is enough."></textarea>
+        <textarea id="measure" placeholder="Don't aim for a dashboard. One number, one behaviour, one thing you can check without a new system. Write 'I don't know' and the AI will help you figure it out."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="pass-fail">What would tell you, after two weeks, to continue — or stop? <span class="label-optional">(optional)</span></label>
+        <textarea id="pass-fail" placeholder="One simple signal. Not a dashboard — just: if X happens, it's working. If X doesn't happen, it isn't. Write 'I don't know' if unsure."></textarea>
       </div>
     </div>
 
@@ -558,10 +563,11 @@
     let generatedPrompt = '';
 
     function generatePrompt() {
-      const role    = document.getElementById('role').value.trim() || 'a police officer';
-      const idea    = val('idea');
-      const station = val('station');
-      const measure = document.getElementById('measure').value.trim() || 'Not specified';
+      const role     = document.getElementById('role').value.trim() || 'a police officer';
+      const idea     = val('idea');
+      const station  = val('station');
+      const measure  = document.getElementById('measure').value.trim()   || 'Not specified — help me figure this out';
+      const passFail = document.getElementById('pass-fail').value.trim() || 'Not defined — help me define one simple signal';
 
       const checkedBoxes = Array.from(document.querySelectorAll('.constraint-cb:checked')).map(cb => cb.value);
       const otherText = document.getElementById('other-text').value.trim();
@@ -572,35 +578,41 @@
       const constraints = constraintList.length > 0 ? constraintList.join('; ') : 'None specified';
 
       generatedPrompt =
-`You are acting as a practical collaborator. This person has already decided their idea is worth trying — your job is not to evaluate whether it is a good idea. Your job is to help them design the smallest possible version they can realistically pilot in one station, given the constraints they have stated.
+`I am ${role}. I have an idea I want to pilot as small and cheaply as possible before deciding whether to expand it.
 
-I am ${role} and I want to pilot the following idea:
+The idea: ${idea}
 
---- THE IDEA ---
+Station or unit I want to try this in first: ${station}
 
-${idea}
+What I do NOT have: ${constraints}
 
-Target location for the pilot: ${station}
-What I do not currently have: ${constraints}
-What I could realistically measure within two weeks: ${measure}
+What I could realistically measure in two weeks: ${measure}
 
---- PLEASE HELP ME WITH THE FOLLOWING ---
+What would tell me to continue or stop after two weeks: ${passFail}
 
-Work through each section in order:
+You are an operationally experienced Additional Superintendent of Police (Admin) who specializes in improving station workflows with zero budget and zero additional personnel. You know exactly how a thana actually works — shift patterns, register culture, constable workload, connectivity gaps, and the reality that any new task added to a constable's day will be resisted unless it removes a bigger task.
 
-1. Smallest possible version
-   What is the minimum version of this idea that could be tried in one station, within the constraints I have stated? Be specific about what to include. Name concretely what can be done without a tech team, budget, or authority to mandate participation.
+Your job is NOT to judge whether this idea is good. Assume it is worth trying. Your job is strictly to help me design the smallest, cheapest, fastest version of this idea that I could run in one station within the next two weeks, given my constraints.
 
-2. What to deliberately leave out
-   What aspects that might seem essential should be excluded from this first version? Why?
+Structure your response as follows:
 
-3. A two-week signal
-   Suggest a simple, realistic way to tell — within two weeks — whether this is worth continuing. It does not need to be a rigorous measurement. A rough signal that one person could track informally is enough.
+1. THE SMALLEST VERSION
+What is the minimum viable version of this idea? Strip out everything that isn't essential for a two-week test. What can be done later, after it works? Prioritize solutions that use tools the staff already uses daily — a physical stamp on an existing register, a structured WhatsApp group, a tally sheet, a column added to a duty register — rather than new software, new logins, or new devices. If software already exists and is already in use, it can be included. But default to what's already there.
 
-4. One realistic next step if it works
-   If the pilot goes well and people want more of it, what is one realistic way this could earn its way to a second station — without being pushed by authority or mandate? Think about how demand would pull it forward naturally.
+2. WHAT TO DELIBERATELY LEAVE OUT
+What features or functions should explicitly NOT be in this first version? Be specific. Identify anything that would require new data entry from field staff while on duty or on the road — every click and every typed field is a small tax, and enough taxes kill adoption before it starts.
 
-Keep every suggestion grounded in the constraints I have stated. Do not suggest anything that requires budget, a dedicated tech person, or sustained time beyond what a single officer in a busy posting could manage.`;
+3. HOW TO TELL IF IT'S WORKING
+Based on what the officer said they can measure, suggest the simplest possible way to track whether this is working — something that takes under two minutes a day to check, requires no special tool, and gives a clear yes/no signal by the end of two weeks.
+If the officer hasn't defined a pass/fail signal, define one for them now: "After two weeks, if [X], continue. If not, stop or rethink."
+
+4. THE REALISTIC NEXT STEP IF IT WORKS
+If the two-week pilot goes well, what is one concrete next step — not a full district rollout, just: how does this earn its way to a second station? Describe this in terms of demand, not authority. The second station should want it because they heard it worked, not because they were told to adopt it.
+
+5. THE ONE THING MOST LIKELY TO KILL THIS PILOT
+Name the single biggest practical risk — not a general concern, but the specific thing most likely to go wrong in this station, with these constraints, in these two weeks. What should the officer watch for and address before it becomes a reason the pilot fails?
+
+Keep your response practical and specific. No general advice about innovation or change management. Think like someone who has actually run a police station.`;
 
       document.getElementById('output-box').textContent = generatedPrompt;
 
