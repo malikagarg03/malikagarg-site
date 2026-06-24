@@ -454,17 +454,8 @@
       </div>
 
       <div class="form-group">
-        <label for="confidence">How confident are you that people will actually use this?</label>
-        <select id="confidence">
-          <option value="Low">Low — I'm not sure people will use it</option>
-          <option value="Medium" selected>Medium — I think they will, but I'm not certain</option>
-          <option value="High">High — I'm confident they will</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="confidence-note">Any note on that? <span class="label-optional">(optional)</span></label>
-        <input type="text" id="confidence-note" placeholder="e.g. a few people said they'd use it, but I've heard that before">
+        <label for="why-use">Why will people actually use this? <span class="label-optional">(optional)</span></label>
+        <textarea id="why-use" placeholder="Be specific — not 'because it's useful' but: what exactly are they doing today that this removes or makes easier? If you can't answer this concretely, write 'I don't know' — that's important information."></textarea>
       </div>
     </div>
 
@@ -523,19 +514,18 @@
       const role           = document.getElementById('role').value.trim() || 'a police officer';
       const idea           = val('idea');
       const whoHelps       = val('who-helps');
-      const legalBasis     = document.getElementById('legal-basis').value.trim();
-      const whatExists     = val('what-exists');
-      const confidence     = document.getElementById('confidence').value;
-      const confidenceNote = document.getElementById('confidence-note').value.trim();
-      const worry          = document.getElementById('worry').value.trim();
+      const legalBasis = document.getElementById('legal-basis').value.trim();
+      const whatExists = val('what-exists');
+      const whyUse     = document.getElementById('why-use').value.trim();
+      const worry      = document.getElementById('worry').value.trim();
 
       const legalBasisLine = legalBasis
         ? legalBasis
         : '(Not stated — please flag this as a gap in your response)';
 
-      const confidenceLine = confidenceNote
-        ? `${confidence} — ${confidenceNote}`
-        : confidence;
+      const whyUseLine = whyUse
+        ? whyUse
+        : '(Not stated — push back hard on this in your response, as it is the most common reason initiatives fail)';
 
       const worryLine = worry || 'Not stated';
 
@@ -550,7 +540,7 @@ Legal/procedural basis to act on what this system surfaces: ${legalBasisLine}
 
 What already exists for this (systems, registers, informal workarounds): ${whatExists}
 
-My confidence that people will actually use it: ${confidenceLine}
+Why I think people will actually use this: ${whyUseLine}
 
 My biggest worry about it: ${worryLine}
 
