@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI as Your Thinking Partner — MCTP-IV</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YZEYRQBYKC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-YZEYRQBYKC');
+</script>
+<style>
+  :root{
+    --gold:#9c6b1f;
+    --gold-light:#f6ede0;
+    --dark:#1f2937;
+    --grey:#6b7280;
+    --border:#e2ddd3;
+    --bg:#faf8f5;
+    --ok:#2f7a4a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--dark);
+    line-height:1.55;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:32px 20px 80px;}
+  header{text-align:center;margin-bottom:36px;}
+  header .kicker{color:var(--gold);font-weight:700;letter-spacing:.08em;font-size:13px;text-transform:uppercase;}
+  header h1{font-size:28px;margin:6px 0 4px;font-weight:700;}
+  header p{color:var(--grey);margin:0;font-size:15px;}
+
+  section{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:24px 24px 26px;
+    margin-bottom:20px;
+  }
+  section h2{
+    font-size:18px;
+    margin:0 0 4px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  section .step-num{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:24px;height:24px;
+    border-radius:50%;
+    background:var(--gold);
+    color:#fff;
+    font-size:13px;
+    font-weight:700;
+    flex-shrink:0;
+  }
+  section .sub{color:var(--grey);font-size:14px;margin:0 0 18px;}
+
+  label{display:block;font-size:14px;font-weight:600;margin:14px 0 6px;}
+  label:first-of-type{margin-top:0;}
+  input[type=text], textarea{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:10px 12px;
+    font-size:15px;
+    font-family:inherit;
+    background:#fffefc;
+    resize:vertical;
+  }
+  textarea{min-height:56px;}
+  input[type=text]:focus, textarea:focus{outline:2px solid var(--gold-light);border-color:var(--gold);}
+
+  .confidence{display:flex;gap:8px;margin-top:6px;}
+  .confidence button{
+    flex:1;
+    padding:10px 0;
+    border-radius:8px;
+    border:1px solid var(--border);
+    background:#fff;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    color:var(--dark);
+  }
+  .confidence button.active{background:var(--gold);border-color:var(--gold);color:#fff;}
+
+  .save-row{margin-top:18px;display:flex;align-items:center;gap:12px;}
+  button.primary{
+    background:var(--gold);
+    color:#fff;
+    border:none;
+    padding:10px 18px;
+    border-radius:8px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  button.primary:hover{opacity:.92;}
+  .saved-flag{font-size:13px;color:var(--ok);font-weight:600;opacity:0;transition:opacity .2s;}
+  .saved-flag.show{opacity:1;}
+
+  button.clearbtn{
+    background:none;
+    border:none;
+    color:var(--grey);
+    font-size:13px;
+    text-decoration:underline;
+    cursor:pointer;
+    padding:0;
+    margin-left:auto;
+  }
+  button.clearbtn:hover{color:var(--dark);}
+
+  .locked{
+    text-align:center;
+    padding:18px 10px;
+    border:1.5px dashed var(--border);
+    border-radius:10px;
+    color:var(--grey);
+    font-size:14px;
+  }
+  .locked .lockrow{
+    display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap;
+  }
+  .locked input[type=text]{
+    max-width:180px;
+    text-align:center;
+    letter-spacing:.05em;
+  }
+  .locked button{
+    background:var(--dark);
+    color:#fff;
+    border:none;
+    padding:10px 16px;
+    border-radius:8px;
+    font-weight:600;
+    cursor:pointer;
+    font-size:14px;
+  }
+  .error{color:#b23b3b;font-size:13px;margin-top:8px;display:none;}
+
+  .promptbox{display:none;}
+  .promptbox.show{display:block;}
+  .promptbox pre{
+    white-space:pre-wrap;
+    word-wrap:break-word;
+    background:var(--gold-light);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:14px 16px;
+    font-family:inherit;
+    font-size:14.5px;
+    margin:10px 0 12px;
+  }
+  .copybtn{
+    background:#fff;
+    border:1px solid var(--gold);
+    color:var(--gold);
+    padding:8px 14px;
+    border-radius:8px;
+    font-weight:600;
+    font-size:13.5px;
+    cursor:pointer;
+  }
+  .copybtn.copied{background:var(--ok);border-color:var(--ok);color:#fff;}
+
+  .wrapup-label{
+    font-size:13px;
+    font-weight:600;
+    color:var(--dark);
+    margin:16px 0 4px;
+    padding-top:12px;
+    border-top:1px dashed var(--border);
+  }
+
+  .stagegroup{margin-bottom:26px;}
+  .stagegroup:last-child{margin-bottom:0;}
+  .stagegroup h3{font-size:15.5px;margin:0 0 3px;}
+  .stagegroup .stage-sub{font-size:13.5px;color:var(--grey);margin:0 0 10px;}
+
+  .private-note{
+    background:#f4f6f4;
+    border:1px solid #dbe4db;
+    border-radius:8px;
+    padding:10px 14px;
+    font-size:13.5px;
+    color:#3d5a42;
+    margin-bottom:16px;
+  }
+
+  .scenario{
+    background:var(--gold-light);
+    border:1px solid var(--gold);
+    border-radius:12px;
+    padding:20px 22px;
+    margin-bottom:20px;
+  }
+  .scenario .tag{
+    color:var(--gold);
+    font-weight:700;
+    letter-spacing:.06em;
+    font-size:12px;
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .scenario p{margin:0 0 10px;font-size:15.5px;line-height:1.6;color:var(--dark);}
+  .scenario p:last-child{margin-bottom:0;}
+  .scenario .prompt-line{font-weight:700;}
+  .scenario .scenario-note{
+    font-size:13.5px;
+    font-weight:400;
+    color:#6b5a3f;
+    border-top:1px solid #e4d3ae;
+    padding-top:12px;
+    margin-top:14px;
+    line-height:1.55;
+  }
+
+  .optionrow{display:flex;flex-direction:column;gap:8px;margin-top:6px;}
+  .optionrow label.radio{
+    display:flex;align-items:center;gap:8px;
+    font-weight:500;font-size:14.5px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:9px 12px;
+    cursor:pointer;
+  }
+  .optionrow input[type=radio]{width:16px;height:16px;}
+
+  .stage-content{display:none;}
+  .stage-content.show{display:block;}
+
+  button.genbtn{
+    background:var(--dark);
+    color:#fff;
+    border:none;
+    padding:9px 16px;
+    border-radius:8px;
+    font-weight:600;
+    font-size:14px;
+    cursor:pointer;
+    margin-bottom:12px;
+  }
+  button.genbtn:hover{opacity:.9;}
+
+  footer{text-align:center;color:var(--grey);font-size:12.5px;margin-top:30px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker">MCTP-IV</div>
+    <h1>AI as Your Thinking Partner</h1>
+  </header>
+
+  <div class="scenario">
+    <div class="tag">The scenario</div>
+    <p>You have been given ₹5 crore under the Ministry of Home Affairs' Modernisation of Police Forces (MoPF) scheme. You have been asked to propose one project that would meaningfully improve policing.</p>
+    <p class="prompt-line">What would you propose?</p>
+    <p class="scenario-note">Begin by setting out your proposal below. The prompts to think it through with AI will be revealed one at a time as the session proceeds. Nothing you enter here is submitted anywhere — it stays on this computer.</p>
+  </div>
+
+  <!-- PART A -->
+  <section id="partA">
+    <h2><span class="step-num">1</span>Your proposal</h2>
+    <p class="sub">Set out your proposal below, without using AI. A first, considered response is enough — you will have the chance to develop it further shortly.</p>
+
+    <label for="project">Project — what would you propose?</label>
+    <textarea id="project" placeholder="e.g. A dedicated cybercrime investigation cell in every district"></textarea>
+
+    <label for="problem">What problem does it solve, and for whom?</label>
+    <textarea id="problem"></textarea>
+
+    <label for="mechanism">How does it actually solve that problem?</label>
+    <textarea id="mechanism" placeholder="Not why it's needed — the mechanism. What changes, and how does that change lead to the outcome?"></textarea>
+
+    <label>How confident are you in this proposal?</label>
+    <div class="confidence" id="confBefore">
+      <button data-v="1">1</button>
+      <button data-v="2">2</button>
+      <button data-v="3">3</button>
+      <button data-v="4">4</button>
+      <button data-v="5">5</button>
+    </div>
+
+    <div class="save-row">
+      <button class="primary" onclick="saveA()">Save my answers</button>
+      <span class="saved-flag" id="flagA">Saved — file downloaded</span>
+      <button class="clearbtn" onclick="clearFormA()">Clear form</button>
+    </div>
+    <p class="sub" style="margin:8px 0 0;">This also downloads a small text file of your proposal — keep it, in case this browser is cleared.</p>
+  </section>
+
+  <!-- PART B: PROMPTS -->
+  <section id="partB">
+    <h2><span class="step-num">2</span>Think it through with AI</h2>
+    <p class="sub">Five moves, one continuing conversation. Open whichever AI tool you use and keep the same conversation running through all five stages — don't start over each time. Your facilitator will give you a passcode when it's time for the next one.</p>
+
+    <div class="stagegroup">
+      <div class="locked" data-stage="frame">
+        <span>Stage locked — enter passcode to reveal</span>
+        <div class="lockrow">
+          <input type="text" placeholder="Passcode">
+          <button onclick="unlock(this,'frame')">Unlock</button>
+        </div>
+        <div class="error">Incorrect passcode.</div>
+      </div>
+      <div class="stage-content" id="content-frame">
+        <h3>A. Understand the problem</h3>
+        <p class="stage-sub">Before asking if your project is good — what problem are you actually solving? Most proposals skip this step.</p>
+        <button class="genbtn" onclick="generatePrompt('frame')">Generate prompt</button>
+        <div class="promptbox" id="box-frame">
+          <pre id="text-frame"></pre>
+          <button class="copybtn" onclick="copyPrompt('frame')">Copy prompt</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="stagegroup">
+      <div class="locked" data-stage="expand">
+        <span>Stage locked — enter passcode to reveal</span>
+        <div class="lockrow">
+          <input type="text" placeholder="Passcode">
+          <button onclick="unlock(this,'expand')">Unlock</button>
+        </div>
+        <div class="error">Incorrect passcode.</div>
+      </div>
+      <div class="stage-content" id="content-expand">
+        <h3>B. Broaden the possibilities</h3>
+        <p class="stage-sub">Have you jumped too quickly to one solution? There's usually more than one way to solve the same problem.</p>
+        <button class="genbtn" onclick="generatePrompt('expand')">Generate prompt</button>
+        <div class="promptbox" id="box-expand">
+          <pre id="text-expand"></pre>
+          <button class="copybtn" onclick="copyPrompt('expand')">Copy prompt</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="stagegroup">
+      <div class="locked" data-stage="challenge">
+        <span>Stage locked — enter passcode to reveal</span>
+        <div class="lockrow">
+          <input type="text" placeholder="Passcode">
+          <button onclick="unlock(this,'challenge')">Unlock</button>
+        </div>
+        <div class="error">Incorrect passcode.</div>
+      </div>
+      <div class="stage-content" id="content-challenge">
+        <h3>C. Challenge your own thinking</h3>
+        <p class="stage-sub">Ask AI to argue that you're wrong. It can argue the opposite just as well — eloquence isn't evidence.</p>
+        <button class="genbtn" onclick="generatePrompt('challenge')">Generate prompt</button>
+        <div class="promptbox" id="box-challenge">
+          <pre id="text-challenge"></pre>
+          <button class="copybtn" onclick="copyPrompt('challenge')">Copy prompt</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="stagegroup">
+      <div class="locked" data-stage="interview">
+        <span>Stage locked — enter passcode to reveal</span>
+        <div class="lockrow">
+          <input type="text" placeholder="Passcode">
+          <button onclick="unlock(this,'interview')">Unlock</button>
+        </div>
+        <div class="error">Incorrect passcode.</div>
+      </div>
+      <div class="stage-content" id="content-interview">
+        <h3>D. Let AI interview you</h3>
+        <p class="stage-sub">Reverse it — this time you answer the questions. You may know more than you think; the interview just makes you say it out loud.</p>
+        <button class="genbtn" onclick="generatePrompt('interview')">Generate prompt</button>
+        <div class="promptbox" id="box-interview">
+          <pre id="text-interview"></pre>
+          <button class="copybtn" onclick="copyPrompt('interview')">Copy prompt</button>
+          <p class="wrapup-label">When your facilitator calls time, paste this to close it out:</p>
+          <pre id="text-interview-wrapup"></pre>
+          <button class="copybtn" onclick="copyPrompt('interview-wrapup')">Copy wrap-up</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="stagegroup">
+      <div class="locked" data-stage="test">
+        <span>Stage locked — enter passcode to reveal</span>
+        <div class="lockrow">
+          <input type="text" placeholder="Passcode">
+          <button onclick="unlock(this,'test')">Unlock</button>
+        </div>
+        <div class="error">Incorrect passcode.</div>
+      </div>
+      <div class="stage-content" id="content-test">
+        <h3>E. Stress-test it (if there's time)</h3>
+        <p class="stage-sub">Assume it failed. Three years from now, what would you wish you'd asked today?</p>
+        <button class="genbtn" onclick="generatePrompt('test')">Generate prompt</button>
+        <div class="promptbox" id="box-test">
+          <pre id="text-test"></pre>
+          <button class="copybtn" onclick="copyPrompt('test')">Copy prompt</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART C: WRITE BACK -->
+  <section id="partC">
+    <h2><span class="step-num">3</span>Return to what you wrote</h2>
+    <div class="locked" data-stage="writeback">
+      <span>Locked — enter passcode to reveal</span>
+      <div class="lockrow">
+        <input type="text" placeholder="Passcode">
+        <button onclick="unlock(this,'writeback')">Unlock</button>
+      </div>
+      <div class="error">Incorrect passcode.</div>
+    </div>
+
+    <div class="promptbox" id="box-writeback">
+      <div class="private-note">This is for you, not for anyone else. It won't be collected or shown to anyone.</div>
+      <p class="sub" style="margin-top:-6px;">Stop using AI. Read what you wrote at the start. Then answer here.</p>
+
+      <label>Would you still propose this project?</label>
+      <div class="optionrow">
+        <label class="radio"><input type="radio" name="changed" value="asis" onchange="saveC()"> Yes — I'd propose it as is</label>
+        <label class="radio"><input type="radio" name="changed" value="redesigned" onchange="saveC()"> Yes, but substantially redesigned</label>
+        <label class="radio"><input type="radio" name="changed" value="no" onchange="saveC()"> No — I'd propose something different</label>
+      </div>
+
+      <label for="newquestion">One thing you're asking now that you weren't at the start</label>
+      <textarea id="newquestion" onblur="saveC()"></textarea>
+
+      <label>Your confidence in the original proposal, now</label>
+      <div class="confidence" id="confAfter">
+        <button data-v="1">1</button>
+        <button data-v="2">2</button>
+        <button data-v="3">3</button>
+        <button data-v="4">4</button>
+        <button data-v="5">5</button>
+      </div>
+
+      <div class="save-row" style="margin-top:20px;">
+        <button class="primary" onclick="downloadSummary()">Download my takeaway</button>
+      </div>
+      <p class="sub" style="margin:8px 0 0;">A single file with your original proposal, where you landed, and the five prompts — yours to keep, and to reuse on your next proposal.</p>
+    </div>
+  </section>
+
+  <footer>Nothing on this page is sent anywhere. It stays in this browser only.</footer>
+</div>
+
+<script>
+// ---- Passcodes: set by facilitator before the session ----
+// ---- Passcodes: base64-encoded so they aren't plain-readable in page source ----
+// (Change these if you want new codes: btoa("YOURCODE") in any browser console.)
+const PASSCODES_B64 = {
+  frame: "RlJBTUU0NQ==",
+  expand: "RVhQQU5EODg=",
+  challenge: "Q0hBTExFTkdFNzY=",
+  interview: "SU5URVJWSUVXNTg=",
+  test: "VEVTVDQ1",
+  writeback: "V1JJVEVCQUNLNTY="
+};
+function decodeCode(stage){
+  return atob(PASSCODES_B64[stage]);
+}
+
+// ---- Confidence pickers ----
+function wireConfidence(id, storeKey, onPick){
+  const el = document.getElementById(id);
+  const saved = localStorage.getItem(storeKey);
+  el.querySelectorAll('button').forEach(btn=>{
+    if(saved && btn.dataset.v === saved) btn.classList.add('active');
+    btn.addEventListener('click', ()=>{
+      el.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      if(onPick) onPick();
+    });
+  });
+}
+wireConfidence('confBefore','conf_before');
+wireConfidence('confAfter','conf_after', saveC);
+
+function getConfidence(id){
+  const active = document.querySelector('#'+id+' button.active');
+  return active ? active.dataset.v : '';
+}
+
+// ---- Load saved Part A on page load ----
+window.addEventListener('DOMContentLoaded', ()=>{
+  ['project','problem','mechanism'].forEach(id=>{
+    const v = localStorage.getItem('a_'+id);
+    if(v) document.getElementById(id).value = v;
+  });
+  const nq = localStorage.getItem('c_newquestion');
+  if(nq) document.getElementById('newquestion').value = nq;
+  const ch = localStorage.getItem('c_changed');
+  if(ch){
+    const r = document.querySelector('input[name=changed][value="'+ch+'"]');
+    if(r) r.checked = true;
+  }
+});
+
+function clearFormA(){
+  if(!confirm('Clear the project, problem, mechanism and confidence fields? This cannot be undone.')) return;
+  ['project','problem','mechanism'].forEach(id=>{
+    document.getElementById(id).value = '';
+    localStorage.removeItem('a_'+id);
+  });
+  document.querySelectorAll('#confBefore button').forEach(b=>b.classList.remove('active'));
+  localStorage.removeItem('conf_before');
+}
+
+function saveA(){
+  ['project','problem','mechanism'].forEach(id=>{
+    localStorage.setItem('a_'+id, document.getElementById(id).value);
+  });
+  localStorage.setItem('conf_before', getConfidence('confBefore'));
+  flash('flagA');
+  downloadProposal();
+}
+
+// ---- HTML document builder (for downloads) ----
+function esc(str){
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : str;
+  return div.innerHTML;
+}
+
+function docStyles(){
+  return `<style>
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2937;line-height:1.6;max-width:720px;margin:0 auto;padding:40px 24px 60px;background:#faf8f5;}
+    .kicker{color:#9c6b1f;font-weight:700;letter-spacing:.08em;font-size:12px;text-transform:uppercase;}
+    h1{font-size:25px;margin:6px 0 4px;}
+    .meta{color:#6b7280;font-size:13px;margin-bottom:8px;}
+    h2{font-size:17px;color:#9c6b1f;border-bottom:1px solid #e2ddd3;padding-bottom:6px;margin:34px 0 14px;}
+    h3{font-size:14.5px;margin:20px 0 4px;color:#1f2937;}
+    .field-label{font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.03em;margin:16px 0 4px;}
+    .field-value{font-size:15px;margin:0 0 4px;white-space:pre-wrap;}
+    .prompt{background:#f6ede0;border:1px solid #e2ddd3;border-radius:8px;padding:13px 15px;white-space:pre-wrap;font-size:13.5px;margin:6px 0 4px;}
+    .before-after{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;}
+    .box{flex:1;min-width:180px;border:1px solid #e2ddd3;border-radius:8px;padding:12px 14px;background:#fff;}
+    .box .tag{font-size:11px;font-weight:700;color:#9c6b1f;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+    .hint{color:#6b7280;font-size:13px;margin:0 0 6px;}
+    .print-btn{
+      position:fixed; top:20px; right:20px;
+      background:#9c6b1f; color:#fff; border:none;
+      padding:9px 16px; border-radius:8px;
+      font-family:inherit; font-weight:600; font-size:13.5px;
+      cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.15);
+    }
+    .print-btn:hover{opacity:.92;}
+    footer{margin-top:44px;color:#9ca3af;font-size:12px;text-align:center;}
+    @media print{ body{background:#fff;} .prompt{background:#f6ede0 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;} .print-btn{display:none;} }
+  </style>`;
+}
+
+function wrapHtmlDoc(title, bodyHtml){
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${esc(title)}</title>${docStyles()}</head><body>${bodyHtml}</body></html>`;
+}
+
+function downloadHtml(filename, htmlString){
+  const blob = new Blob([htmlString], {type: 'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function downloadProposal(){
+  const project = val('project');
+  const problem = val('problem');
+  const mechanism = val('mechanism');
+  const confidence = getConfidence('confBefore') || '(not selected)';
+  const stamp = new Date().toLocaleString();
+
+  const body = `
+    <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+    <div class="kicker">MCTP-IV</div>
+    <h1>My Original Proposal</h1>
+    <div class="meta">AI as Your Thinking Partner — saved ${esc(stamp)}</div>
+
+    <div class="field-label">Project</div>
+    <div class="field-value">${esc(project)}</div>
+
+    <div class="field-label">What problem does it solve, and for whom?</div>
+    <div class="field-value">${esc(problem)}</div>
+
+    <div class="field-label">How does it actually solve that problem?</div>
+    <div class="field-value">${esc(mechanism)}</div>
+
+    <div class="field-label">Confidence (1–5)</div>
+    <div class="field-value">${esc(confidence)}</div>
+
+    <footer>Generated from the MCTP-IV workshop tool. Kept on this computer only — not submitted anywhere.</footer>
+  `;
+
+  downloadHtml('my-proposal-before.html', wrapHtmlDoc('My Original Proposal — MCTP-IV', body));
+}
+
+function downloadSummary(){
+  const project = val('project');
+  const problem = val('problem');
+  const mechanism = val('mechanism');
+  const confBefore = getConfidence('confBefore') || '(not selected)';
+  const confAfter = getConfidence('confAfter') || '(not selected)';
+  const changedEl = document.querySelector('input[name=changed]:checked');
+  const changedLabel = changedEl ? changedEl.closest('label').textContent.trim() : '(not answered)';
+  const newQuestion = document.getElementById('newquestion').value.trim() || '(not filled in)';
+  const stamp = new Date().toLocaleString();
+
+  const stageOrder = ['frame','expand','challenge','interview','test'];
+  const stageNames = {
+    frame: 'A. Understand the problem',
+    expand: 'B. Broaden the possibilities',
+    challenge: 'C. Challenge your own thinking',
+    interview: 'D. Let AI interview you',
+    test: 'E. Stress-test it'
+  };
+
+  const prompts = buildPrompts(project, problem, mechanism);
+  let promptsHtml = '';
+  stageOrder.forEach(key=>{
+    promptsHtml += `<h3>${esc(stageNames[key])}</h3><div class="prompt">${esc(prompts[key])}</div>`;
+  });
+  promptsHtml += `<h3>Wrap-up prompt (to close the interview)</h3><div class="prompt">${esc(WRAPUP_TEXT)}</div>`;
+
+  const genericPrompts = buildPrompts('[your project]', "[the problem, and who it affects]", '[how it actually solves the problem]');
+  let genericHtml = '';
+  stageOrder.forEach(key=>{
+    genericHtml += `<h3>${esc(stageNames[key])}</h3><div class="prompt">${esc(genericPrompts[key])}</div>`;
+  });
+
+  const body = `
+    <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+    <div class="kicker">MCTP-IV</div>
+    <h1>AI as Your Thinking Partner</h1>
+    <div class="meta">Saved ${esc(stamp)}</div>
+
+    <h2>Your original proposal</h2>
+    <div class="field-label">Project</div>
+    <div class="field-value">${esc(project)}</div>
+    <div class="field-label">What problem does it solve, and for whom?</div>
+    <div class="field-value">${esc(problem)}</div>
+    <div class="field-label">How does it actually solve that problem?</div>
+    <div class="field-value">${esc(mechanism)}</div>
+
+    <h2>Where you landed</h2>
+    <div class="before-after">
+      <div class="box"><div class="tag">Before</div><div class="field-value">Confidence: ${esc(confBefore)}/5</div></div>
+      <div class="box"><div class="tag">After</div><div class="field-value">Confidence: ${esc(confAfter)}/5</div></div>
+    </div>
+    <div class="field-label">Would you still propose this project?</div>
+    <div class="field-value">${esc(changedLabel)}</div>
+    <div class="field-label">One thing you're asking now that you weren't at the start</div>
+    <div class="field-value">${esc(newQuestion)}</div>
+
+    <h2>The five prompts you used on this project</h2>
+    ${promptsHtml}
+
+    <h2>Reusable templates — for your next proposal</h2>
+    <p class="hint">The same five moves, blanked out so you can reuse them on a different project without this tool.</p>
+    ${genericHtml}
+
+    <footer>Generated from the MCTP-IV workshop tool. Kept on this computer only — not submitted anywhere.</footer>
+  `;
+
+  downloadHtml('my-ai-thinking-partner-summary.html', wrapHtmlDoc('My AI Thinking Partner Summary — MCTP-IV', body));
+}
+
+function saveC(){
+  localStorage.setItem('c_newquestion', document.getElementById('newquestion').value);
+  const checked = document.querySelector('input[name=changed]:checked');
+  localStorage.setItem('c_changed', checked ? checked.value : '');
+  localStorage.setItem('conf_after', getConfidence('confAfter'));
+}
+
+function flash(id){
+  const el = document.getElementById(id);
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 1800);
+}
+
+// ---- Unlock logic ----
+function unlock(btnEl, stage){
+  const wrap = btnEl.closest('.locked');
+  const input = wrap.querySelector('input[type=text]');
+  const err = wrap.querySelector('.error');
+  if(input.value.trim().toUpperCase() === decodeCode(stage).toUpperCase()){
+    wrap.style.display = 'none';
+    if(stage === 'writeback'){
+      const box = document.getElementById('box-writeback');
+      box.classList.add('show');
+    } else {
+      const content = document.getElementById('content-'+stage);
+      content.classList.add('show');
+    }
+  } else {
+    err.style.display = 'block';
+  }
+}
+
+function generatePrompt(stage){
+  fillPrompt(stage);
+  document.getElementById('box-'+stage).classList.add('show');
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'generate_prompt', { event_category: 'ai_thinking_partner' });
+  }
+}
+
+// ---- Prompt generation ----
+function val(id){
+  const v = document.getElementById(id) ? document.getElementById(id).value.trim() : '';
+  return v || '[not filled in]';
+}
+
+const WRAPUP_TEXT = "Let's stop the interview here. Looking back at the questions you asked me, what's the pattern? What's the one underlying uncertainty they all point back to?";
+
+function buildPrompts(project, problem, mechanism){
+  return {
+    frame: `I'm considering the following project: ${project}\n\nThe problem I believe it solves, and for whom: ${problem}\n\nDon't evaluate the solution yet. Help me examine the problem I'm actually trying to solve. What would I need to establish to know this is a significant problem? What information should I seek before deciding whether to intervene?\n\nGive me your answer as a short list — your 4-5 sharpest questions or points, not a full framework. If there's more depth worth going into on any point, just flag it and I'll ask you to expand.`,
+
+    expand: `Staying with the same project we've been discussing — have I jumped too quickly to one solution? What other interventions could address the same underlying problem? Include interventions that don't require new technology or procurement.\n\nGive me your answer as a short list — your best 4-5 alternatives, not an exhaustive one. If there's more depth worth going into on any option, just flag it and I'll ask you to expand.`,
+
+    challenge: `Here's something about this proposal I haven't told you yet — this is how I believe it actually solves the problem: ${mechanism}\n\nMake the strongest case that this is the wrong intervention, or that this mechanism won't actually produce the outcome I expect. What assumptions does my proposal depend upon? What evidence would make me abandon or substantially redesign it?`,
+
+    interview: `Now reverse it. You already understand the project, the problem, and how I think it works. Interview me as a sceptical senior officer examining whether this proposal deserves public money. Ask me one question at a time. Follow up on my answers. Challenge vague claims and unsupported assumptions. Don't recommend a solution unless I ask.`,
+
+    test: `Assume the project we've been discussing was funded with the full ₹5 crore. Three years later, it is regarded as a failure. What are the most plausible reasons?`
+  };
+}
+
+function fillPrompt(stage){
+  const project = val('project');
+  const problem = val('problem');
+  const mechanism = val('mechanism');
+  const prompts = buildPrompts(project, problem, mechanism);
+
+  document.getElementById('text-'+stage).textContent = prompts[stage];
+
+  if(stage === 'interview'){
+    document.getElementById('text-interview-wrapup').textContent = WRAPUP_TEXT;
+  }
+}
+
+function copyPrompt(stage){
+  const text = document.getElementById('text-'+stage).textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = event.target;
+    btn.classList.add('copied');
+    btn.textContent = 'Copied';
+    setTimeout(()=>{ btn.classList.remove('copied'); btn.textContent = 'Copy prompt'; }, 1500);
+  });
+}
+</script>
+</body>
+</html>
