@@ -56,6 +56,16 @@ Path: /rtgs-diesel-dashboard/
 
 ------------------------------------------------------------------------
 
+### AI as Your Thinking Partner
+
+Path: /prompt-library/ai-thinking-partner.html
+
+-   Facilitated workshop tool (MCTP-IV) for officers developing a funding proposal
+-   Passcode-gated stages guide a continuing AI conversation: frame the problem, broaden options, challenge the thinking, AI-led interview, stress-test it
+-   Saves proposal and takeaways to localStorage and downloads them as HTML files
+
+------------------------------------------------------------------------
+
 ### Incident Response Prompt Generator
 
 Path: /prompt-library/incident-response.html

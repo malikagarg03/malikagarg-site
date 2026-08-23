@@ -634,7 +634,7 @@ function downloadSummary(){
   });
   promptsHtml += `<h3>Wrap-up prompt (to close the interview)</h3><div class="prompt">${esc(WRAPUP_TEXT)}</div>`;
 
-  const genericPrompts = buildPrompts('[your project]', "[the problem, and who it affects]", '[how it actually solves the problem]');
+  const genericPrompts = buildPrompts('[your project]', "[the problem, and who it affects]", '[how it actually solves the problem]', 'was fully funded and implemented');
   let genericHtml = '';
   stageOrder.forEach(key=>{
     genericHtml += `<h3>${esc(stageNames[key])}</h3><div class="prompt">${esc(genericPrompts[key])}</div>`;
@@ -664,11 +664,11 @@ function downloadSummary(){
     <div class="field-label">One thing you're asking now that you weren't at the start</div>
     <div class="field-value">${esc(newQuestion)}</div>
 
-    <h2>The five prompts you used on this project</h2>
+    <h2>The five thinking moves you used on this project</h2>
     ${promptsHtml}
 
-    <h2>Reusable templates — for your next proposal</h2>
-    <p class="hint">The same five moves, blanked out so you can reuse them on a different project without this tool.</p>
+    <h2>Reusable prompts for the five moves</h2>
+    <p class="hint">Don't memorise the wording — remember the move. The same five moves, blanked out so you can apply them to a different project without this tool.</p>
     ${genericHtml}
 
     <footer>Generated from the MCTP-IV workshop tool. Kept on this computer only — not submitted anywhere.</footer>
@@ -725,7 +725,8 @@ function val(id){
 
 const WRAPUP_TEXT = "Let's stop the interview here. Looking back at the questions you asked me, what's the pattern? What's the one underlying uncertainty they all point back to?";
 
-function buildPrompts(project, problem, mechanism){
+function buildPrompts(project, problem, mechanism, fundedClause){
+  fundedClause = fundedClause || "was funded with the full ₹5 crore";
   return {
     frame: `I'm considering the following project: ${project}\n\nThe problem I believe it solves, and for whom: ${problem}\n\nDon't evaluate the solution yet. Help me examine the problem I'm actually trying to solve. What would I need to establish to know this is a significant problem? What information should I seek before deciding whether to intervene?\n\nGive me your answer as a short list — your 4-5 sharpest questions or points, not a full framework. If there's more depth worth going into on any point, just flag it and I'll ask you to expand.`,
 
@@ -735,7 +736,7 @@ function buildPrompts(project, problem, mechanism){
 
     interview: `Now reverse it. You already understand the project, the problem, and how I think it works. Interview me as a sceptical senior officer examining whether this proposal deserves public money. Ask me one question at a time. Follow up on my answers. Challenge vague claims and unsupported assumptions. Don't recommend a solution unless I ask.`,
 
-    test: `Assume the project we've been discussing was funded with the full ₹5 crore. Three years later, it is regarded as a failure. What are the most plausible reasons?`
+    test: `Assume the project we've been discussing ${fundedClause}. Three years later, it is regarded as a failure. What are the most plausible reasons?`
   };
 }
 
