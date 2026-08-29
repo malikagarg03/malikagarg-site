@@ -186,16 +186,6 @@
   .stagegroup h3{font-size:15.5px;margin:0 0 3px;}
   .stagegroup .stage-sub{font-size:13.5px;color:var(--grey);margin:0 0 10px;}
 
-  .private-note{
-    background:#f4f6f4;
-    border:1px solid #dbe4db;
-    border-radius:8px;
-    padding:10px 14px;
-    font-size:13.5px;
-    color:#3d5a42;
-    margin-bottom:16px;
-  }
-
   .scenario{
     background:var(--gold-light);
     border:1px solid var(--gold);
@@ -297,7 +287,7 @@
       <span class="saved-flag" id="flagA">Saved — file downloaded</span>
       <button class="clearbtn" onclick="clearFormA()">Clear form</button>
     </div>
-    <p class="sub" style="margin:8px 0 0;">This also downloads a text file of your proposal — keep it, in case this browser is cleared.</p>
+    <p class="sub" style="margin:8px 0 0;">This also downloads a document of your proposal, which opens in Word — keep it, in case this browser is cleared.</p>
   </section>
 
   <!-- PART B: PROMPTS -->
@@ -316,7 +306,7 @@
       </div>
       <div class="stage-content" id="content-frame">
         <h3>A. Understand the problem</h3>
-        <p class="stage-sub">Before asking if your project is good — what problem are you actually solving? Most proposals skip this step.</p>
+        <p class="stage-sub">Before evaluating the project proposal, the problem must be established correctly. A project built on a misunderstood problem will not deliver the intended outcome, however well it is designed.</p>
         <button class="genbtn" onclick="generatePrompt('frame')">Generate prompt</button>
         <div class="promptbox" id="box-frame">
           <pre id="text-frame"></pre>
@@ -336,7 +326,7 @@
       </div>
       <div class="stage-content" id="content-expand">
         <h3>B. Broaden the possibilities</h3>
-        <p class="stage-sub">Have you settled on a single solution prematurely? There is usually more than one way to solve the same problem.</p>
+        <p class="stage-sub">Settling on the first solution without comparison risks overlooking a more effective one. Before proceeding, the range of alternatives should be examined.</p>
         <button class="genbtn" onclick="generatePrompt('expand')">Generate prompt</button>
         <div class="promptbox" id="box-expand">
           <pre id="text-expand"></pre>
@@ -356,7 +346,7 @@
       </div>
       <div class="stage-content" id="content-challenge">
         <h3>C. Challenge your own thinking</h3>
-        <p class="stage-sub">Ask AI to argue that you are wrong. It can argue the opposite just as well — eloquence is not evidence.</p>
+        <p class="stage-sub">This step reverses the usual use of AI: instead of confirming you are right, ask it to argue you are wrong, surface the assumptions your proposal depends upon, and identify the evidence that would justify abandoning or redesigning it.</p>
         <button class="genbtn" onclick="generatePrompt('challenge')">Generate prompt</button>
         <div class="promptbox" id="box-challenge">
           <pre id="text-challenge"></pre>
@@ -381,7 +371,7 @@
         <div class="promptbox" id="box-interview">
           <pre id="text-interview"></pre>
           <button class="copybtn" onclick="copyPrompt('interview')">Copy prompt</button>
-          <p class="wrapup-label">When your facilitator signals time is up, use this prompt to conclude the exercise:</p>
+          <p class="wrapup-label">To stop the interview: use this prompt when your facilitator signals time is up.</p>
           <pre id="text-interview-wrapup"></pre>
           <button class="copybtn" onclick="copyPrompt('interview-wrapup')">Copy wrap-up</button>
         </div>
@@ -398,8 +388,8 @@
         <div class="error">Incorrect passcode.</div>
       </div>
       <div class="stage-content" id="content-test">
-        <h3>E. Stress-test it (if there's time)</h3>
-        <p class="stage-sub">Assume it failed. Three years from now, what question should you have asked today?</p>
+        <h3>E. Stress-test it</h3>
+        <p class="stage-sub">This step works backward from failure: assume the project was funded and did not succeed, then ask AI what the most plausible reasons would be.</p>
         <button class="genbtn" onclick="generatePrompt('test')">Generate prompt</button>
         <div class="promptbox" id="box-test">
           <pre id="text-test"></pre>
@@ -422,20 +412,9 @@
     </div>
 
     <div class="promptbox" id="box-writeback">
-      <div class="private-note">This section is private. It will not be collected or shown to anyone.</div>
-      <p class="sub" style="margin-top:-6px;">Please stop using AI at this point. Read what you wrote at the outset, then respond below.</p>
+      <p class="sub" style="margin-top:0;">Please stop using AI at this point. Read your original project proposal, then respond below.</p>
 
-      <label>Would you still propose this project?</label>
-      <div class="optionrow">
-        <label class="radio"><input type="radio" name="changed" value="asis" onchange="saveC()"> Yes — I would propose it as is</label>
-        <label class="radio"><input type="radio" name="changed" value="redesigned" onchange="saveC()"> Yes, but substantially redesigned</label>
-        <label class="radio"><input type="radio" name="changed" value="no" onchange="saveC()"> No — I would propose something different</label>
-      </div>
-
-      <label for="newquestion">One thing you are asking now that you were not asking at the start</label>
-      <textarea id="newquestion" onblur="saveC()"></textarea>
-
-      <label>Your confidence, now, that it will solve the problem you've described</label>
+      <label>Your confidence, now, that this project (in the initial form) will solve the problem you have described</label>
       <div class="confidence" id="confAfter">
         <button data-v="1">1</button>
         <button data-v="2">2</button>
@@ -444,10 +423,20 @@
         <button data-v="5">5</button>
       </div>
 
+      <label>Would you still propose this project?</label>
+      <div class="optionrow">
+        <label class="radio"><input type="radio" name="changed" value="asis" onchange="saveC()"> Yes — I would propose it as is</label>
+        <label class="radio"><input type="radio" name="changed" value="redesigned" onchange="saveC()"> Yes, but substantially redesigned</label>
+        <label class="radio"><input type="radio" name="changed" value="no" onchange="saveC()"> No — I would propose something different</label>
+      </div>
+
+      <label for="newquestion">One thing this exercise revealed about your proposal that you had not considered before</label>
+      <textarea id="newquestion" onblur="saveC()"></textarea>
+
       <div class="save-row" style="margin-top:20px;">
         <button class="primary" onclick="downloadSummary()">Download Summary</button>
       </div>
-      <p class="sub" style="margin:8px 0 0;">A single text file with your original proposal, where you landed, and the five thinking moves — yours to keep, and to reuse on your next proposal.</p>
+      <p class="sub" style="margin:8px 0 0;">A single document, which opens in Word, with your original proposal, where you landed, and the five thinking moves — yours to keep, and to reuse on your next proposal.</p>
     </div>
   </section>
 
@@ -524,9 +513,53 @@ function saveA(){
   downloadProposal();
 }
 
-// ---- Plain text document builder (for downloads) ----
-function downloadText(filename, content){
-  const blob = new Blob([content], {type: 'text/plain'});
+// ---- RTF document builder (for downloads) ----
+// RTF opens natively in Word, Google Docs, and Pages — no library needed.
+function rtfEscape(str){
+  if (str == null) return '';
+  let out = '';
+  for (const ch of String(str)) {
+    if (ch === '\\') out += '\\\\';
+    else if (ch === '{') out += '\\{';
+    else if (ch === '}') out += '\\}';
+    else if (ch === '\n') out += '\\line ';
+    else {
+      const code = ch.codePointAt(0);
+      if (code > 127) out += `\\u${code > 32767 ? code - 65536 : code}?`;
+      else out += ch;
+    }
+  }
+  return out;
+}
+
+const RTF_HEADER = '{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\n' +
+  '{\\fonttbl{\\f0\\fswiss\\fcharset0 Calibri;}{\\f1\\fswiss\\fcharset0 Calibri Light;}}\n' +
+  '{\\colortbl;\\red156\\green107\\blue31;\\red31\\green41\\blue55;\\red107\\green114\\blue128;\\red246\\green237\\blue224;}\n' +
+  '\\f0\\fs20\\cf2\n';
+
+function rtfTitleBlock(kicker, title, meta){
+  return `{\\pard\\sa60\\f1\\fs20\\cf3 ${rtfEscape(kicker)}\\par}\n` +
+         `{\\pard\\sa200\\b\\fs36\\cf2 ${rtfEscape(title)}\\par}\n` +
+         `{\\pard\\sa400\\fs18\\cf3 ${rtfEscape(meta)}\\par}\n`;
+}
+function rtfSectionHeading(text){
+  return `{\\pard\\sb200\\sa160\\b\\fs26\\cf1\\brdrb\\brdrs\\brdrw10\\brdrcf1\\brsp20 ${rtfEscape(text)}\\par}\n`;
+}
+function rtfFieldLabel(text){
+  return `{\\pard\\sa40\\b\\fs18\\cf3\\caps ${rtfEscape(text)}\\par}\n`;
+}
+function rtfFieldValue(text){
+  return `{\\pard\\sa240\\fs20\\cf2 ${rtfEscape(text)}\\par}\n`;
+}
+function rtfStageName(text){
+  return `{\\pard\\sa40\\b\\fs19\\cf1 ${rtfEscape(text)}\\par}\n`;
+}
+function rtfPromptBlock(text){
+  return `{\\pard\\sa240\\fs18\\cf2\\highlight4 ${rtfEscape(text)}\\par}\n`;
+}
+
+function downloadRtf(filename, content){
+  const blob = new Blob([content], {type: 'application/rtf'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -544,25 +577,19 @@ function downloadProposal(){
   const confidence = getConfidence('confBefore') || '(not selected)';
   const stamp = new Date().toLocaleString();
 
-  const lines = [
-    'AI AS YOUR THINKING PARTNER — MCTP-IV',
-    'My Original Proposal',
-    `Saved: ${stamp}`,
-    '',
-    'PROPOSED PROJECT',
-    project,
-    '',
-    'PROBLEM STATEMENT — WHAT PROBLEM ARE YOU TRYING TO SOLVE, AND FOR WHOM?',
-    problem,
-    '',
-    'MECHANISM — HOW THIS PROJECT RESOLVES THE STATED PROBLEM',
-    mechanism,
-    '',
-    'CONFIDENCE (1–5)',
-    confidence
-  ];
+  let doc = RTF_HEADER;
+  doc += rtfTitleBlock('MCTP-IV', 'My Original Proposal', `AI as Your Thinking Partner — saved ${stamp}`);
+  doc += rtfFieldLabel('Proposed project');
+  doc += rtfFieldValue(project);
+  doc += rtfFieldLabel('Problem statement — what problem are you trying to solve, and for whom?');
+  doc += rtfFieldValue(problem);
+  doc += rtfFieldLabel('Mechanism — how this project resolves the stated problem');
+  doc += rtfFieldValue(mechanism);
+  doc += rtfFieldLabel('Confidence (1–5)');
+  doc += rtfFieldValue(confidence);
+  doc += '}';
 
-  downloadText('my-proposal-before.txt', lines.join('\n'));
+  downloadRtf('my-proposal-before.rtf', doc);
 }
 
 function downloadSummary(){
@@ -588,50 +615,43 @@ function downloadSummary(){
   const prompts = buildPrompts(project, problem, mechanism);
   const genericPrompts = buildPrompts('[your project]', "[the problem, and who it affects]", '[how it actually solves the problem]', 'was fully funded and implemented');
 
-  const lines = [
-    'AI AS YOUR THINKING PARTNER — MCTP-IV',
-    `Saved: ${stamp}`,
-    '',
-    '== YOUR ORIGINAL PROPOSAL ==',
-    '',
-    'PROPOSED PROJECT',
-    project,
-    '',
-    'PROBLEM STATEMENT — WHAT PROBLEM ARE YOU TRYING TO SOLVE, AND FOR WHOM?',
-    problem,
-    '',
-    'MECHANISM — HOW THIS PROJECT RESOLVES THE STATED PROBLEM',
-    mechanism,
-    '',
-    '== WHERE YOU LANDED ==',
-    '',
-    `Confidence before: ${confBefore}/5`,
-    `Confidence now: ${confAfter}/5`,
-    '',
-    'WOULD YOU STILL PROPOSE THIS PROJECT?',
-    changedLabel,
-    '',
-    "ONE THING YOU'RE ASKING NOW THAT YOU WEREN'T AT THE START",
-    newQuestion,
-    '',
-    '== THE FIVE THINKING MOVES YOU USED ON THIS PROJECT =='
-  ];
+  let doc = RTF_HEADER;
+  doc += rtfTitleBlock('MCTP-IV', 'AI as Your Thinking Partner', `Saved ${stamp}`);
 
+  doc += rtfSectionHeading('Your Original Proposal');
+  doc += rtfFieldLabel('Proposed project');
+  doc += rtfFieldValue(project);
+  doc += rtfFieldLabel('Problem statement — what problem are you trying to solve, and for whom?');
+  doc += rtfFieldValue(problem);
+  doc += rtfFieldLabel('Mechanism — how this project resolves the stated problem');
+  doc += rtfFieldValue(mechanism);
+
+  doc += rtfSectionHeading('Where You Landed');
+  doc += rtfFieldValue(`Confidence before: ${confBefore}/5`);
+  doc += rtfFieldValue(`Confidence now: ${confAfter}/5`);
+  doc += rtfFieldLabel('Would you still propose this project?');
+  doc += rtfFieldValue(changedLabel);
+  doc += rtfFieldLabel('One thing this exercise revealed about your proposal that you had not considered before');
+  doc += rtfFieldValue(newQuestion);
+
+  doc += rtfSectionHeading('The Five Thinking Moves You Used On This Project');
   stageOrder.forEach(key=>{
-    lines.push('', stageNames[key], prompts[key]);
+    doc += rtfStageName(stageNames[key]);
+    doc += rtfPromptBlock(prompts[key]);
   });
-  lines.push('', 'Wrap-up prompt (to close the interview)', WRAPUP_TEXT);
+  doc += rtfStageName('Wrap-up prompt (to close the interview)');
+  doc += rtfPromptBlock(WRAPUP_TEXT);
 
-  lines.push(
-    '',
-    '== REUSABLE PROMPTS FOR THE FIVE MOVES ==',
-    "Do not memorise the wording — remember the move. The same five moves, blanked out so you can apply them to a different project without this tool."
-  );
+  doc += rtfSectionHeading('Reusable Prompts For The Five Moves');
+  doc += rtfFieldValue('Do not memorise the wording — remember the move. The same five moves, blanked out so you can apply them to a different project without this tool.');
   stageOrder.forEach(key=>{
-    lines.push('', stageNames[key], genericPrompts[key]);
+    doc += rtfStageName(stageNames[key]);
+    doc += rtfPromptBlock(genericPrompts[key]);
   });
 
-  downloadText('my-ai-thinking-partner-summary.txt', lines.join('\n'));
+  doc += '}';
+
+  downloadRtf('my-ai-thinking-partner-summary.rtf', doc);
 }
 
 function saveC(){
