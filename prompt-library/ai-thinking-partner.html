@@ -266,24 +266,24 @@
     <div class="tag">The scenario</div>
     <p>You have been given ₹5 crore under the Ministry of Home Affairs' Modernisation of Police Forces (MoPF) scheme. You have been asked to propose one project that would meaningfully improve policing.</p>
     <p class="prompt-line">What would you propose?</p>
-    <p class="scenario-note">Begin by setting out your proposal below. The prompts to think it through with AI will be revealed one at a time as the session proceeds. Nothing you enter here is submitted anywhere — it stays on this computer.</p>
+    <p class="scenario-note">Begin by setting out your proposal below. The prompts to think it through with AI will be revealed one at a time as the session proceeds.</p>
   </div>
 
   <!-- PART A -->
   <section id="partA">
     <h2><span class="step-num">1</span>Your proposal</h2>
-    <p class="sub">Set out your proposal below, without using AI. A first, considered response is enough — you will have the chance to develop it further shortly.</p>
+    <p class="sub">Record your proposal below, without the use of AI. A brief, considered response is sufficient at this stage — you will refine it further shortly.</p>
 
-    <label for="project">Project — what would you propose?</label>
-    <textarea id="project" placeholder="e.g. A dedicated cybercrime investigation cell in every district"></textarea>
+    <label for="project">Proposed project</label>
+    <textarea id="project" placeholder="e.g. Establishment of a dedicated cybercrime investigation cell at each district headquarters"></textarea>
 
-    <label for="problem">What problem does it solve, and for whom?</label>
-    <textarea id="problem"></textarea>
+    <label for="problem">Problem statement — what problem are you trying to solve, and for whom?</label>
+    <textarea id="problem" placeholder="e.g. Cybercrime complaints remain uninvestigated in the absence of station-level capacity to handle digital evidence, leaving complainants without redress"></textarea>
 
-    <label for="mechanism">How does it actually solve that problem?</label>
-    <textarea id="mechanism" placeholder="Not why it's needed — the mechanism. What changes, and how does that change lead to the outcome?"></textarea>
+    <label for="mechanism">Mechanism — how this project resolves the stated problem</label>
+    <textarea id="mechanism" placeholder="e.g. Deployment of a trained two-officer cell per district, assuming direct responsibility for digital evidence handling currently routed through the state cyber cell"></textarea>
 
-    <label>How confident are you in this proposal?</label>
+    <label>How confident are you that this project, as designed, will solve the problem you've described?</label>
     <div class="confidence" id="confBefore">
       <button data-v="1">1</button>
       <button data-v="2">2</button>
@@ -293,17 +293,17 @@
     </div>
 
     <div class="save-row">
-      <button class="primary" onclick="saveA()">Save my answers</button>
+      <button class="primary" onclick="saveA()">Save and download my proposal</button>
       <span class="saved-flag" id="flagA">Saved — file downloaded</span>
       <button class="clearbtn" onclick="clearFormA()">Clear form</button>
     </div>
-    <p class="sub" style="margin:8px 0 0;">This also downloads a small text file of your proposal — keep it, in case this browser is cleared.</p>
+    <p class="sub" style="margin:8px 0 0;">This also downloads a text file of your proposal — keep it, in case this browser is cleared.</p>
   </section>
 
   <!-- PART B: PROMPTS -->
   <section id="partB">
     <h2><span class="step-num">2</span>Think it through with AI</h2>
-    <p class="sub">Five moves, one continuing conversation. Open whichever AI tool you use and keep the same conversation running through all five stages — don't start over each time. Your facilitator will give you a passcode when it's time for the next one.</p>
+    <p class="sub">This section has five stages, conducted as one continuing conversation with AI. Open whichever AI tool you use and keep the same conversation running through all five stages, rather than beginning a new conversation for each stage. Your facilitator will give you a passcode when it is time for the next one.</p>
 
     <div class="stagegroup">
       <div class="locked" data-stage="frame">
@@ -336,7 +336,7 @@
       </div>
       <div class="stage-content" id="content-expand">
         <h3>B. Broaden the possibilities</h3>
-        <p class="stage-sub">Have you jumped too quickly to one solution? There's usually more than one way to solve the same problem.</p>
+        <p class="stage-sub">Have you settled on a single solution prematurely? There is usually more than one way to solve the same problem.</p>
         <button class="genbtn" onclick="generatePrompt('expand')">Generate prompt</button>
         <div class="promptbox" id="box-expand">
           <pre id="text-expand"></pre>
@@ -356,7 +356,7 @@
       </div>
       <div class="stage-content" id="content-challenge">
         <h3>C. Challenge your own thinking</h3>
-        <p class="stage-sub">Ask AI to argue that you're wrong. It can argue the opposite just as well — eloquence isn't evidence.</p>
+        <p class="stage-sub">Ask AI to argue that you are wrong. It can argue the opposite just as well — eloquence is not evidence.</p>
         <button class="genbtn" onclick="generatePrompt('challenge')">Generate prompt</button>
         <div class="promptbox" id="box-challenge">
           <pre id="text-challenge"></pre>
@@ -376,12 +376,12 @@
       </div>
       <div class="stage-content" id="content-interview">
         <h3>D. Let AI interview you</h3>
-        <p class="stage-sub">Reverse it — this time you answer the questions. You may know more than you think; the interview just makes you say it out loud.</p>
+        <p class="stage-sub">Reverse it — this time you answer the questions. This exercise is designed to draw out expertise you already hold.</p>
         <button class="genbtn" onclick="generatePrompt('interview')">Generate prompt</button>
         <div class="promptbox" id="box-interview">
           <pre id="text-interview"></pre>
           <button class="copybtn" onclick="copyPrompt('interview')">Copy prompt</button>
-          <p class="wrapup-label">When your facilitator calls time, paste this to close it out:</p>
+          <p class="wrapup-label">When your facilitator signals time is up, use this prompt to conclude the exercise:</p>
           <pre id="text-interview-wrapup"></pre>
           <button class="copybtn" onclick="copyPrompt('interview-wrapup')">Copy wrap-up</button>
         </div>
@@ -399,7 +399,7 @@
       </div>
       <div class="stage-content" id="content-test">
         <h3>E. Stress-test it (if there's time)</h3>
-        <p class="stage-sub">Assume it failed. Three years from now, what would you wish you'd asked today?</p>
+        <p class="stage-sub">Assume it failed. Three years from now, what question should you have asked today?</p>
         <button class="genbtn" onclick="generatePrompt('test')">Generate prompt</button>
         <div class="promptbox" id="box-test">
           <pre id="text-test"></pre>
@@ -422,20 +422,20 @@
     </div>
 
     <div class="promptbox" id="box-writeback">
-      <div class="private-note">This is for you, not for anyone else. It won't be collected or shown to anyone.</div>
-      <p class="sub" style="margin-top:-6px;">Stop using AI. Read what you wrote at the start. Then answer here.</p>
+      <div class="private-note">This section is private. It will not be collected or shown to anyone.</div>
+      <p class="sub" style="margin-top:-6px;">Please stop using AI at this point. Read what you wrote at the outset, then respond below.</p>
 
       <label>Would you still propose this project?</label>
       <div class="optionrow">
-        <label class="radio"><input type="radio" name="changed" value="asis" onchange="saveC()"> Yes — I'd propose it as is</label>
+        <label class="radio"><input type="radio" name="changed" value="asis" onchange="saveC()"> Yes — I would propose it as is</label>
         <label class="radio"><input type="radio" name="changed" value="redesigned" onchange="saveC()"> Yes, but substantially redesigned</label>
-        <label class="radio"><input type="radio" name="changed" value="no" onchange="saveC()"> No — I'd propose something different</label>
+        <label class="radio"><input type="radio" name="changed" value="no" onchange="saveC()"> No — I would propose something different</label>
       </div>
 
-      <label for="newquestion">One thing you're asking now that you weren't at the start</label>
+      <label for="newquestion">One thing you are asking now that you were not asking at the start</label>
       <textarea id="newquestion" onblur="saveC()"></textarea>
 
-      <label>Your confidence in the original proposal, now</label>
+      <label>Your confidence, now, that it will solve the problem you've described</label>
       <div class="confidence" id="confAfter">
         <button data-v="1">1</button>
         <button data-v="2">2</button>
@@ -445,13 +445,12 @@
       </div>
 
       <div class="save-row" style="margin-top:20px;">
-        <button class="primary" onclick="downloadSummary()">Download my takeaway</button>
+        <button class="primary" onclick="downloadSummary()">Download Summary</button>
       </div>
-      <p class="sub" style="margin:8px 0 0;">A single file with your original proposal, where you landed, and the five prompts — yours to keep, and to reuse on your next proposal.</p>
+      <p class="sub" style="margin:8px 0 0;">A single text file with your original proposal, where you landed, and the five thinking moves — yours to keep, and to reuse on your next proposal.</p>
     </div>
   </section>
 
-  <footer>Nothing on this page is sent anywhere. It stays in this browser only.</footer>
 </div>
 
 <script>
@@ -525,47 +524,9 @@ function saveA(){
   downloadProposal();
 }
 
-// ---- HTML document builder (for downloads) ----
-function esc(str){
-  const div = document.createElement('div');
-  div.textContent = str == null ? '' : str;
-  return div.innerHTML;
-}
-
-function docStyles(){
-  return `<style>
-    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2937;line-height:1.6;max-width:720px;margin:0 auto;padding:40px 24px 60px;background:#faf8f5;}
-    .kicker{color:#9c6b1f;font-weight:700;letter-spacing:.08em;font-size:12px;text-transform:uppercase;}
-    h1{font-size:25px;margin:6px 0 4px;}
-    .meta{color:#6b7280;font-size:13px;margin-bottom:8px;}
-    h2{font-size:17px;color:#9c6b1f;border-bottom:1px solid #e2ddd3;padding-bottom:6px;margin:34px 0 14px;}
-    h3{font-size:14.5px;margin:20px 0 4px;color:#1f2937;}
-    .field-label{font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.03em;margin:16px 0 4px;}
-    .field-value{font-size:15px;margin:0 0 4px;white-space:pre-wrap;}
-    .prompt{background:#f6ede0;border:1px solid #e2ddd3;border-radius:8px;padding:13px 15px;white-space:pre-wrap;font-size:13.5px;margin:6px 0 4px;}
-    .before-after{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;}
-    .box{flex:1;min-width:180px;border:1px solid #e2ddd3;border-radius:8px;padding:12px 14px;background:#fff;}
-    .box .tag{font-size:11px;font-weight:700;color:#9c6b1f;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
-    .hint{color:#6b7280;font-size:13px;margin:0 0 6px;}
-    .print-btn{
-      position:fixed; top:20px; right:20px;
-      background:#9c6b1f; color:#fff; border:none;
-      padding:9px 16px; border-radius:8px;
-      font-family:inherit; font-weight:600; font-size:13.5px;
-      cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.15);
-    }
-    .print-btn:hover{opacity:.92;}
-    footer{margin-top:44px;color:#9ca3af;font-size:12px;text-align:center;}
-    @media print{ body{background:#fff;} .prompt{background:#f6ede0 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;} .print-btn{display:none;} }
-  </style>`;
-}
-
-function wrapHtmlDoc(title, bodyHtml){
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${esc(title)}</title>${docStyles()}</head><body>${bodyHtml}</body></html>`;
-}
-
-function downloadHtml(filename, htmlString){
-  const blob = new Blob([htmlString], {type: 'text/html'});
+// ---- Plain text document builder (for downloads) ----
+function downloadText(filename, content){
+  const blob = new Blob([content], {type: 'text/plain'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -583,28 +544,25 @@ function downloadProposal(){
   const confidence = getConfidence('confBefore') || '(not selected)';
   const stamp = new Date().toLocaleString();
 
-  const body = `
-    <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
-    <div class="kicker">MCTP-IV</div>
-    <h1>My Original Proposal</h1>
-    <div class="meta">AI as Your Thinking Partner — saved ${esc(stamp)}</div>
+  const lines = [
+    'AI AS YOUR THINKING PARTNER — MCTP-IV',
+    'My Original Proposal',
+    `Saved: ${stamp}`,
+    '',
+    'PROPOSED PROJECT',
+    project,
+    '',
+    'PROBLEM STATEMENT — WHAT PROBLEM ARE YOU TRYING TO SOLVE, AND FOR WHOM?',
+    problem,
+    '',
+    'MECHANISM — HOW THIS PROJECT RESOLVES THE STATED PROBLEM',
+    mechanism,
+    '',
+    'CONFIDENCE (1–5)',
+    confidence
+  ];
 
-    <div class="field-label">Project</div>
-    <div class="field-value">${esc(project)}</div>
-
-    <div class="field-label">What problem does it solve, and for whom?</div>
-    <div class="field-value">${esc(problem)}</div>
-
-    <div class="field-label">How does it actually solve that problem?</div>
-    <div class="field-value">${esc(mechanism)}</div>
-
-    <div class="field-label">Confidence (1–5)</div>
-    <div class="field-value">${esc(confidence)}</div>
-
-    <footer>Generated from the MCTP-IV workshop tool. Kept on this computer only — not submitted anywhere.</footer>
-  `;
-
-  downloadHtml('my-proposal-before.html', wrapHtmlDoc('My Original Proposal — MCTP-IV', body));
+  downloadText('my-proposal-before.txt', lines.join('\n'));
 }
 
 function downloadSummary(){
@@ -628,53 +586,52 @@ function downloadSummary(){
   };
 
   const prompts = buildPrompts(project, problem, mechanism);
-  let promptsHtml = '';
-  stageOrder.forEach(key=>{
-    promptsHtml += `<h3>${esc(stageNames[key])}</h3><div class="prompt">${esc(prompts[key])}</div>`;
-  });
-  promptsHtml += `<h3>Wrap-up prompt (to close the interview)</h3><div class="prompt">${esc(WRAPUP_TEXT)}</div>`;
-
   const genericPrompts = buildPrompts('[your project]', "[the problem, and who it affects]", '[how it actually solves the problem]', 'was fully funded and implemented');
-  let genericHtml = '';
+
+  const lines = [
+    'AI AS YOUR THINKING PARTNER — MCTP-IV',
+    `Saved: ${stamp}`,
+    '',
+    '== YOUR ORIGINAL PROPOSAL ==',
+    '',
+    'PROPOSED PROJECT',
+    project,
+    '',
+    'PROBLEM STATEMENT — WHAT PROBLEM ARE YOU TRYING TO SOLVE, AND FOR WHOM?',
+    problem,
+    '',
+    'MECHANISM — HOW THIS PROJECT RESOLVES THE STATED PROBLEM',
+    mechanism,
+    '',
+    '== WHERE YOU LANDED ==',
+    '',
+    `Confidence before: ${confBefore}/5`,
+    `Confidence now: ${confAfter}/5`,
+    '',
+    'WOULD YOU STILL PROPOSE THIS PROJECT?',
+    changedLabel,
+    '',
+    "ONE THING YOU'RE ASKING NOW THAT YOU WEREN'T AT THE START",
+    newQuestion,
+    '',
+    '== THE FIVE THINKING MOVES YOU USED ON THIS PROJECT =='
+  ];
+
   stageOrder.forEach(key=>{
-    genericHtml += `<h3>${esc(stageNames[key])}</h3><div class="prompt">${esc(genericPrompts[key])}</div>`;
+    lines.push('', stageNames[key], prompts[key]);
+  });
+  lines.push('', 'Wrap-up prompt (to close the interview)', WRAPUP_TEXT);
+
+  lines.push(
+    '',
+    '== REUSABLE PROMPTS FOR THE FIVE MOVES ==',
+    "Do not memorise the wording — remember the move. The same five moves, blanked out so you can apply them to a different project without this tool."
+  );
+  stageOrder.forEach(key=>{
+    lines.push('', stageNames[key], genericPrompts[key]);
   });
 
-  const body = `
-    <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
-    <div class="kicker">MCTP-IV</div>
-    <h1>AI as Your Thinking Partner</h1>
-    <div class="meta">Saved ${esc(stamp)}</div>
-
-    <h2>Your original proposal</h2>
-    <div class="field-label">Project</div>
-    <div class="field-value">${esc(project)}</div>
-    <div class="field-label">What problem does it solve, and for whom?</div>
-    <div class="field-value">${esc(problem)}</div>
-    <div class="field-label">How does it actually solve that problem?</div>
-    <div class="field-value">${esc(mechanism)}</div>
-
-    <h2>Where you landed</h2>
-    <div class="before-after">
-      <div class="box"><div class="tag">Before</div><div class="field-value">Confidence: ${esc(confBefore)}/5</div></div>
-      <div class="box"><div class="tag">After</div><div class="field-value">Confidence: ${esc(confAfter)}/5</div></div>
-    </div>
-    <div class="field-label">Would you still propose this project?</div>
-    <div class="field-value">${esc(changedLabel)}</div>
-    <div class="field-label">One thing you're asking now that you weren't at the start</div>
-    <div class="field-value">${esc(newQuestion)}</div>
-
-    <h2>The five thinking moves you used on this project</h2>
-    ${promptsHtml}
-
-    <h2>Reusable prompts for the five moves</h2>
-    <p class="hint">Don't memorise the wording — remember the move. The same five moves, blanked out so you can apply them to a different project without this tool.</p>
-    ${genericHtml}
-
-    <footer>Generated from the MCTP-IV workshop tool. Kept on this computer only — not submitted anywhere.</footer>
-  `;
-
-  downloadHtml('my-ai-thinking-partner-summary.html', wrapHtmlDoc('My AI Thinking Partner Summary — MCTP-IV', body));
+  downloadText('my-ai-thinking-partner-summary.txt', lines.join('\n'));
 }
 
 function saveC(){
@@ -728,7 +685,7 @@ const WRAPUP_TEXT = "Let's stop the interview here. Looking back at the question
 function buildPrompts(project, problem, mechanism, fundedClause){
   fundedClause = fundedClause || "was funded with the full ₹5 crore";
   return {
-    frame: `I'm considering the following project: ${project}\n\nThe problem I believe it solves, and for whom: ${problem}\n\nDon't evaluate the solution yet. Help me examine the problem I'm actually trying to solve. What would I need to establish to know this is a significant problem? What information should I seek before deciding whether to intervene?\n\nGive me your answer as a short list — your 4-5 sharpest questions or points, not a full framework. If there's more depth worth going into on any point, just flag it and I'll ask you to expand.`,
+    frame: `This is a proposal for the Indian police, to be funded under a government police modernisation scheme.\n\nI'm considering the following project: ${project}\n\nThe problem I believe it solves, and for whom: ${problem}\n\nDon't evaluate the solution yet. Help me examine the problem I'm actually trying to solve. What would I need to establish to know this is a significant problem? What information should I seek before deciding whether to intervene?\n\nGive me your answer as a short list — your 4-5 sharpest questions or points, not a full framework. If there's more depth worth going into on any point, just flag it and I'll ask you to expand.`,
 
     expand: `Staying with the same project we've been discussing — have I jumped too quickly to one solution? What other interventions could address the same underlying problem? Include interventions that don't require new technology or procurement.\n\nGive me your answer as a short list — your best 4-5 alternatives, not an exhaustive one. If there's more depth worth going into on any option, just flag it and I'll ask you to expand.`,
 
