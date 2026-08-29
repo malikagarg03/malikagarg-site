@@ -273,7 +273,7 @@
     <label for="mechanism">Mechanism — how this project resolves the stated problem</label>
     <textarea id="mechanism" placeholder="e.g. Deployment of a trained two-officer cell per district, assuming direct responsibility for digital evidence handling currently routed through the state cyber cell"></textarea>
 
-    <label>How confident are you that this project, as designed, will solve the problem you've described?</label>
+    <label>How confident are you that this project, as originally proposed, should be pursued?</label>
     <div class="confidence" id="confBefore">
       <button data-v="1">1</button>
       <button data-v="2">2</button>
@@ -414,7 +414,7 @@
     <div class="promptbox" id="box-writeback">
       <p class="sub" style="margin-top:0;">Please stop using AI at this point. Read your original project proposal, then respond below.</p>
 
-      <label>Your confidence, now, that this project (in the initial form) will solve the problem you have described</label>
+      <label>Your confidence, now, that this project, in the form originally proposed, should be pursued</label>
       <div class="confidence" id="confAfter">
         <button data-v="1">1</button>
         <button data-v="2">2</button>
@@ -436,7 +436,7 @@
       <div class="save-row" style="margin-top:20px;">
         <button class="primary" onclick="downloadSummary()">Download Summary</button>
       </div>
-      <p class="sub" style="margin:8px 0 0;">A single document, which opens in Word, with your original proposal, where you landed, and the five thinking moves — yours to keep, and to reuse on your next proposal.</p>
+      <p class="sub" style="margin:8px 0 0;">This document, compatible with Word, records your original proposal, the conclusion you reached, and the prompts used at each stage of this exercise.</p>
     </div>
   </section>
 
@@ -626,7 +626,7 @@ function downloadSummary(){
   doc += rtfFieldLabel('Mechanism — how this project resolves the stated problem');
   doc += rtfFieldValue(mechanism);
 
-  doc += rtfSectionHeading('Where You Landed');
+  doc += rtfSectionHeading('Your Position After Discussion');
   doc += rtfFieldValue(`Confidence before: ${confBefore}/5`);
   doc += rtfFieldValue(`Confidence now: ${confAfter}/5`);
   doc += rtfFieldLabel('Would you still propose this project?');
@@ -634,7 +634,7 @@ function downloadSummary(){
   doc += rtfFieldLabel('One thing this exercise revealed about your proposal that you had not considered before');
   doc += rtfFieldValue(newQuestion);
 
-  doc += rtfSectionHeading('The Five Thinking Moves You Used On This Project');
+  doc += rtfSectionHeading('The Prompts Used At Each Stage Of This Exercise');
   stageOrder.forEach(key=>{
     doc += rtfStageName(stageNames[key]);
     doc += rtfPromptBlock(prompts[key]);
@@ -642,8 +642,8 @@ function downloadSummary(){
   doc += rtfStageName('Wrap-up prompt (to close the interview)');
   doc += rtfPromptBlock(WRAPUP_TEXT);
 
-  doc += rtfSectionHeading('Reusable Prompts For The Five Moves');
-  doc += rtfFieldValue('Do not memorise the wording — remember the move. The same five moves, blanked out so you can apply them to a different project without this tool.');
+  doc += rtfSectionHeading('Reusable Prompts For Each Stage');
+  doc += rtfFieldValue('Do not memorise the wording — remember the underlying stage it belongs to. The same prompts, blanked out so you can apply them to a different project without this tool.');
   stageOrder.forEach(key=>{
     doc += rtfStageName(stageNames[key]);
     doc += rtfPromptBlock(genericPrompts[key]);
