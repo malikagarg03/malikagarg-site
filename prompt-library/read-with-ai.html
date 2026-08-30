@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Read With AI</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YZEYRQBYKC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-YZEYRQBYKC');
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --paper:#eae5d6;
+    --paper-raised:#f4f0e3;
+    --ink:#23241f;
+    --ink-soft:#5c5848;
+    --line:#c7bfa4;
+    --accent:#8a1f2b;
+    --olive:#2d4a3e;
+    --olive-ink:#e8efe9;
+    --focus:#1c5f8a;
+    --shadow: rgba(35,36,31,0.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#1b1c17; --paper-raised:#242520; --ink:#eee8d8; --ink-soft:#b3ab93;
+      --line:#3f3f34; --accent:#e17b6a; --olive:#8fbfa8; --olive-ink:#122019;
+      --focus:#7ec1e8; --shadow: rgba(0,0,0,0.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#1b1c17; --paper-raised:#242520; --ink:#eee8d8; --ink-soft:#b3ab93;
+    --line:#3f3f34; --accent:#e17b6a; --olive:#8fbfa8; --olive-ink:#122019;
+    --focus:#7ec1e8; --shadow: rgba(0,0,0,0.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh; background:var(--paper); color:var(--ink);
+    font-family:'Work Sans', -apple-system, sans-serif; line-height:1.55;
+    display:flex; flex-direction:column; align-items:center;
+    padding:clamp(20px,5vw,56px) 16px 60px;
+  }
+  h1,h2,h3{font-family:'Zilla Slab', Georgia, serif; font-weight:600; text-wrap:balance; margin:0;}
+  .mono{font-family:'IBM Plex Mono', ui-monospace, monospace;}
+  :focus-visible{outline:2px solid var(--focus); outline-offset:2px;}
+
+  .wrap{width:100%; max-width:680px;}
+
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--olive); font-weight:600; margin-bottom:10px;
+  }
+  header h1{font-size:clamp(1.6rem,4vw,2.2rem); margin-bottom:8px;}
+  header p{color:var(--ink-soft); font-size:1rem; max-width:56ch; margin:0 0 28px;}
+
+  /* step rail */
+  .rail{display:flex; align-items:center; gap:4px; margin-bottom:32px;}
+  .rail .dot{
+    flex:1; height:6px; border-radius:3px; background:var(--line); position:relative;
+  }
+  .rail .dot.active{background:var(--accent);}
+  .rail .labels{display:flex; justify-content:space-between; margin-top:8px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--ink-soft); letter-spacing:0.03em;}
+  .rail .labels span{flex:1; text-align:center;}
+  .rail .labels span:first-child{text-align:left;}
+  .rail .labels span:last-child{text-align:right;}
+  .rail .labels span.now{color:var(--accent); font-weight:600;}
+
+  /* card */
+  .card{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:8px;
+    padding:clamp(20px,4vw,32px); box-shadow:0 2px 0 var(--shadow);
+  }
+  .card + .card{margin-top:18px;}
+  .step-tag{
+    display:inline-flex; align-items:center; gap:8px; font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent);
+    font-weight:600; margin-bottom:14px;
+  }
+  .step-tag .n{background:var(--accent); color:var(--paper-raised); border-radius:50%; width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; font-size:11px;}
+  .card h2{font-size:1.25rem; margin-bottom:6px;}
+  .card .hint{color:var(--ink-soft); font-size:0.92rem; margin-bottom:20px; max-width:52ch;}
+
+  label{display:block; font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:6px;}
+  input[type=text], textarea{
+    width:100%; background:var(--paper); border:1px solid var(--line); border-radius:5px;
+    color:var(--ink); font-family:'Work Sans',sans-serif; font-size:0.98rem;
+    padding:10px 12px; resize:vertical;
+  }
+  input[type=text]{margin-bottom:18px;}
+  textarea{min-height:150px; line-height:1.5; margin-bottom:6px;}
+  .char-count{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-soft); text-align:right; margin-bottom:6px;}
+  .suggestion{
+    font-size:0.86rem; color:var(--ink-soft); margin:0 0 20px; display:flex; gap:8px; align-items:flex-start;
+  }
+  .suggestion .ic{color:var(--olive); font-family:'IBM Plex Mono',monospace; font-weight:700;}
+
+  button.primary{
+    font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:0.05em; text-transform:uppercase;
+    background:var(--accent); color:var(--paper-raised); border:none; border-radius:5px;
+    padding:12px 20px; cursor:pointer; font-weight:600;
+  }
+  button.primary:disabled{opacity:0.4; cursor:not-allowed;}
+  button.primary:not(:disabled):hover{filter:brightness(1.08);}
+
+  .output{display:none;}
+  .output.show{display:block;}
+  .tag-line{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--ink-soft); margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;
+  }
+  .prompt-box{
+    font-family:'IBM Plex Mono',monospace; font-size:13.5px; line-height:1.65;
+    background:var(--paper); border:1px dashed var(--line); border-radius:5px;
+    padding:14px 16px; white-space:pre-wrap; color:var(--ink); max-height:340px; overflow-y:auto;
+  }
+  .copy-btn{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.06em;
+    background:transparent; border:1px solid var(--ink-soft); color:var(--ink-soft);
+    border-radius:3px; padding:4px 10px; cursor:pointer; text-transform:uppercase;
+  }
+  .copy-btn:hover{border-color:var(--accent); color:var(--accent);}
+  .copy-btn.done{border-color:var(--olive); color:var(--olive);}
+
+  .next-note{
+    margin-top:20px; font-size:0.88rem; color:var(--ink-soft); border-top:1px solid var(--line); padding-top:16px;
+  }
+
+  .locked{
+    opacity:0.5; display:flex; align-items:center; gap:10px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft);
+    padding:14px 16px; border:1px dashed var(--line); border-radius:6px;
+  }
+
+  .extras-header{margin-top:40px; padding-top:28px; border-top:3px solid var(--ink);}
+  .extra-category{margin-top:30px;}
+  .extra-category h3{font-size:1.05rem; margin-bottom:4px;}
+  .extra-category .cat-note{font-size:0.86rem; color:var(--ink-soft); margin-bottom:14px; max-width:58ch;}
+  .extra-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px;}
+  .extra-card{border:1px solid var(--line); border-radius:5px; background:var(--paper-raised); padding:14px 16px;}
+  .extra-card .ex-label{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--accent); text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:8px;}
+  .extra-card .prompt-box{font-size:12.5px; max-height:none;}
+  .extra-card .copy-btn{margin-top:8px;}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Read With AI · Field Tool</div>
+    <h1>Learn to read your posting's language</h1>
+    <p>Bring one piece of real text — a newspaper article works well — and this will build a short set of prompts to work through it with: context, vocabulary, sentence-by-sentence reading, and the real issue behind it.</p>
+  </header>
+
+  <div class="rail">
+    <div class="dot active"></div>
+    <div class="dot active"></div>
+    <div class="dot active"></div>
+    <div class="dot active"></div>
+    <div class="dot active"></div>
+  </div>
+  <div class="rail labels" style="margin-top:-24px; margin-bottom:32px;">
+    <span>Set up</span>
+    <span>Context</span>
+    <span>Words</span>
+    <span>Sentences</span>
+    <span class="now">The issue</span>
+  </div>
+
+  <div class="card">
+    <div class="step-tag"><span class="n">1</span> Set up your text</div>
+    <h2>What are you reading?</h2>
+    <p class="hint">Pick any local language — this works the same way whichever one you're building.</p>
+
+    <label for="lang">Language you're learning</label>
+    <input type="text" id="lang" placeholder="e.g. Telugu, Odia, Marathi, Bengali…" autocomplete="off">
+
+    <label for="cadre">Cadre you're allotted to (optional)</label>
+    <input type="text" id="cadre" placeholder="e.g. Andhra Pradesh — leave blank if not yet allotted" autocomplete="off">
+
+    <label for="text">Paste the text</label>
+    <textarea id="text" placeholder="Paste a paragraph or two here — a newspaper article, a circular, a petition…"></textarea>
+    <div class="char-count" id="charCount">0 characters</div>
+    <p class="suggestion"><span class="ic">→</span> No text handy? Open any local-language news site, pick a short article, and paste one or two paragraphs in.</p>
+
+    <button class="primary" id="genBtn" disabled>Generate context prompt</button>
+  </div>
+
+  <div class="card output" id="outputCard">
+    <div class="step-tag"><span class="n">2</span> Context, before the detail</div>
+    <h2>Get the gist first</h2>
+    <p class="hint">Copy this into ChatGPT or Gemini. Each later step includes the article again too, so the AI always has the actual text in front of it rather than relying on memory — but keep this same chat open through step 4, since the closing summary there depends on remembering how you did earlier on.</p>
+    <div class="tag-line"><span>Your context-setting prompt</span><button class="copy-btn" id="copyBtn">Copy prompt</button></div>
+    <div class="prompt-box" id="promptOut"></div>
+    <p class="next-note">Once you've read the AI's answer and have a sense of what the piece is about, generate the next prompt below — it'll quiz you on words from the same text before showing you any answers.</p>
+    <button class="primary" id="genBtn2" style="margin-top:16px;">Generate word-testing prompt</button>
+  </div>
+
+  <div class="card output" id="outputCard2">
+    <div class="step-tag"><span class="n">3</span> Test yourself, word by word</div>
+    <h2>Guess before you're told</h2>
+    <p class="hint">It turns the AI into a quizmaster instead of a dictionary: meaningful words and short phrases from the article, script plus transliteration, meaning held back until you've guessed, and one clean word list to copy out at the end. Best kept in the same chat as step 2, so the AI already has a sense of the context.</p>
+    <div class="tag-line"><span>Your word-testing prompt</span><button class="copy-btn" id="copyBtn2">Copy prompt</button></div>
+    <div class="prompt-box" id="promptOut2"></div>
+    <p class="next-note">Go through all the rounds it gives you before moving on. Step 4 will take you into a full sentence-by-sentence read of the same passage.</p>
+    <button class="primary" id="genBtn3" style="margin-top:16px;">Generate sentence-by-sentence prompt</button>
+  </div>
+
+  <div class="card output" id="outputCard3">
+    <div class="step-tag"><span class="n">4</span> Read it sentence by sentence</div>
+    <h2>Attempt it, then check it</h2>
+    <p class="hint">Keep this in the <strong>same chat</strong> as step 3 — the closing summary at the end depends on the AI remembering how your vocabulary quiz went. Same idea as step 3: you try first. For each sentence you'll be asked for your own attempt before the AI gives the real translation, a word-by-word (or chunk-by-chunk) breakdown, and the grammar behind it — plus a flag whenever something is a pattern you'll see again. At the end, it closes with a summary built from what you actually got wrong across steps 3 and 4, not a generic recap.</p>
+    <div class="tag-line"><span>Your sentence-by-sentence prompt</span><button class="copy-btn" id="copyBtn3">Copy prompt</button></div>
+    <div class="prompt-box" id="promptOut3"></div>
+    <p class="next-note">Once you've read through every sentence, generate the last prompt below — it steps back from the language itself to the real issue the article touches on.</p>
+    <button class="primary" id="genBtn4" style="margin-top:16px;">Generate final prompt</button>
+  </div>
+
+  <div class="card output" id="outputCard4">
+    <div class="step-tag"><span class="n">5</span> The issue behind the article</div>
+    <h2>Go one level deeper</h2>
+    <p class="hint">A short, one-shot close — no back-and-forth needed after four steps already, and no need to repaste the article since the AI already has it from earlier in this chat. It asks the AI to look past this one document to the real issue behind it, and what a police officer specifically should take from it — tied to your cadre if you entered one above.</p>
+    <div class="tag-line"><span>Your final prompt</span><button class="copy-btn" id="copyBtn4">Copy prompt</button></div>
+    <div class="prompt-box" id="promptOut4"></div>
+  </div>
+
+  <div class="extras-header">
+    <div class="eyebrow">Beyond the five steps</div>
+    <h2>Additional ways to explore</h2>
+    <p style="color:var(--ink-soft); font-size:0.96rem; max-width:60ch; margin-top:6px;">You don't need a fresh article for these — a menu of prompts covering the other things AI is actually good for: writing, not just reading; talking, not just translating. Copy any of them in, and swap out anything in <span class="mono">[brackets]</span> before you send it.</p>
+    <label for="extraLang" style="margin-top:18px;">Language you're exploring in</label>
+    <input type="text" id="extraLang" placeholder="e.g. Telugu, Odia, Marathi, Bengali…" autocomplete="off" style="max-width:340px;">
+  </div>
+
+  <div id="extrasWrap"></div>
+</div>
+
+<script>
+(function(){
+  var langEl = document.getElementById('lang');
+  var cadreEl = document.getElementById('cadre');
+  var textEl = document.getElementById('text');
+  var genBtn = document.getElementById('genBtn');
+  var charCount = document.getElementById('charCount');
+  var outputCard = document.getElementById('outputCard');
+  var promptOut = document.getElementById('promptOut');
+  var copyBtn = document.getElementById('copyBtn');
+  var genBtn2 = document.getElementById('genBtn2');
+  var outputCard2 = document.getElementById('outputCard2');
+  var promptOut2 = document.getElementById('promptOut2');
+  var copyBtn2 = document.getElementById('copyBtn2');
+  var genBtn3 = document.getElementById('genBtn3');
+  var outputCard3 = document.getElementById('outputCard3');
+  var promptOut3 = document.getElementById('promptOut3');
+  var copyBtn3 = document.getElementById('copyBtn3');
+  var genBtn4 = document.getElementById('genBtn4');
+  var outputCard4 = document.getElementById('outputCard4');
+  var promptOut4 = document.getElementById('promptOut4');
+  var copyBtn4 = document.getElementById('copyBtn4');
+
+  function updateState(){
+    var len = textEl.value.trim().length;
+    charCount.textContent = len + ' characters';
+    genBtn.disabled = !(langEl.value.trim().length > 0 && len > 0);
+  }
+  langEl.addEventListener('input', updateState);
+  textEl.addEventListener('input', updateState);
+  updateState();
+
+  function cadreLine(cadre){
+    return cadre ? (" I'm allotted to the " + cadre + " cadre.") : "";
+  }
+
+  function buildPrompt(lang, text, cadre){
+    return "I'm learning " + lang + "." + cadreLine(cadre) + " Before I try to translate this word by word, help me understand it at a glance.\n\n" +
+      "Here is the text:\n\"\"\"\n" + text + "\n\"\"\"\n\n" +
+      "Without giving me a full translation yet, tell me:\n" +
+      "1. What is this piece about, in one or two sentences?\n" +
+      "2. Who or what is involved — people, places, organisations?\n" +
+      "3. What background or context would a local reader already know that I might not?\n" +
+      "4. What kind of writing is this (news report, official notice, personal account, something else) and does that affect its tone?";
+  }
+
+  function buildWordTestPrompt(lang, text){
+    return "Now I want to test myself on vocabulary from the same text — not just read a glossary.\n\n" +
+      "Here is the article again, for reference:\n\"\"\"\n" + text + "\n\"\"\"\n\n" +
+      "Pick 6-8 meaningful words or short phrases from it (favour short phrases over single words wherever a word only really makes sense as part of one, e.g. a noun with its modifier). Skip anything too obvious to bother with.\n\n" +
+      "Then quiz me on them one at a time, like this:\n" +
+      "- Show me the word or phrase in " + lang + " script, plus its transliteration into English letters — but not its meaning.\n" +
+      "- Ask me to guess what it means before you tell me anything.\n" +
+      "- Wait for my answer.\n" +
+      "- Then tell me if I was right, and if not, correct me with a one-line reason.\n" +
+      "- Only then move to the next one.\n\n" +
+      "Do not give me the full list of meanings up front — one at a time, and wait for me each time, and don't let the transliteration give the meaning away.\n\n" +
+      "Once we've been through all of them, put together a single word list covering everything we just did, as a clean table or list I can copy out: " + lang + " script, transliteration, and English meaning for each.";
+  }
+
+  function buildSentencePrompt(lang, text){
+    return "Now let's read the same text sentence by sentence, building on what we've already covered.\n\n" +
+      "Here is the article again, for reference:\n\"\"\"\n" + text + "\n\"\"\"\n\n" +
+      "Go one sentence at a time. For each sentence:\n" +
+      "1. Show it in " + lang + " script, plus its transliteration into English letters.\n" +
+      "2. Ask me to try translating it myself first — I can use the words we already tested. Wait for my attempt.\n" +
+      "3. Then give the correct translation.\n" +
+      "4. Break it down word by word, or chunk by chunk where a word only really makes sense as part of one, showing each piece in " + lang + " script, its transliteration, its meaning, and its grammatical role.\n" +
+      "5. Point out the sentence structure and word order, and explain any particles or verb forms doing real work.\n" +
+      "6. Flag anything that's a reusable pattern I'll see again in official or news writing generally, not just specific to this sentence.\n\n" +
+      "Only move to the next sentence after I've responded to your question, and don't do the whole passage at once.\n\n" +
+      "Once we've finished the last sentence, give me a short closing summary — but base it specifically on where I actually struggled or got things wrong across this whole session (both the vocabulary quiz earlier and this sentence read), not a generic recap of the passage. Call out the 2-3 concepts, word types, or patterns I should focus on next, and why.";
+  }
+
+  function buildIssuePrompt(lang, text, cadre){
+    return "Beyond just this article, I want to understand the real issue behind it — not just this one instance, but how it connects to this kind of area more generally." + cadreLine(cadre) + "\n\n" +
+      "Search the web if you can, for anything current. In a few sentences: why does this actually matter, what's the real challenge behind it, and what should I as a police officer understand about issues like this" + (cadre ? (", especially one likely to serve in " + cadre) : "") + "?";
+  }
+
+  function wireCopy(btn, sourceEl){
+    btn.addEventListener('click', function(){
+      var text = sourceEl.textContent;
+      var done = function(){
+        var old = btn.textContent;
+        btn.textContent = 'Copied'; btn.classList.add('done');
+        setTimeout(function(){ btn.textContent = old; btn.classList.remove('done'); }, 1400);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done).catch(function(){ fallbackCopy(text, done); });
+      } else { fallbackCopy(text, done); }
+    });
+  }
+
+  genBtn.addEventListener('click', function(){
+    var prompt = buildPrompt(langEl.value.trim(), textEl.value.trim(), cadreEl.value.trim());
+    promptOut.textContent = prompt;
+    outputCard.classList.add('show');
+    outputCard.scrollIntoView({behavior:'smooth', block:'start'});
+    gtag('event', 'generate_prompt', { event_category: 'read_with_ai' });
+  });
+
+  genBtn2.addEventListener('click', function(){
+    var prompt2 = buildWordTestPrompt(langEl.value.trim(), textEl.value.trim());
+    promptOut2.textContent = prompt2;
+    outputCard2.classList.add('show');
+    outputCard2.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  genBtn3.addEventListener('click', function(){
+    var prompt3 = buildSentencePrompt(langEl.value.trim(), textEl.value.trim());
+    promptOut3.textContent = prompt3;
+    outputCard3.classList.add('show');
+    outputCard3.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  var EXTRA_PROMPTS = [
+    {
+      category: "Vocabulary, for the job you'll actually do",
+      items: [
+        { label: "High-frequency job vocabulary",
+          template: "Give me the 20 words and short phrases that show up most often in official notices, petitions, and FIRs in {{lang}}, ordered by how often I'd actually run into them, with a meaning and one example sentence each." },
+        { label: "Test me on tricky words",
+          template: "Test me on these {{lang}} words — [list the words here] — by asking for synonyms, antonyms, and a situation where each would and wouldn't fit. Wait for my answer each time before correcting me." }
+      ]
+    },
+    {
+      category: "Writing, not just reading",
+      items: [
+        { label: "Correct my own sentence",
+          template: "Here's a sentence I wrote in {{lang}}: [paste your sentence]. Correct it, and explain what was wrong — grammar, word choice, or anything that just sounds unnatural." },
+        { label: "Draft an official notice",
+          template: "Help me draft a short official notice in {{lang}} about: [describe what it's about]. Then tell me honestly whether the tone and register are right for an official document, or too casual or too formal." }
+      ]
+    },
+    {
+      category: "Roleplay and conversation",
+      note: "Both of these work even better out loud — most AI apps now have a voice mode. Try the text version first, then switch to voice once you're comfortable.",
+      items: [
+        { label: "Talk to a petitioner",
+          template: "Roleplay a conversation in {{lang}} where I'm a police officer speaking with a petitioner about [describe the situation]. Play the petitioner, keep it realistic, and correct my language as we go rather than only at the end." },
+        { label: "Address an elder respectfully",
+          template: "I need to speak with a village elder in {{lang}} about [describe the topic]. Teach me the respectful forms of address and phrasing I should use, then roleplay the conversation with you playing the elder." }
+      ]
+    },
+    {
+      category: "Reading beyond today's article",
+      items: [
+        { label: "Write something at my level",
+          template: "Write a short, simple piece in {{lang}} about a topic I'm interested in: [name a topic]. Keep the vocabulary and sentence length appropriate for someone still building up their reading." },
+        { label: "Simplify a hard document",
+          template: "This document in {{lang}} is too difficult for me right now: [paste it]. Rewrite it in simpler {{lang}}, keeping the same meaning, at a level I can actually read." }
+      ]
+    },
+    {
+      category: "Check yourself",
+      items: [
+        { label: "Comprehension check",
+          template: "Here's a piece of text in {{lang}}: [paste it]. Ask me 4-5 questions in English to check whether I actually understood it, based on the content — not just the vocabulary." }
+      ]
+    }
+  ];
+
+  function renderExtras(){
+    var lang = extraLangEl.value.trim() || 'the local language';
+    var wrap = document.getElementById('extrasWrap');
+    wrap.innerHTML = '';
+    EXTRA_PROMPTS.forEach(function(cat, ci){
+      var catEl = document.createElement('div');
+      catEl.className = 'extra-category';
+      var h3 = document.createElement('h3');
+      h3.textContent = cat.category;
+      catEl.appendChild(h3);
+      if(cat.note){
+        var note = document.createElement('p');
+        note.className = 'cat-note';
+        note.textContent = cat.note;
+        catEl.appendChild(note);
+      }
+      var grid = document.createElement('div');
+      grid.className = 'extra-grid';
+      cat.items.forEach(function(item, ii){
+        var id = 'extra-' + ci + '-' + ii;
+        var card = document.createElement('div');
+        card.className = 'extra-card';
+        var label = document.createElement('span');
+        label.className = 'ex-label';
+        label.textContent = item.label;
+        var box = document.createElement('div');
+        box.className = 'prompt-box mono';
+        box.id = id;
+        box.textContent = item.template.split('{{lang}}').join(lang);
+        var btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.textContent = 'Copy prompt';
+        wireCopy(btn, box);
+        card.appendChild(label);
+        card.appendChild(box);
+        card.appendChild(btn);
+        grid.appendChild(card);
+      });
+      catEl.appendChild(grid);
+      wrap.appendChild(catEl);
+    });
+  }
+  var extraLangEl = document.getElementById('extraLang');
+  if(langEl.value.trim()){ extraLangEl.value = langEl.value.trim(); }
+  langEl.addEventListener('input', function(){
+    if(!extraLangEl.dataset.touched){ extraLangEl.value = langEl.value; }
+  });
+  extraLangEl.addEventListener('input', function(){
+    extraLangEl.dataset.touched = '1';
+    renderExtras();
+  });
+  renderExtras();
+
+  genBtn4.addEventListener('click', function(){
+    var prompt4 = buildIssuePrompt(langEl.value.trim(), textEl.value.trim(), cadreEl.value.trim());
+    promptOut4.textContent = prompt4;
+    outputCard4.classList.add('show');
+    outputCard4.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  wireCopy(copyBtn, promptOut);
+  wireCopy(copyBtn2, promptOut2);
+  wireCopy(copyBtn3, promptOut3);
+  wireCopy(copyBtn4, promptOut4);
+  function fallbackCopy(text, cb){
+    try{
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      cb();
+    }catch(e){}
+  }
+})();
+</script>
+</body>
+</html>

@@ -76,6 +76,16 @@ Path: /prompt-library/incident-response.html
 
 ------------------------------------------------------------------------
 
+### Read With AI
+
+Path: /prompt-library/read-with-ai.html
+
+-   Tool for officers learning their posting's local language
+-   Takes one pasted article and builds a five-step sequence of AI prompts: context, vocabulary quiz, sentence-by-sentence read, and the issue behind it
+-   Includes a bonus menu of standalone prompts for vocabulary, writing, roleplay, and comprehension practice
+
+------------------------------------------------------------------------
+
 ### Google Sheet Experiment
 
 Path: /google-sheet-experiment/
