@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn Better with AI — Phase 1 Session</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YZEYRQBYKC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-YZEYRQBYKC');
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1B3A5C;
+    --paper:#FFFFFF;
+    --paper-tint:#E4ECF6;
+    --border:#E3E6EC;
+    --orange:#F96501;
+    --orange-dim:#C9550A;
+    --orange-tint:#FFF1E6;
+    --white:#FFFFFF;
+    --muted:#5B6B85;
+    --muted-dim:#94A1B8;
+    --ok:#1F8A5E;
+    --ok-light:#E8F6EF;
+    --danger:#C93A1F;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    background:var(--paper);
+    color:var(--navy);
+    line-height:1.6;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:40px 20px 100px;}
+
+  /* Header */
+  header{margin-bottom:32px;}
+  header .kicker{
+    color:var(--orange);
+    font-weight:700;
+    letter-spacing:.14em;
+    font-size:12px;
+    text-transform:uppercase;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  header h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:32px;
+    font-weight:700;
+    margin:10px 0 12px;
+    letter-spacing:-.01em;
+    text-transform:uppercase;
+    color:var(--navy);
+  }
+  header p{color:var(--muted);margin:0;font-size:15.5px;max-width:60ch;}
+
+  /* Deck card */
+  .deck-card{
+    background:var(--navy);
+    border:1px solid var(--navy);
+    color:#fff;
+    border-radius:10px;
+    padding:22px 24px;
+    margin-bottom:36px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .deck-card .deck-info .label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--orange);
+    margin-bottom:4px;
+  }
+  .deck-card .deck-info .title{font-size:17px;font-weight:600;}
+  .deck-card .deck-info .sub{font-size:13.5px;color:#AEB9CC;margin-top:2px;}
+  .deck-btn{
+    background:var(--orange);
+    color:#fff;
+    text-decoration:none;
+    padding:11px 18px;
+    border-radius:6px;
+    font-size:14px;
+    font-weight:700;
+    white-space:nowrap;
+    transition:background .15s;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .deck-btn:hover{background:var(--orange-dim);}
+
+  .deck-note{
+    font-size:14px;
+    color:var(--muted);
+    margin:-12px 0 32px;
+    max-width:62ch;
+  }
+
+  /* Section divider */
+  .section-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:8px 0 16px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .section-label::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--border);
+  }
+
+  /* Stage card */
+  .stage{
+    background:var(--paper);
+    border:1px solid var(--border);
+    border-radius:10px;
+    margin-bottom:16px;
+    overflow:hidden;
+    transition:border-color .2s, box-shadow .2s;
+    box-shadow:0 1px 2px rgba(11,30,57,.04);
+  }
+  .stage.unlocked{border-color:var(--orange);}
+  .stage-head{
+    padding:16px 22px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:var(--navy);
+  }
+  .stage-num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    font-weight:700;
+    color:var(--navy);
+    background:var(--orange);
+    border-radius:5px;
+    padding:4px 9px;
+    flex-shrink:0;
+  }
+  .stage-titles{flex:1;min-width:0;}
+  .stage-name{font-weight:700;font-size:16px;font-family:'Space Grotesk',sans-serif;color:#fff;text-transform:uppercase;letter-spacing:.02em;}
+  .stage-role{color:#AEB9CC;font-size:13px;margin-top:1px;}
+  .stage-status{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    padding:5px 10px;
+    border-radius:20px;
+    flex-shrink:0;
+  }
+  .stage-status.locked{background:rgba(255,255,255,.08);color:#AEB9CC;border:1px solid rgba(255,255,255,.18);}
+  .stage-status.cleared{background:var(--orange);color:var(--navy);border:1px solid var(--orange);}
+
+  .stage-lock{
+    padding:18px 22px;
+    display:flex;
+    gap:8px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+  .stage-lock input{
+    font-family:'IBM Plex Mono',monospace;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:10px 12px;
+    font-size:14px;
+    width:180px;
+    background:var(--paper);
+    color:var(--navy);
+  }
+  .stage-lock input::placeholder{color:var(--muted-dim);}
+  .stage-lock input:focus{outline:2px solid var(--orange);outline-offset:1px;}
+  .stage-lock button{
+    background:var(--navy);
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    padding:10px 16px;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:'IBM Plex Mono',monospace;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  .stage-lock button:hover{background:var(--orange-dim);}
+  .lock-error{
+    font-size:12.5px;
+    color:var(--danger);
+    width:100%;
+    display:none;
+    margin-top:2px;
+  }
+  .lock-error.show{display:block;}
+
+  .stage-body{
+    display:none;
+    padding:0 22px 22px;
+  }
+  .stage.unlocked .stage-body{display:block;padding-top:18px;}
+  .stage.unlocked .stage-lock{display:none;}
+
+  .instruction{
+    font-size:13.5px;
+    color:var(--muted);
+    margin-bottom:12px;
+  }
+  .prompt-box{
+    background:var(--paper-tint);
+    border:1px solid var(--border);
+    border-left:3px solid var(--orange);
+    border-radius:8px;
+    padding:16px 18px;
+    font-size:14.5px;
+    white-space:pre-wrap;
+    font-family:'IBM Plex Mono',monospace;
+    line-height:1.65;
+    position:relative;
+    color:var(--navy);
+  }
+  .copy-btn{
+    margin-top:12px;
+    background:transparent;
+    border:1px solid var(--navy);
+    color:var(--navy);
+    border-radius:6px;
+    padding:8px 14px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+  }
+  .copy-btn:hover{background:var(--orange);border-color:var(--orange);color:#fff;}
+  .copy-btn.copied{background:var(--ok);border-color:var(--ok);color:#fff;}
+
+  /* Takeaway section */
+  #takeaway{
+    margin-top:44px;
+    padding-top:8px;
+  }
+  .takeaway-card{
+    background:var(--paper);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:24px;
+    box-shadow:0 1px 2px rgba(11,30,57,.04);
+  }
+  .takeaway-card h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:21px;
+    margin:0 0 8px;
+    text-transform:uppercase;
+    color:var(--navy);
+  }
+  .takeaway-card p{font-size:14.5px;color:var(--muted);margin:0 0 16px;}
+  .takeaway-card .stage-lock{padding:0;margin-bottom:4px;}
+  .takeaway-card .stage-body{padding:0;border-top:none;}
+  .takeaway-card .stage-body.show{display:block;}
+  .takeaway-card .further-reading{
+    margin:18px 0 0;
+    padding-top:14px;
+    border-top:1px solid var(--border);
+    font-size:13px;
+  }
+  .takeaway-card .further-reading a{
+    color:var(--navy);
+    text-decoration:underline;
+    text-underline-offset:2px;
+  }
+  .takeaway-card .further-reading a:hover{color:var(--orange);}
+
+  footer{
+    margin-top:60px;
+    text-align:center;
+    color:var(--muted-dim);
+    font-size:12.5px;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  footer a{
+    color:var(--muted-dim);
+    text-decoration:underline;
+    text-underline-offset:2px;
+  }
+  footer a:hover{color:var(--orange);}
+  footer .divider{margin:0 8px;opacity:.5;}
+
+  /* Feedback section */
+  #feedback{
+    margin-top:48px;
+  }
+  #feedback h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:19px;
+    margin:0 0 4px;
+    text-transform:uppercase;
+    color:var(--navy);
+  }
+  #feedback p{
+    font-size:13.5px;
+    color:var(--muted);
+    margin:0 0 14px;
+  }
+  #feedback iframe{
+    width:100%;
+    height:900px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:#fff;
+  }
+  @media (max-width:520px){
+    #feedback iframe{height:1200px;}
+  }
+
+  @media (max-width:520px){
+    header h1{font-size:26px;}
+    .stage-lock input{width:100%;}
+    .deck-card{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker">NPA · Phase 1 · Learn Better with AI</div>
+    <h1>Retrieve it, don't just read it.</h1>
+    <p>You attended the Handling Protests lecture recently. We're not going to ask AI to summarise it for you. We're going to use AI to test what's actually in your memory — and repair what isn't.</p>
+  </header>
+
+  <div class="deck-card">
+    <div class="deck-info">
+      <div class="label">The lecture</div>
+      <div class="title">Handling Protests — SP Guntur</div>
+      <div class="sub">Open or download this before Stage 1.</div>
+    </div>
+    <a class="deck-btn" href="handling-protests-lecture.pptx" download>Download PPT</a>
+  </div>
+  <p class="deck-note">We're using this lecture as the working example today. The six prompts ahead aren't specific to protest-handling — the same sequence works on any lecture you attend at NPA. Today you'll go through it once, together, on material you already have. From then on, you can run it yourself on anything.</p>
+
+  <div id="stages"></div>
+
+  <div id="takeaway">
+    <div class="takeaway-card">
+      <h2>Continue your learning journey</h2>
+      <p>These six prompts aren't the only way to engage with a lecture — they're one set out of many possible ones. Unlock the master prompt below to generate a fresh set, tailored to any lecture you attend, any time you want to engage with it more deeply.</p>
+      <div class="stage-lock" id="lock-master">
+        <input type="text" placeholder="Enter password" id="input-master" maxlength="20">
+        <button onclick="tryUnlockMaster()">Unlock</button>
+        <div class="lock-error" id="error-master">Not quite — check the code and try again.</div>
+      </div>
+      <div class="stage-body" id="body-master">
+        <div class="prompt-box" id="masterPromptText"></div>
+        <button class="copy-btn" onclick="copyPrompt('masterPromptText', this)">Copy master prompt</button>
+      </div>
+      <p class="further-reading">Further reading: <a href="https://malikagarg03.substack.com/p/how-im-using-chatgpt-as-my-learning" target="_blank" rel="noopener">How I'm using ChatGPT as my learning partner</a></p>
+    </div>
+  </div>
+
+  <div id="feedback">
+    <h2>Exit ticket</h2>
+    <p>A quick set of questions about today's exercise — takes about a minute.</p>
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdTeYxchlEjoO_s8zJG-IWwv2UpdtZFj8P6nNGRxqvrZeeFFw/viewform?embedded=true" title="Session feedback form">Loading form…</iframe>
+  </div>
+
+  <footer>SVP NPA · Hyderabad</footer>
+</div>
+
+<script>
+const stages = [
+  {
+    id: 'retrieve',
+    num: 'Prompt 1 of 6',
+    name: 'Retrieve',
+    role: 'What actually survived?',
+    code: 'UkVUUklFVkU0Nw==',
+    instruction: 'Paste this in, along with the lecture PPT. Answer entirely from memory — don\'t look anything up.',
+    prompt: `I attended the attached lecture about two weeks ago.
+
+Do not summarise, explain, or teach me anything from the PPT yet.
+
+First help me find out what I actually remember.
+
+Ask me 5 questions, one at a time, covering the most important ideas of the lecture rather than minor details.
+
+For each question:
+- Let me answer entirely from memory.
+- Do not give me hints.
+- Do not correct or explain my answer yet.
+- Move to the next question.
+
+After all 5 questions, compare my answers with the PPT and tell me:
+1. What I remembered well.
+2. What I remembered partially or inaccurately.
+3. What important ideas I seem to have forgotten.
+
+Keep the feedback brief. Do not reteach the lecture yet.`
+  },
+  {
+    id: 'clarify',
+    num: 'Prompt 2 of 6',
+    name: 'Clarify',
+    role: 'Repair the weak part',
+    code: 'Q0xBUklGWTI5',
+    instruction: 'Use this right after Retrieve, on the same conversation.',
+    prompt: `Now help me understand that concept properly.
+
+Do not simply repeat the PPT.
+
+Use:
+1. one simple example;
+2. one realistic policing example;
+3. one contrasting example where the concept does not apply or applies differently.
+
+Then ask me to explain the concept back to you in my own words.
+
+After I answer, point out only the important gaps or inaccuracies in my explanation.`
+  },
+  {
+    id: 'cues',
+    num: 'Prompt 3 of 6',
+    name: 'Build Retrieval Cues',
+    role: 'Will a field situation trigger the knowledge?',
+    code: 'Q1VFUzYz',
+    instruction: 'This is where memory turns into something usable on the ground.',
+    prompt: `I don't just want to remember these ideas when someone asks me about this PPT. I want the relevant knowledge to come to mind when a real situation requires it.
+
+Give me 4 short policing situations, one at a time.
+
+For each situation:
+- Do not tell me which principle from the lecture is relevant.
+- Ask me: "What in this situation should trigger something you learnt in the lecture?"
+- Let me answer before giving feedback.
+- Then tell me whether I noticed the important cue and what knowledge it should have triggered.
+
+Make the surface details different across the situations.`
+  },
+  {
+    id: 'discriminate',
+    num: 'Prompt 4 of 6',
+    name: 'Discriminate',
+    role: 'Similar situations don\'t always mean the same answer',
+    code: 'RElTQ1JJTUlOQVRFODU=',
+    instruction: 'Optional — use only if time allows.',
+    prompt: `Now make this harder.
+
+Give me 3 pairs of situations, one pair at a time.
+
+Within each pair, make the situations appear superficially similar, but change one or two important facts so that I should think about them differently.
+
+Ask me:
+1. What is the decisive difference?
+2. What idea from the lecture does that difference trigger?
+3. How should it change my reasoning?
+
+Let me answer before giving feedback.`
+  },
+  {
+    id: 'simulate',
+    num: 'Prompt 5 of 6',
+    name: 'Simulate',
+    role: 'Mental rehearsal',
+    code: 'U0lNVUxBVEUxMg==',
+    instruction: 'Put yourself in the field. Commit to each decision before moving on.',
+    prompt: `Now put me in the role of an ASP handling a realistic protest.
+
+Give me only the information I could reasonably know at the beginning.
+
+Run the situation through 4 stages.
+
+At each stage:
+1. Give me a new development.
+2. Ask me what I would do and why.
+3. Do not tell me which concept from the lecture is relevant.
+4. Do not give me options unless I ask for them.
+5. Let me commit to my decision before continuing.
+
+Make some information incomplete or uncertain, as it would be in the field.
+
+After Stage 4, assess how well I:
+- noticed important changes;
+- retrieved relevant knowledge from the lecture;
+- sought information I needed;
+- revised or failed to revise my thinking;
+- justified my decisions.
+
+Do not judge me merely on whether my final answer matches what you would have done.`
+  },
+  {
+    id: 'reflect',
+    num: 'Prompt 6 of 6',
+    name: 'Challenge & Reflect',
+    role: 'What are my blind spots?',
+    code: 'UkVGTEVDVDk0',
+    instruction: 'The last stage. Look back across everything you\'ve typed today.',
+    prompt: `Look across my answers throughout this entire conversation.
+
+Based on my actual responses, identify briefly:
+- something I understand well;
+- something I still understand only superficially;
+- an assumption I repeatedly made;
+- something important I tended not to notice.
+
+Then select one important decision I made during the simulation.
+
+Challenge my reasoning by asking me, one question at a time:
+1. What assumption were you relying on?
+2. What if that assumption is wrong?
+3. What is another plausible interpretation of the information?
+4. What additional information would most affect your decision?
+5. Would that information make you change your decision?
+
+After I answer all five, briefly tell me what this reveals about my current mental model and what I should practise further.`
+  }
+];
+
+const masterPrompt = `I have uploaded material from a lecture/class that I have already attended.
+
+I want to use AI to help me learn the material deeply and be able to retrieve and apply it later, not merely summarise it or make studying easier.
+
+Create a step-by-step sequence of prompts that I can give you one at a time to help me learn this particular material.
+
+Design the sequence around these learning goals:
+
+1. RETRIEVE — First test what I can remember without showing or explaining the answers. Use a small, bounded number of questions covering the most important ideas, not minor details.
+2. DIAGNOSE — Use my answers to identify important concepts that I remember superficially, misunderstand, or cannot explain properly.
+3. CLARIFY — Help me repair those gaps using explanations, examples, contrasts and asking me to explain the idea back in my own words.
+4. CONNECT — Make me first connect the new learning to things I already know, have learnt elsewhere, or have experienced. Elicit these connections from me before suggesting them yourself.
+5. EXPAND — After I have tried making my own connections, use your general knowledge to suggest a few important additional concepts, examples or perspectives that would enrich my mental model. Clearly distinguish these additions from what was actually taught in the uploaded material.
+6. BUILD RETRIEVAL CUES — Give me situations or cues in which knowledge from the lecture should come to mind, without telling me which concept is relevant. Make me retrieve it.
+7. DISCRIMINATE — Give me superficially similar situations where important differences mean that the knowledge applies differently. Make me identify the decisive difference.
+8. APPLY / SIMULATE — Where appropriate, create realistic situations in which I have to use the knowledge. Reveal information progressively and make me decide, explain and revise rather than simply giving me the answer.
+9. CHALLENGE & REFLECT — Use my answers throughout the interaction to identify weaknesses, assumptions, blind spots and gaps in my mental model. Challenge my reasoning rather than simply agreeing with me.
+
+Important rules:
+- Base the learning sequence primarily on the uploaded material.
+- Do not begin by summarising the material.
+- Make me do the cognitive work wherever possible.
+- Do not give me answers before I have attempted retrieval or reasoning.
+- Ask questions one at a time when answering one question may affect the next.
+- Keep each stage bounded so the exercise does not become unnecessarily long.
+- Adapt the prompts to the nature of this particular subject. Do not mechanically force simulations or scenarios where they are inappropriate.
+- Clearly distinguish knowledge you add from knowledge contained in the uploaded material.
+- Flag factual, legal or technical additions that should be verified from authoritative sources.
+- Prefer understanding, retrieval and application over memorising isolated facts.
+
+First give me the complete numbered sequence of prompts. Do not start executing them until I tell you to begin.`;
+
+const MASTER_CODE = 'Sk9VUk5FWTUx'; // base64
+const STORAGE_KEY = 'lbwa-unlocked-stages';
+const MASTER_KEY = 'lbwa-unlocked-master';
+
+function getUnlocked(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch(e){ return []; }
+}
+function setUnlocked(arr){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+}
+
+function render(){
+  const container = document.getElementById('stages');
+  const unlocked = getUnlocked();
+  container.innerHTML = '';
+
+  stages.forEach(s => {
+    const isUnlocked = unlocked.includes(s.id);
+    const el = document.createElement('div');
+    el.className = 'stage' + (isUnlocked ? ' unlocked' : '');
+    el.innerHTML = `
+      <div class="stage-head">
+        <div class="stage-num">${s.num}</div>
+        <div class="stage-titles">
+          <div class="stage-name">${s.name}</div>
+          <div class="stage-role">${s.role}</div>
+        </div>
+        <div class="stage-status ${isUnlocked ? 'cleared' : 'locked'}">${isUnlocked ? 'Cleared' : 'Locked'}</div>
+      </div>
+      <div class="stage-lock">
+        <input type="text" placeholder="Enter password" id="input-${s.id}" maxlength="20">
+        <button onclick="tryUnlock('${s.id}')">Unlock</button>
+        <div class="lock-error" id="error-${s.id}">Not quite — check the code and try again.</div>
+      </div>
+      <div class="stage-body">
+        <div class="instruction">${s.instruction}</div>
+        <div class="prompt-box" id="text-${s.id}">${s.prompt}</div>
+        <button class="copy-btn" onclick="copyPrompt('text-${s.id}', this)">Copy prompt</button>
+      </div>
+    `;
+    container.appendChild(el);
+
+    const input = el.querySelector(`#input-${s.id}`);
+    input.addEventListener('keydown', e => { if(e.key === 'Enter') tryUnlock(s.id); });
+  });
+
+  document.getElementById('masterPromptText').textContent = masterPrompt;
+
+  const masterInput = document.getElementById('input-master');
+  if(masterInput && !masterInput.dataset.bound){
+    masterInput.addEventListener('keydown', e => { if(e.key === 'Enter') tryUnlockMaster(); });
+    masterInput.dataset.bound = 'true';
+  }
+
+  const masterUnlocked = localStorage.getItem(MASTER_KEY) === 'true';
+  document.getElementById('lock-master').style.display = masterUnlocked ? 'none' : 'flex';
+  document.getElementById('body-master').classList.toggle('show', masterUnlocked);
+}
+
+function tryUnlockMaster(){
+  const input = document.getElementById('input-master');
+  const error = document.getElementById('error-master');
+  const entered = input.value.trim().toUpperCase();
+
+  if(entered === atob(MASTER_CODE)){
+    localStorage.setItem(MASTER_KEY, 'true');
+    error.classList.remove('show');
+    render();
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'unlock_stage', { event_category: 'learn_better_with_ai', stage: 'master' });
+    }
+  } else {
+    error.classList.add('show');
+  }
+}
+
+function tryUnlock(id){
+  const stage = stages.find(s => s.id === id);
+  const input = document.getElementById(`input-${id}`);
+  const error = document.getElementById(`error-${id}`);
+  const entered = input.value.trim().toUpperCase();
+
+  if(entered === atob(stage.code)){
+    const unlocked = getUnlocked();
+    if(!unlocked.includes(id)){
+      unlocked.push(id);
+      setUnlocked(unlocked);
+    }
+    error.classList.remove('show');
+    render();
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'unlock_stage', { event_category: 'learn_better_with_ai', stage: id });
+    }
+  } else {
+    error.classList.add('show');
+  }
+}
+
+function copyPrompt(elId, btn){
+  const text = document.getElementById(elId).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const original = btn.textContent;
+    btn.textContent = 'Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1600);
+  });
+}
+
+render();
+</script>
+</body>
+</html>

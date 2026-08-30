@@ -86,6 +86,17 @@ Path: /prompt-library/read-with-ai.html
 
 ------------------------------------------------------------------------
 
+### Learn Better with AI
+
+Path: /prompt-library/learn-better-with-ai.html
+
+-   Facilitated workshop tool for an NPA (National Police Academy) Phase 1 session
+-   Six passcode-gated prompts (given live by the facilitator) turn a specific lecture into a retrieval, clarification, and simulation exercise, plus a master prompt to run the same method on any future lecture
+-   Includes a PPT download for the session's example lecture and an embedded Google Form exit ticket
+-   Progress saved to localStorage so unlocked stages persist on refresh
+
+------------------------------------------------------------------------
+
 ### Google Sheet Experiment
 
 Path: /google-sheet-experiment/
