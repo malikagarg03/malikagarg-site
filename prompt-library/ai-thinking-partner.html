@@ -146,6 +146,25 @@
     font-size:14.5px;
     margin:10px 0 12px;
   }
+  .recap{
+    background:var(--gold-light);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:14px 16px;
+    margin:0 0 20px;
+  }
+  .recap .recap-label{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:10px;
+  }
+  .recap .recap-field{font-size:14.5px;margin-bottom:10px;}
+  .recap .recap-field:last-child{margin-bottom:0;}
+  .recap .recap-field strong{display:block;font-size:12.5px;font-weight:600;color:var(--grey);margin-bottom:2px;}
+
   .copybtn{
     background:#fff;
     border:1px solid var(--gold);
@@ -391,6 +410,13 @@
     <div class="promptbox" id="box-writeback">
       <p class="sub" style="margin-top:0;">Please stop using AI at this point. Read your original project proposal, then respond below.</p>
 
+      <div class="recap" id="recap-writeback">
+        <div class="recap-label">Your original proposal</div>
+        <div class="recap-field"><strong>Proposed project</strong><span id="recap-project"></span></div>
+        <div class="recap-field"><strong>Problem statement</strong><span id="recap-problem"></span></div>
+        <div class="recap-field"><strong>Mechanism</strong><span id="recap-mechanism"></span></div>
+      </div>
+
       <label>Would you still propose this project?</label>
       <div class="optionrow">
         <label class="radio"><input type="radio" name="changed" value="asis" onchange="saveC()"> Yes — I would propose it as is</label>
@@ -453,6 +479,8 @@ function clearFormA(){
   const checked = document.querySelector('input[name=changed]:checked');
   if(checked) checked.checked = false;
   localStorage.removeItem('c_changed');
+
+  if(document.getElementById('box-writeback').classList.contains('show')) fillRecap();
 }
 
 function saveA(){
@@ -619,6 +647,7 @@ function unlock(btnEl, stage){
     if(stage === 'writeback'){
       const box = document.getElementById('box-writeback');
       box.classList.add('show');
+      fillRecap();
     } else {
       const content = document.getElementById('content-'+stage);
       content.classList.add('show');
@@ -640,6 +669,12 @@ function generatePrompt(stage){
 function val(id){
   const v = document.getElementById(id) ? document.getElementById(id).value.trim() : '';
   return v || '[not filled in]';
+}
+
+function fillRecap(){
+  document.getElementById('recap-project').textContent = val('project');
+  document.getElementById('recap-problem').textContent = val('problem');
+  document.getElementById('recap-mechanism').textContent = val('mechanism');
 }
 
 const WRAPUP_TEXT = "Let's stop the interview here. Looking back at the questions you asked me, what's the pattern? What's the one underlying uncertainty they all point back to?";
