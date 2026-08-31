@@ -442,11 +442,17 @@ window.addEventListener('DOMContentLoaded', ()=>{
 });
 
 function clearFormA(){
-  if(!confirm('Clear the project, problem and mechanism fields? This cannot be undone.')) return;
+  if(!confirm('Clear the project, problem and mechanism fields, along with your writeback answers below? This cannot be undone.')) return;
   ['project','problem','mechanism'].forEach(id=>{
     document.getElementById(id).value = '';
     localStorage.removeItem('a_'+id);
   });
+
+  document.getElementById('newquestion').value = '';
+  localStorage.removeItem('c_newquestion');
+  const checked = document.querySelector('input[name=changed]:checked');
+  if(checked) checked.checked = false;
+  localStorage.removeItem('c_changed');
 }
 
 function saveA(){
