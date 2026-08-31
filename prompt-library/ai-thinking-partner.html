@@ -78,20 +78,6 @@
   textarea{min-height:56px;}
   input[type=text]:focus, textarea:focus{outline:2px solid var(--gold-light);border-color:var(--gold);}
 
-  .confidence{display:flex;gap:8px;margin-top:6px;}
-  .confidence button{
-    flex:1;
-    padding:10px 0;
-    border-radius:8px;
-    border:1px solid var(--border);
-    background:#fff;
-    font-size:15px;
-    font-weight:600;
-    cursor:pointer;
-    color:var(--dark);
-  }
-  .confidence button.active{background:var(--gold);border-color:var(--gold);color:#fff;}
-
   .save-row{margin-top:18px;display:flex;align-items:center;gap:12px;}
   button.primary{
     background:var(--gold);
@@ -273,15 +259,6 @@
     <label for="mechanism">Mechanism — how this project resolves the stated problem</label>
     <textarea id="mechanism" placeholder="e.g. Deployment of a trained two-officer cell per district, assuming direct responsibility for digital evidence handling currently routed through the state cyber cell"></textarea>
 
-    <label>How confident are you that this project, as originally proposed, should be pursued?</label>
-    <div class="confidence" id="confBefore">
-      <button data-v="1">1</button>
-      <button data-v="2">2</button>
-      <button data-v="3">3</button>
-      <button data-v="4">4</button>
-      <button data-v="5">5</button>
-    </div>
-
     <div class="save-row">
       <button class="primary" onclick="saveA()">Save and download my proposal</button>
       <span class="saved-flag" id="flagA">Saved — file downloaded</span>
@@ -414,15 +391,6 @@
     <div class="promptbox" id="box-writeback">
       <p class="sub" style="margin-top:0;">Please stop using AI at this point. Read your original project proposal, then respond below.</p>
 
-      <label>Your confidence, now, that this project, in the form originally proposed, should be pursued</label>
-      <div class="confidence" id="confAfter">
-        <button data-v="1">1</button>
-        <button data-v="2">2</button>
-        <button data-v="3">3</button>
-        <button data-v="4">4</button>
-        <button data-v="5">5</button>
-      </div>
-
       <label>Would you still propose this project?</label>
       <div class="optionrow">
         <label class="radio"><input type="radio" name="changed" value="asis" onchange="saveC()"> Yes — I would propose it as is</label>
@@ -458,27 +426,6 @@ function decodeCode(stage){
   return atob(PASSCODES_B64[stage]);
 }
 
-// ---- Confidence pickers ----
-function wireConfidence(id, storeKey, onPick){
-  const el = document.getElementById(id);
-  const saved = localStorage.getItem(storeKey);
-  el.querySelectorAll('button').forEach(btn=>{
-    if(saved && btn.dataset.v === saved) btn.classList.add('active');
-    btn.addEventListener('click', ()=>{
-      el.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      if(onPick) onPick();
-    });
-  });
-}
-wireConfidence('confBefore','conf_before');
-wireConfidence('confAfter','conf_after', saveC);
-
-function getConfidence(id){
-  const active = document.querySelector('#'+id+' button.active');
-  return active ? active.dataset.v : '';
-}
-
 // ---- Load saved Part A on page load ----
 window.addEventListener('DOMContentLoaded', ()=>{
   ['project','problem','mechanism'].forEach(id=>{
@@ -495,20 +442,17 @@ window.addEventListener('DOMContentLoaded', ()=>{
 });
 
 function clearFormA(){
-  if(!confirm('Clear the project, problem, mechanism and confidence fields? This cannot be undone.')) return;
+  if(!confirm('Clear the project, problem and mechanism fields? This cannot be undone.')) return;
   ['project','problem','mechanism'].forEach(id=>{
     document.getElementById(id).value = '';
     localStorage.removeItem('a_'+id);
   });
-  document.querySelectorAll('#confBefore button').forEach(b=>b.classList.remove('active'));
-  localStorage.removeItem('conf_before');
 }
 
 function saveA(){
   ['project','problem','mechanism'].forEach(id=>{
     localStorage.setItem('a_'+id, document.getElementById(id).value);
   });
-  localStorage.setItem('conf_before', getConfidence('confBefore'));
   flash('flagA');
   downloadProposal();
 }
@@ -574,7 +518,6 @@ function downloadProposal(){
   const project = val('project');
   const problem = val('problem');
   const mechanism = val('mechanism');
-  const confidence = getConfidence('confBefore') || '(not selected)';
   const stamp = new Date().toLocaleString();
 
   let doc = RTF_HEADER;
@@ -585,8 +528,6 @@ function downloadProposal(){
   doc += rtfFieldValue(problem);
   doc += rtfFieldLabel('Mechanism — how this project resolves the stated problem');
   doc += rtfFieldValue(mechanism);
-  doc += rtfFieldLabel('Confidence (1–5)');
-  doc += rtfFieldValue(confidence);
   doc += '}';
 
   downloadRtf('my-proposal-before.rtf', doc);
@@ -596,8 +537,6 @@ function downloadSummary(){
   const project = val('project');
   const problem = val('problem');
   const mechanism = val('mechanism');
-  const confBefore = getConfidence('confBefore') || '(not selected)';
-  const confAfter = getConfidence('confAfter') || '(not selected)';
   const changedEl = document.querySelector('input[name=changed]:checked');
   const changedLabel = changedEl ? changedEl.closest('label').textContent.trim() : '(not answered)';
   const newQuestion = document.getElementById('newquestion').value.trim() || '(not filled in)';
@@ -627,8 +566,6 @@ function downloadSummary(){
   doc += rtfFieldValue(mechanism);
 
   doc += rtfSectionHeading('Your Position After Discussion');
-  doc += rtfFieldValue(`Confidence before: ${confBefore}/5`);
-  doc += rtfFieldValue(`Confidence now: ${confAfter}/5`);
   doc += rtfFieldLabel('Would you still propose this project?');
   doc += rtfFieldValue(changedLabel);
   doc += rtfFieldLabel('One thing this exercise revealed about your proposal that you had not considered before');
@@ -658,7 +595,6 @@ function saveC(){
   localStorage.setItem('c_newquestion', document.getElementById('newquestion').value);
   const checked = document.querySelector('input[name=changed]:checked');
   localStorage.setItem('c_changed', checked ? checked.value : '');
-  localStorage.setItem('conf_after', getConfidence('confAfter'));
 }
 
 function flash(id){
