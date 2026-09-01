@@ -4,13 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI as Your Thinking Partner — MCTP-IV</title>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YZEYRQBYKC"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YZEYRQBYKC');
-</script>
 <style>
   :root{
     --gold:#9c6b1f;
@@ -660,9 +653,6 @@ function unlock(btnEl, stage){
 function generatePrompt(stage){
   fillPrompt(stage);
   document.getElementById('box-'+stage).classList.add('show');
-  if (typeof gtag !== 'undefined') {
-    gtag('event', 'generate_prompt', { event_category: 'ai_thinking_partner' });
-  }
 }
 
 // ---- Prompt generation ----
