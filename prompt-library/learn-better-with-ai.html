@@ -401,7 +401,7 @@ Do not summarise, explain, or teach me anything from the PPT yet.
 
 First help me find out what I actually remember.
 
-Ask me 5 questions, one at a time, covering the most important ideas of the lecture rather than minor details.
+Ask me no more than 5 questions, one at a time, covering the most important ideas of the lecture rather than minor details.
 
 For each question:
 - Let me answer entirely from memory.
@@ -409,12 +409,12 @@ For each question:
 - Do not correct or explain my answer yet.
 - Move to the next question.
 
-After all 5 questions, compare my answers with the PPT and tell me:
-1. What I remembered well.
-2. What I remembered partially or inaccurately.
-3. What important ideas I seem to have forgotten.
+After all questions, go through the PPT and list the key concepts it covers. Sort them into three groups based on my answers:
+1. Concepts I understood well.
+2. Concepts I understood partially or got somewhat wrong.
+3. Concepts I seem to have forgotten or missed entirely.
 
-Keep the feedback brief. Do not reteach the lecture yet.`
+Keep this brief — a short list under each heading, not an essay.`
   },
   {
     id: 'clarify',
@@ -423,18 +423,20 @@ Keep the feedback brief. Do not reteach the lecture yet.`
     role: 'Repair the weak part',
     code: 'Q0xBUklGWTI5',
     instruction: 'Use this right after Retrieve, on the same conversation.',
-    prompt: `Now help me understand that concept properly.
+    prompt: `Now let's fix the concepts you listed as partially understood or forgotten.
 
-Do not simply repeat the PPT.
+From those — the ones I understood partially or forgot — pick the 3 most important ones to teach in this session.
 
-Use:
-1. one simple example;
-2. one realistic policing example;
-3. one contrasting example where the concept does not apply or applies differently.
+Keep a running tracker at the top of every reply in this stage: "Concepts left to teach: X of 3."
 
-Then ask me to explain the concept back to you in my own words.
+Take them one at a time, starting with the ones I forgot entirely. For each concept:
+1. One simple example.
+2. One realistic policing example.
+3. One contrasting example where the concept does not apply or applies differently.
+4. Then ask me to explain the concept back to you in my own words.
+5. Point out only the important gaps or inaccuracies in my explanation.
 
-After I answer, point out only the important gaps or inaccuracies in my explanation.`
+Move to the next concept only after I've explained the current one back to you. Stop after all 3 concepts.`
   },
   {
     id: 'cues',
