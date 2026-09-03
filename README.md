@@ -23,8 +23,8 @@ usability
 Path: /
 
 -   Personal landing page
--   Section order: About → Tools → Writing → Projects → Quick Links
--   Quick Links loaded dynamically from `links.json`
+-   Section order: About → Tools → Writing
+-   Projects and Quick Links sections are commented out in the HTML (not deleted) — currently not relevant
 
 ------------------------------------------------------------------------
 
@@ -91,9 +91,21 @@ Path: /prompt-library/read-with-ai.html
 Path: /prompt-library/learn-better-with-ai.html
 
 -   Facilitated workshop tool for an NPA (National Police Academy) Phase 1 session
--   Six passcode-gated prompts (given live by the facilitator) turn a specific lecture into a retrieval, clarification, and simulation exercise, plus a master prompt to run the same method on any future lecture
+-   Five passcode-gated prompts (given live by the facilitator) turn a specific lecture into a retrieval, clarification, and simulation exercise, plus a master prompt to run the same method on any future lecture
 -   Includes a PPT download for the session's example lecture and an embedded Google Form exit ticket
 -   Progress saved to localStorage so unlocked stages persist on refresh
+-   Links out to the Build My AI Learning Partner tool for anyone doing an online course
+
+------------------------------------------------------------------------
+
+### Build My AI Learning Partner
+
+Path: /prompt-library/ai-learning-partner.html
+
+-   Tool for anyone taking an online course, built with IPS probationers in mind
+-   Guided form captures who the learner is, the course, their purpose, prior knowledge, interests, and where they want to apply it
+-   Assembles one reusable AI instruction — for a ChatGPT/Claude Project or custom instructions — that turns lecture transcripts, slides, or readings into a personalised learning conversation, plus two follow-up prompts for starting each new lecture
+-   Entirely client-side; form contents are never stored or transmitted
 
 ------------------------------------------------------------------------
 

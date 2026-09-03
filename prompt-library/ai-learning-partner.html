@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build My AI Learning Partner</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YZEYRQBYKC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-YZEYRQBYKC');
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1B3A5C;
+    --paper:#FFFFFF;
+    --paper-tint:#E4ECF6;
+    --border:#E3E6EC;
+    --orange:#F96501;
+    --orange-dim:#C9550A;
+    --muted:#5B6B85;
+    --muted-dim:#94A1B8;
+    --ok:#1F8A5E;
+    --danger:#C93A1F;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    background:var(--paper);
+    color:var(--navy);
+    line-height:1.6;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:40px 20px 100px;}
+
+  /* Header */
+  header{margin-bottom:24px;}
+  header .kicker{
+    color:var(--orange);
+    font-weight:700;
+    letter-spacing:.14em;
+    font-size:12px;
+    text-transform:uppercase;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  header h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:32px;
+    font-weight:700;
+    margin:10px 0 14px;
+    letter-spacing:-.01em;
+    text-transform:uppercase;
+    color:var(--navy);
+  }
+  header p{color:var(--muted);margin:0 0 12px;font-size:15.5px;max-width:64ch;}
+  header p:last-child{margin-bottom:0;}
+
+  /* Note box (reused for the personalisation note) */
+  .note-box{
+    background:var(--paper-tint);
+    border:1px solid var(--border);
+    border-left:3px solid var(--orange);
+    border-radius:8px;
+    padding:14px 18px;
+    font-size:13.5px;
+    color:var(--navy);
+    margin:20px 0 32px;
+  }
+  .note-box strong{
+    font-family:'IBM Plex Mono',monospace;
+    text-transform:uppercase;
+    font-size:11px;
+    letter-spacing:.08em;
+    color:var(--orange);
+    display:block;
+    margin-bottom:4px;
+  }
+
+  /* Section label */
+  .section-label{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:15px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.02em;
+    color:var(--navy);
+    margin:0 0 16px;
+  }
+
+  /* Form card */
+  .form-card{
+    background:var(--paper);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:26px 24px;
+    box-shadow:0 1px 2px rgba(11,30,57,.04);
+    margin-bottom:28px;
+  }
+  .field{margin-bottom:22px;}
+  .field:last-of-type{margin-bottom:0;}
+  .field-label-row{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .field label{
+    font-weight:700;
+    font-size:15px;
+    color:var(--navy);
+  }
+  .tag-req, .tag-opt{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+  .tag-req{color:var(--orange-dim);}
+  .tag-opt{color:var(--muted-dim);}
+  .field .helper{
+    font-size:13px;
+    color:var(--muted);
+    margin:2px 0 8px;
+  }
+  .field input[type=text], .field textarea{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:10px 12px;
+    font-size:14.5px;
+    font-family:'Inter',sans-serif;
+    background:var(--paper);
+    color:var(--navy);
+    resize:vertical;
+  }
+  .field textarea{min-height:64px;}
+  .field input[type=text]:focus, .field textarea:focus{
+    outline:2px solid var(--orange);
+    outline-offset:1px;
+    border-color:var(--orange);
+  }
+  .field input.invalid, .field textarea.invalid{border-color:var(--danger);}
+  .field-error{
+    font-size:12.5px;
+    color:var(--danger);
+    margin-top:6px;
+    display:none;
+  }
+  .field-error.show{display:block;}
+
+  .privacy-note{
+    font-size:12.5px;
+    color:var(--muted-dim);
+    margin:22px 0 14px;
+  }
+
+  .btn-generate{
+    display:block;
+    width:100%;
+    background:var(--orange);
+    color:#fff;
+    border:none;
+    padding:15px 20px;
+    border-radius:8px;
+    font-size:15px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    font-family:'IBM Plex Mono',monospace;
+    cursor:pointer;
+    transition:background .15s;
+  }
+  .btn-generate:hover{background:var(--orange-dim);}
+
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+  .btn-secondary{
+    background:transparent;
+    border:1px solid var(--navy);
+    color:var(--navy);
+    border-radius:6px;
+    padding:9px 16px;
+    font-size:13.5px;
+    font-weight:600;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+  }
+  .btn-secondary:hover{background:var(--orange);border-color:var(--orange);color:#fff;}
+  .btn-secondary.copied{background:var(--ok);border-color:var(--ok);color:#fff;}
+
+  /* Output card */
+  .output-card{
+    display:none;
+    background:var(--paper);
+    border:1px solid var(--orange);
+    border-radius:10px;
+    padding:24px;
+    margin-bottom:24px;
+    box-shadow:0 1px 2px rgba(11,30,57,.04);
+  }
+  .output-card.show{display:block;}
+  .output-card h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:19px;
+    text-transform:uppercase;
+    color:var(--navy);
+    margin:0 0 6px;
+  }
+  .output-card .output-note{font-size:13.5px;color:var(--muted);margin:0 0 14px;}
+  .output-textarea{
+    width:100%;
+    min-height:360px;
+    border:1px solid var(--border);
+    border-left:3px solid var(--orange);
+    border-radius:8px;
+    background:var(--paper-tint);
+    color:var(--navy);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13.5px;
+    line-height:1.6;
+    padding:16px 18px;
+    resize:vertical;
+  }
+  .output-textarea:focus{outline:2px solid var(--orange);outline-offset:1px;}
+
+  /* Lecture card */
+  .lecture-card{
+    display:none;
+    background:var(--paper);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:22px 24px;
+    margin-bottom:36px;
+  }
+  .lecture-card.show{display:block;}
+  .lecture-card h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:16px;
+    text-transform:uppercase;
+    color:var(--navy);
+    margin:0 0 6px;
+  }
+  .lecture-card > p{font-size:13.5px;color:var(--muted);margin:0 0 16px;}
+  .lecture-prompt{margin-bottom:16px;}
+  .lecture-prompt:last-child{margin-bottom:0;}
+  .lecture-prompt .prompt-box{
+    background:var(--paper-tint);
+    border:1px solid var(--border);
+    border-left:3px solid var(--orange);
+    border-radius:8px;
+    padding:14px 16px;
+    font-size:14px;
+    font-family:'IBM Plex Mono',monospace;
+    line-height:1.6;
+    color:var(--navy);
+    margin-bottom:10px;
+    white-space:pre-wrap;
+  }
+
+  /* Why this works */
+  .why-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-bottom:40px;
+  }
+  .why-card{
+    background:var(--paper);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:18px 18px 20px;
+  }
+  .why-card .why-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--orange);
+    margin-bottom:8px;
+  }
+  .why-card p{font-size:14px;color:var(--navy);margin:0;line-height:1.55;}
+
+  /* Example */
+  .example-details{
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:4px 20px 20px;
+    margin-bottom:20px;
+    background:var(--paper);
+  }
+  .example-details summary{
+    cursor:pointer;
+    padding:16px 0;
+    font-weight:700;
+    color:var(--navy);
+    font-family:'Space Grotesk',sans-serif;
+    text-transform:uppercase;
+    font-size:14px;
+    letter-spacing:.02em;
+  }
+  .example-dl{margin:6px 0 16px;}
+  .example-dl dt{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--muted);
+    margin-top:14px;
+  }
+  .example-dl dt:first-child{margin-top:0;}
+  .example-dl dd{margin:4px 0 0;font-size:14px;color:var(--navy);}
+
+  footer{
+    margin-top:20px;
+    color:var(--muted-dim);
+    font-size:12.5px;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  footer a{color:var(--muted-dim);text-decoration:underline;text-underline-offset:2px;}
+  footer a:hover{color:var(--orange);}
+
+  @media (max-width:640px){
+    .why-grid{grid-template-columns:1fr;}
+  }
+  @media (max-width:520px){
+    header h1{font-size:26px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker">AI Learning Tool</div>
+    <h1>Build My AI Learning Partner</h1>
+    <p>Online courses make it easy to watch, understand and move on — but much harder to remember, connect and apply what you learn.</p>
+    <p>Tell AI who you are, what you are learning and why it matters to you. This tool will create a reusable instruction that turns lecture transcripts, slides and readings into a personalised learning conversation.</p>
+  </header>
+
+  <div class="note-box"><strong>Note</strong> Personalisation is not telling AI your "learning style." It is giving it enough context to understand what you know, what you care about and what you want to become capable of doing.</div>
+
+  <form id="learnerForm" novalidate>
+    <div class="form-card" id="formCard">
+
+      <div class="field">
+        <div class="field-label-row">
+          <label for="field-who">Who are you?</label>
+          <span class="tag-opt">Optional</span>
+        </div>
+        <p class="helper" id="helper-who">Your role, background or experience relevant to this course.</p>
+        <textarea id="field-who" aria-describedby="helper-who" placeholder="IPS probationer undergoing the Basic Course at the National Police Academy."></textarea>
+      </div>
+
+      <div class="field">
+        <div class="field-label-row">
+          <label for="field-course">What course are you taking?</label>
+          <span class="tag-req">Required</span>
+        </div>
+        <input type="text" id="field-course" aria-describedby="error-course" aria-required="true" placeholder="Introduction to Cybersecurity">
+        <p class="field-error" id="error-course" role="alert">Please enter the course you're taking.</p>
+      </div>
+
+      <div class="field">
+        <div class="field-label-row">
+          <label for="field-purpose">Why are you taking this course?</label>
+          <span class="tag-req">Required</span>
+        </div>
+        <p class="helper" id="helper-purpose">What do you actually want to understand or become better at?</p>
+        <textarea id="field-purpose" aria-describedby="helper-purpose error-purpose" aria-required="true" placeholder="I want to understand how cybercrime actually works so I can investigate digital offences and guide my station's cybercrime cell effectively."></textarea>
+        <p class="field-error" id="error-purpose" role="alert">Please share why you're taking this course.</p>
+      </div>
+
+      <div class="field">
+        <div class="field-label-row">
+          <label for="field-prior">What do you already know?</label>
+          <span class="tag-opt">Optional</span>
+        </div>
+        <p class="helper" id="helper-prior">Mention relevant knowledge, experience or previous courses.</p>
+        <textarea id="field-prior" aria-describedby="helper-prior" placeholder="I have basic computer literacy and some exposure to IT Act provisions from training, but no technical background in networks or security."></textarea>
+      </div>
+
+      <div class="field">
+        <div class="field-label-row">
+          <label for="field-interests">What are you especially interested in?</label>
+          <span class="tag-opt">Optional</span>
+        </div>
+        <p class="helper" id="helper-interests">Concepts, questions or themes you want AI to notice when they appear.</p>
+        <textarea id="field-interests" aria-describedby="helper-interests" placeholder="Attacker techniques, digital evidence, how attackers think, and what's realistically preventable versus what isn't."></textarea>
+      </div>
+
+      <div class="field">
+        <div class="field-label-row">
+          <label for="field-application">Where do you want to apply the learning?</label>
+          <span class="tag-opt">Optional</span>
+        </div>
+        <p class="helper" id="helper-application">Work, examinations, teaching, research, personal life, field practice, etc.</p>
+        <textarea id="field-application" aria-describedby="helper-application" placeholder="Investigating cybercrime complaints and advising my station on digital evidence handling."></textarea>
+      </div>
+
+      <div class="field">
+        <div class="field-label-row">
+          <label for="field-other">Anything else AI should know about how you want to learn?</label>
+          <span class="tag-opt">Optional</span>
+        </div>
+        <p class="helper" id="helper-other">Keep this about the learning process, not learning-style labels.</p>
+        <textarea id="field-other" aria-describedby="helper-other" placeholder="I prefer first principles, concrete examples and being challenged when my reasoning is weak."></textarea>
+      </div>
+
+      <p class="privacy-note">The information you type into this form is processed locally and is not intentionally submitted by this tool.</p>
+
+      <button type="submit" class="btn-generate">Generate My Learning Partner</button>
+    </div>
+  </form>
+
+  <div class="output-card" id="outputCard">
+    <h2>Your AI Learning Partner Instruction</h2>
+    <p class="output-note">Use this as a standing instruction in a ChatGPT Project, Claude Project, custom instruction, or at the start of a course conversation.</p>
+    <textarea class="output-textarea" id="outputText" aria-label="Generated learning partner instruction"></textarea>
+    <div class="btn-row">
+      <button type="button" class="btn-secondary" id="copyMain">Copy prompt</button>
+      <button type="button" class="btn-secondary" id="resetBtn">Reset</button>
+    </div>
+  </div>
+
+  <div class="lecture-card" id="lectureCard">
+    <h2>When you start a new lecture</h2>
+    <p>Once your learning-partner instruction is in place, your prompt for each lecture can stay simple.</p>
+
+    <div class="lecture-prompt">
+      <div class="prompt-box" id="lecturePromptA">Here are the transcript and slides for the next lecture. Let's work through it using my learning-partner instructions.</div>
+      <button type="button" class="btn-secondary" id="copyLectureA">Copy prompt</button>
+    </div>
+
+    <div class="lecture-prompt">
+      <div class="prompt-box" id="lecturePromptB">Before we begin this lecture, first test whether there is anything important from previous lectures that I should retrieve.</div>
+      <button type="button" class="btn-secondary" id="copyLectureB">Copy prompt</button>
+    </div>
+  </div>
+
+  <div class="section-label">Why this works</div>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-label">Purpose</div>
+      <p>AI knows what you are ultimately trying to become capable of doing.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-label">Connection</div>
+      <p>AI can relate new ideas to your experience and previous knowledge.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-label">Active learning</div>
+      <p>AI can make you retrieve, explain, discriminate and apply rather than simply consume answers.</p>
+    </div>
+  </div>
+
+  <details class="example-details">
+    <summary>See an example</summary>
+    <dl class="example-dl">
+      <dt>Who</dt>
+      <dd>IPS probationer undergoing the Basic Course at the National Police Academy.</dd>
+      <dt>Course</dt>
+      <dd>Introduction to Cybersecurity</dd>
+      <dt>Purpose</dt>
+      <dd>I want to understand how cybercrime actually works so I can investigate digital offences and guide my station's cybercrime cell effectively.</dd>
+      <dt>Prior knowledge</dt>
+      <dd>I have basic computer literacy and some exposure to IT Act provisions from training, but no technical background in networks or security.</dd>
+      <dt>Interests</dt>
+      <dd>Attacker techniques, digital evidence, how attackers think, and what's realistically preventable versus what isn't.</dd>
+      <dt>Application</dt>
+      <dd>Investigating cybercrime complaints and advising my station on digital evidence handling.</dd>
+    </dl>
+    <button type="button" class="btn-secondary" id="useExample">Try this example</button>
+  </details>
+
+  <footer>Don't reinvent the prompt for every video — give AI enough context once, and let it guide the conversation throughout the course.</footer>
+
+</div>
+
+<script>
+(function(){
+  var form = document.getElementById('learnerForm');
+  var whoEl = document.getElementById('field-who');
+  var courseEl = document.getElementById('field-course');
+  var purposeEl = document.getElementById('field-purpose');
+  var priorEl = document.getElementById('field-prior');
+  var interestsEl = document.getElementById('field-interests');
+  var applicationEl = document.getElementById('field-application');
+  var otherEl = document.getElementById('field-other');
+
+  var courseErr = document.getElementById('error-course');
+  var purposeErr = document.getElementById('error-purpose');
+
+  var outputCard = document.getElementById('outputCard');
+  var outputText = document.getElementById('outputText');
+  var lectureCard = document.getElementById('lectureCard');
+  var resetBtn = document.getElementById('resetBtn');
+  var useExampleBtn = document.getElementById('useExample');
+
+  function buildPrompt(v){
+    var blocks = [];
+    blocks.push('I am taking the course "' + v.course + '".');
+    if(v.who) blocks.push('About me:\n' + v.who);
+    blocks.push('Why I am learning this:\n' + v.purpose);
+    if(v.prior) blocks.push('Relevant prior knowledge or experience:\n' + v.prior);
+    if(v.interests) blocks.push('I am particularly interested in:\n' + v.interests);
+    if(v.application) blocks.push('I want to apply what I learn to:\n' + v.application);
+    if(v.other) blocks.push('Additional preferences:\n' + v.other);
+
+    var intro = blocks.join('\n\n');
+
+    var body = "Act as my learning partner throughout this course.\n\n" +
+      "I will give you lecture transcripts, slides, readings or notes as I progress.\n\n" +
+      "Do not merely summarise them.\n\n" +
+      "First help me understand each lecture on its own terms:\n" +
+      "- follow the lecturer's argument and sequence;\n" +
+      "- explain unfamiliar ideas clearly;\n" +
+      "- show why each new idea follows from what came before.\n\n" +
+      "Then help me learn it more deeply by adapting to my purpose, prior knowledge and context.\n\n" +
+      "Where useful:\n" +
+      "- test what I remember before explaining;\n" +
+      "- identify gaps or misconceptions;\n" +
+      "- connect new ideas to things I already know;\n" +
+      "- use examples and contrasts;\n" +
+      "- ask me to explain important ideas back in my own words;\n" +
+      "- create situations where I have to recognise when the knowledge is relevant;\n" +
+      "- help me distinguish similar situations where important differences matter;\n" +
+      "- give me opportunities to apply the learning;\n" +
+      "- challenge assumptions or weak reasoning rather than simply agreeing with me.\n\n" +
+      "Do not mechanically use all of these methods every time. Choose the ones that best suit the material and what I appear to need.\n\n" +
+      "When you introduce ideas that are not contained in the material I provide, clearly distinguish them as additional knowledge.\n\n" +
+      "For important factual, legal, technical or research claims that may require verification, tell me when I should check an authoritative source.\n\n" +
+      "As the course develops, help me notice:\n" +
+      "- connections across lectures;\n" +
+      "- how my understanding is changing;\n" +
+      "- recurring gaps in my thinking;\n" +
+      "- implications for my stated goals.\n\n" +
+      "The purpose is not to make the course effortless. It is to help me think more deeply, remember more reliably and apply what I learn.";
+
+    return intro + '\n\n' + body;
+  }
+
+  function setInvalid(el, errEl, isInvalid){
+    el.classList.toggle('invalid', isInvalid);
+    errEl.classList.toggle('show', isInvalid);
+    el.setAttribute('aria-invalid', isInvalid ? 'true' : 'false');
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    var courseVal = courseEl.value.trim();
+    var purposeVal = purposeEl.value.trim();
+
+    var courseInvalid = !courseVal;
+    var purposeInvalid = !purposeVal;
+    setInvalid(courseEl, courseErr, courseInvalid);
+    setInvalid(purposeEl, purposeErr, purposeInvalid);
+
+    if(courseInvalid || purposeInvalid){
+      (courseInvalid ? courseEl : purposeEl).focus();
+      return;
+    }
+
+    var values = {
+      who: whoEl.value.trim(),
+      course: courseVal,
+      purpose: purposeVal,
+      prior: priorEl.value.trim(),
+      interests: interestsEl.value.trim(),
+      application: applicationEl.value.trim(),
+      other: otherEl.value.trim()
+    };
+
+    outputText.value = buildPrompt(values);
+    outputCard.classList.add('show');
+    lectureCard.classList.add('show');
+    outputCard.scrollIntoView({behavior:'smooth', block:'start'});
+
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'generate_prompt', { event_category: 'ai_learning_partner' });
+    }
+  });
+
+  resetBtn.addEventListener('click', function(){
+    form.reset();
+    setInvalid(courseEl, courseErr, false);
+    setInvalid(purposeEl, purposeErr, false);
+    outputCard.classList.remove('show');
+    lectureCard.classList.remove('show');
+    outputText.value = '';
+    whoEl.focus();
+  });
+
+  useExampleBtn.addEventListener('click', function(){
+    whoEl.value = 'IPS probationer undergoing the Basic Course at the National Police Academy.';
+    courseEl.value = 'Introduction to Cybersecurity';
+    purposeEl.value = 'I want to understand how cybercrime actually works so I can investigate digital offences and guide my station\'s cybercrime cell effectively.';
+    priorEl.value = 'I have basic computer literacy and some exposure to IT Act provisions from training, but no technical background in networks or security.';
+    interestsEl.value = 'Attacker techniques, digital evidence, how attackers think, and what\'s realistically preventable versus what isn\'t.';
+    applicationEl.value = 'Investigating cybercrime complaints and advising my station on digital evidence handling.';
+    setInvalid(courseEl, courseErr, false);
+    setInvalid(purposeEl, purposeErr, false);
+    document.getElementById('formCard').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  function fallbackCopy(text, cb){
+    try{
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      cb();
+    }catch(e){}
+  }
+
+  function getText(el){
+    return (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') ? el.value : el.textContent;
+  }
+
+  function wireCopy(btn, sourceEl){
+    btn.addEventListener('click', function(){
+      var text = getText(sourceEl);
+      var done = function(){
+        var old = btn.textContent;
+        btn.textContent = 'Copied';
+        btn.classList.add('copied');
+        setTimeout(function(){ btn.textContent = old; btn.classList.remove('copied'); }, 1400);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done).catch(function(){ fallbackCopy(text, done); });
+      } else {
+        fallbackCopy(text, done);
+      }
+    });
+  }
+
+  wireCopy(document.getElementById('copyMain'), outputText);
+  wireCopy(document.getElementById('copyLectureA'), document.getElementById('lecturePromptA'));
+  wireCopy(document.getElementById('copyLectureB'), document.getElementById('lecturePromptB'));
+})();
+</script>
+</body>
+</html>

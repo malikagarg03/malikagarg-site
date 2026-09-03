@@ -108,6 +108,35 @@
     max-width:62ch;
   }
 
+  /* Global principle note */
+  .principle-note{
+    background:var(--paper-tint);
+    border:1px solid var(--border);
+    border-left:3px solid var(--orange);
+    border-radius:8px;
+    padding:14px 18px;
+    font-size:13.5px;
+    color:var(--navy);
+    margin:0 0 28px;
+  }
+  .principle-note strong{
+    font-family:'IBM Plex Mono',monospace;
+    text-transform:uppercase;
+    font-size:11px;
+    letter-spacing:.08em;
+    color:var(--orange);
+    display:block;
+    margin-bottom:4px;
+  }
+
+  .cross-link{
+    font-size:13px;
+    color:var(--muted);
+    margin:0 0 8px;
+  }
+  .cross-link a{color:var(--navy);text-decoration:underline;text-underline-offset:2px;}
+  .cross-link a:hover{color:var(--orange);}
+
   /* Section divider */
   .section-label{
     font-family:'IBM Plex Mono',monospace;
@@ -356,14 +385,16 @@
     </div>
     <a class="deck-btn" href="handling-protests-lecture.pptx" download>Download PPT</a>
   </div>
-  <p class="deck-note">We're using this lecture as the working example today. The six prompts ahead aren't specific to protest-handling — the same sequence works on any lecture you attend at NPA. Today you'll go through it once, together, on material you already have. From then on, you can run it yourself on anything.</p>
+  <p class="deck-note">These five moves show different ways AI can deepen your learning. You won't need all five every time. Use the ones that match what you need to do: remember it, understand it, recognise when it matters, distinguish situations, or practise using it. Today we'll try them together using a lecture you've already attended.</p>
+
+  <div class="principle-note"><strong>Throughout</strong> Make me think before you help me. Don't give me an answer before I attempt retrieval or reasoning. Ask one question at a time when my answer should affect what comes next.</div>
 
   <div id="stages"></div>
 
   <div id="takeaway">
     <div class="takeaway-card">
       <h2>Continue your learning journey</h2>
-      <p>These six prompts aren't the only way to engage with a lecture — they're one set out of many possible ones. Unlock the master prompt below to generate a fresh set, tailored to any lecture you attend, any time you want to engage with it more deeply.</p>
+      <p>These five moves are a starting point, not a fixed recipe. Unlock the master prompt to let AI design a learning sequence suited to the material and what you need to practise.</p>
       <div class="stage-lock" id="lock-master">
         <input type="text" placeholder="Enter password" id="input-master" maxlength="20">
         <button onclick="tryUnlockMaster()">Unlock</button>
@@ -383,6 +414,8 @@
     <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdTeYxchlEjoO_s8zJG-IWwv2UpdtZFj8P6nNGRxqvrZeeFFw/viewform?embedded=true" title="Session feedback form">Loading form…</iframe>
   </div>
 
+  <p class="cross-link">Doing an online course? <a href="ai-learning-partner.html">Build your AI Learning Partner →</a></p>
+
   <footer>SVP NPA · Hyderabad</footer>
 </div>
 
@@ -390,183 +423,108 @@
 const stages = [
   {
     id: 'retrieve',
-    num: 'Prompt 1 of 6',
+    num: 'Prompt 1 of 5',
     name: 'Retrieve',
     role: 'What actually survived?',
     code: 'UkVUUklFVkU0Nw==',
     instruction: 'Paste this in, along with the lecture PPT. Answer entirely from memory — don\'t look anything up.',
-    prompt: `I attended the attached lecture about two weeks ago.
+    prompt: `I attended the attached lecture recently.
 
-Do not summarise, explain, or teach me anything from the PPT yet.
+Don't summarise it yet. Test what I actually remember with 5 questions covering the most important ideas, one at a time and without hints.
 
-First help me find out what I actually remember.
-
-Ask me no more than 5 questions, one at a time, covering the most important ideas of the lecture rather than minor details.
-
-For each question:
-- Let me answer entirely from memory.
-- Do not give me hints.
-- Do not correct or explain my answer yet.
-- Move to the next question.
-
-After all questions, go through the PPT and list the key concepts it covers. Sort them into three groups based on my answers:
-1. Concepts I understood well.
-2. Concepts I understood partially or got somewhat wrong.
-3. Concepts I seem to have forgotten or missed entirely.
-
-Keep this brief — a short list under each heading, not an essay.`
+Afterward, compare my answers with the PPT and briefly tell me:
+- what I remembered well;
+- what I understood only partly;
+- what important ideas I missed.`
   },
   {
     id: 'clarify',
-    num: 'Prompt 2 of 6',
-    name: 'Clarify',
-    role: 'Repair the weak part',
+    num: 'Prompt 2 of 5',
+    name: 'Clarify & Connect',
+    role: 'Repair the weak part and connect it',
     code: 'Q0xBUklGWTI5',
     instruction: 'Use this right after Retrieve, on the same conversation.',
-    prompt: `Now let's fix the concepts you listed as partially understood or forgotten.
+    prompt: `Pick one important idea from the lecture that my answers suggest I don't understand well.
 
-From those — the ones I understood partially or forgot — pick the 3 most important ones to teach in this session.
+Help me understand it using:
+- a simple example;
+- a policing example;
+- a useful contrast.
 
-Keep a running tracker at the top of every reply in this stage: "Concepts left to teach: X of 3."
+Then ask me to explain it back in my own words and correct only the important gaps.
 
-Take them one at a time, starting with the ones I forgot entirely. For each concept:
-1. One simple example.
-2. One realistic policing example.
-3. One contrasting example where the concept does not apply or applies differently.
-4. Then ask me to explain the concept back to you in my own words.
-5. Point out only the important gaps or inaccuracies in my explanation.
-
-Move to the next concept only after I've explained the current one back to you. Stop after all 3 concepts.`
+Finally, ask me what this idea connects to from something I already know, have learnt elsewhere, or experienced.`
   },
   {
     id: 'cues',
-    num: 'Prompt 3 of 6',
+    num: 'Prompt 3 of 5',
     name: 'Build Retrieval Cues',
     role: 'Will a field situation trigger the knowledge?',
     code: 'Q1VFUzYz',
     instruction: 'This is where memory turns into something usable on the ground.',
-    prompt: `I don't just want to remember these ideas when someone asks me about this PPT. I want the relevant knowledge to come to mind when a real situation requires it.
+    prompt: `Give me 4 short policing situations in which something from this lecture should come to mind.
 
-Give me 4 short policing situations, one at a time.
+Don't name the relevant concept. Ask me what in the situation should trigger something I learnt, then give me brief feedback.
 
-For each situation:
-- Do not tell me which principle from the lecture is relevant.
-- Ask me: "What in this situation should trigger something you learnt in the lecture?"
-- Let me answer before giving feedback.
-- Then tell me whether I noticed the important cue and what knowledge it should have triggered.
-
-Make the surface details different across the situations.`
+Vary the surface details across situations.`
   },
   {
     id: 'discriminate',
-    num: 'Prompt 4 of 6',
+    num: 'Prompt 4 of 5',
     name: 'Discriminate',
-    role: 'Similar situations don\'t always mean the same answer',
+    role: 'What important difference changes my thinking?',
     code: 'RElTQ1JJTUlOQVRFODU=',
-    instruction: 'Optional — use only if time allows.',
-    prompt: `Now make this harder.
+    instruction: 'Look for the one fact that changes the right response.',
+    prompt: `Give me 3 pairs of superficially similar policing situations where one important difference should change my thinking.
 
-Give me 3 pairs of situations, one pair at a time.
-
-Within each pair, make the situations appear superficially similar, but change one or two important facts so that I should think about them differently.
-
-Ask me:
-1. What is the decisive difference?
-2. What idea from the lecture does that difference trigger?
-3. How should it change my reasoning?
-
-Let me answer before giving feedback.`
+For each pair, make me identify:
+1. the decisive difference;
+2. what idea from the lecture it triggers;
+3. how it changes my reasoning.`
   },
   {
     id: 'simulate',
-    num: 'Prompt 5 of 6',
+    num: 'Prompt 5 of 5',
     name: 'Simulate',
-    role: 'Mental rehearsal',
+    role: 'Mental rehearsal under uncertainty',
     code: 'U0lNVUxBVEUxMg==',
     instruction: 'Put yourself in the field. Commit to each decision before moving on.',
-    prompt: `Now put me in the role of an ASP handling a realistic protest.
+    prompt: `Put me in the role of an ASP facing a realistic situation related to this lecture.
 
-Give me only the information I could reasonably know at the beginning.
+Run it through 3 stages, revealing new and sometimes incomplete information at each stage. Make me decide what I would do and why before continuing.
 
-Run the situation through 4 stages.
+Don't tell me which concepts are relevant or give me options unless I ask.
 
-At each stage:
-1. Give me a new development.
-2. Ask me what I would do and why.
-3. Do not tell me which concept from the lecture is relevant.
-4. Do not give me options unless I ask for them.
-5. Let me commit to my decision before continuing.
-
-Make some information incomplete or uncertain, as it would be in the field.
-
-After Stage 4, assess how well I:
+At the end, assess how well I:
 - noticed important changes;
-- retrieved relevant knowledge from the lecture;
-- sought information I needed;
-- revised or failed to revise my thinking;
+- retrieved relevant knowledge;
+- sought missing information;
+- revised my thinking;
 - justified my decisions.
 
-Do not judge me merely on whether my final answer matches what you would have done.`
-  },
-  {
-    id: 'reflect',
-    num: 'Prompt 6 of 6',
-    name: 'Challenge & Reflect',
-    role: 'What are my blind spots?',
-    code: 'UkVGTEVDVDk0',
-    instruction: 'The last stage. Look back across everything you\'ve typed today.',
-    prompt: `Look across my answers throughout this entire conversation.
+Also identify any recurring assumption I made or important thing I repeatedly failed to notice.
 
-Based on my actual responses, identify briefly:
-- something I understand well;
-- something I still understand only superficially;
-- an assumption I repeatedly made;
-- something important I tended not to notice.
-
-Then select one important decision I made during the simulation.
-
-Challenge my reasoning by asking me, one question at a time:
-1. What assumption were you relying on?
-2. What if that assumption is wrong?
-3. What is another plausible interpretation of the information?
-4. What additional information would most affect your decision?
-5. Would that information make you change your decision?
-
-After I answer all five, briefly tell me what this reveals about my current mental model and what I should practise further.`
+Don't judge me merely against one "correct" final answer.`
   }
 ];
 
-const masterPrompt = `I have uploaded material from a lecture/class that I have already attended.
+const masterPrompt = `I have uploaded material from a class I have already attended.
 
-I want to use AI to help me learn the material deeply and be able to retrieve and apply it later, not merely summarise it or make studying easier.
+Help me learn it deeply rather than simply summarising it. Create a short, step-by-step learning sequence adapted to this material using whichever of these moves are useful:
 
-Create a step-by-step sequence of prompts that I can give you one at a time to help me learn this particular material.
+RETRIEVE — test what I remember.
+CLARIFY & CONNECT — repair weak understanding and connect it to what I know.
+CUES — practise noticing when the knowledge should come to mind.
+DISCRIMINATE — distinguish similar situations where important differences matter.
+SIMULATE — make me apply the knowledge in realistic situations.
 
-Design the sequence around these learning goals:
+Throughout, make me do the thinking before you help me. Don't give answers before I attempt retrieval or reasoning.
 
-1. RETRIEVE — First test what I can remember without showing or explaining the answers. Use a small, bounded number of questions covering the most important ideas, not minor details.
-2. DIAGNOSE — Use my answers to identify important concepts that I remember superficially, misunderstand, or cannot explain properly.
-3. CLARIFY — Help me repair those gaps using explanations, examples, contrasts and asking me to explain the idea back in my own words.
-4. CONNECT — Make me first connect the new learning to things I already know, have learnt elsewhere, or have experienced. Elicit these connections from me before suggesting them yourself.
-5. EXPAND — After I have tried making my own connections, use your general knowledge to suggest a few important additional concepts, examples or perspectives that would enrich my mental model. Clearly distinguish these additions from what was actually taught in the uploaded material.
-6. BUILD RETRIEVAL CUES — Give me situations or cues in which knowledge from the lecture should come to mind, without telling me which concept is relevant. Make me retrieve it.
-7. DISCRIMINATE — Give me superficially similar situations where important differences mean that the knowledge applies differently. Make me identify the decisive difference.
-8. APPLY / SIMULATE — Where appropriate, create realistic situations in which I have to use the knowledge. Reveal information progressively and make me decide, explain and revise rather than simply giving me the answer.
-9. CHALLENGE & REFLECT — Use my answers throughout the interaction to identify weaknesses, assumptions, blind spots and gaps in my mental model. Challenge my reasoning rather than simply agreeing with me.
+Base the exercise primarily on the uploaded material. Clearly distinguish important knowledge you add from elsewhere.
 
-Important rules:
-- Base the learning sequence primarily on the uploaded material.
-- Do not begin by summarising the material.
-- Make me do the cognitive work wherever possible.
-- Do not give me answers before I have attempted retrieval or reasoning.
-- Ask questions one at a time when answering one question may affect the next.
-- Keep each stage bounded so the exercise does not become unnecessarily long.
-- Adapt the prompts to the nature of this particular subject. Do not mechanically force simulations or scenarios where they are inappropriate.
-- Clearly distinguish knowledge you add from knowledge contained in the uploaded material.
-- Flag factual, legal or technical additions that should be verified from authoritative sources.
-- Prefer understanding, retrieval and application over memorising isolated facts.
+Keep the sequence bounded and adapt it to the subject rather than mechanically using every stage.
 
-First give me the complete numbered sequence of prompts. Do not start executing them until I tell you to begin.`;
+Give me the prompts first. Don't execute them until I ask you to begin.`;
 
 const MASTER_CODE = 'Sk9VUk5FWTUx'; // base64
 const STORAGE_KEY = 'lbwa-unlocked-stages';
