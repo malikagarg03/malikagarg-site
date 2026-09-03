@@ -101,6 +101,13 @@
   }
   .deck-btn:hover{background:var(--orange-dim);}
 
+  .deck-btn-group{display:flex;gap:10px;flex-wrap:wrap;}
+  .deck-btn-secondary{
+    background:transparent;
+    border:1px solid rgba(255,255,255,.4);
+  }
+  .deck-btn-secondary:hover{background:rgba(255,255,255,.1);border-color:#fff;}
+
   .deck-note{
     font-size:14px;
     color:var(--muted);
@@ -356,8 +363,12 @@
       <div class="title">Handling Protests — SP Guntur</div>
       <div class="sub">Open or download this before Stage 1.</div>
     </div>
-    <a class="deck-btn" href="handling-protests-lecture.pptx" download>Download PPT</a>
+    <div class="deck-btn-group">
+      <a class="deck-btn" href="handling-protests-lecture.pptx" download>Download PPT</a>
+      <a class="deck-btn deck-btn-secondary" href="handling-protests-lecture.txt" download>Download as Text</a>
+    </div>
   </div>
+  <p class="deck-note">Can't upload the PPT? Some free AI plans don't accept file uploads — download the text version instead and paste it in.</p>
   <p class="deck-note">These five moves show different ways AI can deepen your learning. You won't need all five every time. Use the ones that match what you need to do: remember it, understand it, recognise when it matters, distinguish situations, or practise using it. Today we'll try them together using a lecture you've already attended.</p>
 
   <div class="principle-note"><strong>Throughout</strong> Make me think before you help me. Don't give me an answer before I attempt retrieval or reasoning. Ask one question at a time when my answer should affect what comes next.</div>
@@ -382,6 +393,7 @@
   </div>
 
   <p class="cross-link">Doing an online course? <a href="ai-learning-partner.html">Build your AI Learning Partner →</a></p>
+  <p class="cross-link"><a href="https://docs.google.com/document/d/1XyOmRBf3SKfJHyRTBa7lvPSSaCBq7qxtigwNH7NghFo/edit?usp=sharing" target="_blank" rel="noopener">Other links for today's class →</a></p>
 
   <footer>SVP NPA · Hyderabad</footer>
 </div>
