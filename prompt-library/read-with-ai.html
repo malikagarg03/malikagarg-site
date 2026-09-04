@@ -275,8 +275,13 @@
     return cadre ? (" I'm allotted to the " + cadre + " cadre.") : "";
   }
 
+  function personaLine(lang){
+    return "For this entire conversation, act as an experienced " + lang + " tutor for police officers posted to a new state where they don't yet speak the local language. Be practical and patient, and focus on what I'll actually need to read and speak on the job — official notices, petitions, complaints, newspaper reports, and conversations with the public and the media — rather than formal grammar for its own sake.\n\n";
+  }
+
   function buildPrompt(lang, text, cadre){
-    return "I'm learning " + lang + "." + cadreLine(cadre) + " Before I try to translate this word by word, help me understand it at a glance.\n\n" +
+    return personaLine(lang) +
+      "I'm learning " + lang + "." + cadreLine(cadre) + " Before I try to translate this word by word, help me understand it at a glance.\n\n" +
       "Here is the text:\n\"\"\"\n" + text + "\n\"\"\"\n\n" +
       "Without giving me a full translation yet, tell me:\n" +
       "1. What is this piece about, in one or two sentences?\n" +
