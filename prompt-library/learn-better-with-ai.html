@@ -143,6 +143,12 @@
   }
   .cross-link a{color:var(--navy);text-decoration:underline;text-underline-offset:2px;}
   .cross-link a:hover{color:var(--orange);}
+  .reset-btn{
+    background:none; border:none; padding:0; margin:0;
+    font:inherit; font-size:13px; color:var(--navy);
+    text-decoration:underline; text-underline-offset:2px; cursor:pointer;
+  }
+  .reset-btn:hover{color:var(--orange);}
 
   /* Section divider */
   .section-label{
@@ -394,6 +400,7 @@
 
   <p class="cross-link">Doing an online course? <a href="ai-learning-partner.html">Build your AI Learning Partner →</a></p>
   <p class="cross-link"><a href="https://docs.google.com/document/d/1XyOmRBf3SKfJHyRTBa7lvPSSaCBq7qxtigwNH7NghFo/edit?usp=sharing" target="_blank" rel="noopener">Other links for today's class →</a></p>
+  <p class="cross-link"><button type="button" class="reset-btn" onclick="resetPage()">Reset this page — lock all stages again</button></p>
 
   <footer>SVP NPA · Hyderabad</footer>
 </div>
@@ -407,7 +414,9 @@ const stages = [
     role: 'What actually survived?',
     code: 'UkVUUklFVkU0Nw==',
     instruction: 'Paste this in, along with the lecture PPT. Answer entirely from memory — don\'t look anything up.',
-    prompt: `I attended the attached lecture recently.
+    prompt: `For this entire conversation, act as an experienced police training faculty member — direct, rigorous, and grounded in real policing practice, not a generic AI tutor. Don't just agree with me — push back when my thinking is shaky or my answers are wrong.
+
+I attended the attached lecture recently.
 
 Don't summarise it yet. Test what I actually remember with 5 questions covering the most important ideas, one at a time and without hints.
 
@@ -602,6 +611,14 @@ function tryUnlock(id){
   } else {
     error.classList.add('show');
   }
+}
+
+function resetPage(){
+  if(!confirm('Lock all stages and the master prompt again? This clears saved progress on this device.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(MASTER_KEY);
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
 }
 
 function copyPrompt(elId, btn){
