@@ -143,12 +143,25 @@
   }
   .cross-link a{color:var(--navy);text-decoration:underline;text-underline-offset:2px;}
   .cross-link a:hover{color:var(--orange);}
-  .reset-btn{
-    background:none; border:none; padding:0; margin:0;
-    font:inherit; font-size:13px; color:var(--navy);
-    text-decoration:underline; text-underline-offset:2px; cursor:pointer;
+  .reset-row{
+    margin:28px 0 8px;
+    padding-top:18px;
+    border-top:1px solid var(--border);
   }
-  .reset-btn:hover{color:var(--orange);}
+  .reset-btn{
+    background:transparent;
+    border:1px solid var(--danger);
+    color:var(--danger);
+    border-radius:6px;
+    padding:9px 16px;
+    font-size:12.5px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:'IBM Plex Mono',monospace;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  .reset-btn:hover{background:var(--danger);color:#fff;}
 
   /* Section divider */
   .section-label{
@@ -400,7 +413,10 @@
 
   <p class="cross-link">Doing an online course? <a href="ai-learning-partner.html">Build your AI Learning Partner →</a></p>
   <p class="cross-link"><a href="https://docs.google.com/document/d/1XyOmRBf3SKfJHyRTBa7lvPSSaCBq7qxtigwNH7NghFo/edit?usp=sharing" target="_blank" rel="noopener">Other links for today's class →</a></p>
-  <p class="cross-link"><button type="button" class="reset-btn" onclick="resetPage()">Reset this page — lock all stages again</button></p>
+
+  <div class="reset-row">
+    <button type="button" class="reset-btn" onclick="resetPage()">Reset this page — lock all stages again</button>
+  </div>
 
   <footer>SVP NPA · Hyderabad</footer>
 </div>
