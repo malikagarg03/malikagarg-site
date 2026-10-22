@@ -355,7 +355,7 @@
       </div>
       <div class="stage-content" id="content-interview">
         <h3>D. Let AI interview you</h3>
-        <p class="stage-sub">Reverse it — this time you answer the questions. This exercise is designed to draw out expertise you already hold.</p>
+        <p class="stage-sub">Let AI question you one step at a time. Use your experience to work through how the proposal would operate, what it depends on, and where it might fail. Reach your own conclusions about what to retain, change or investigate.</p>
         <button class="genbtn" onclick="generatePrompt('interview')">Generate prompt</button>
         <div class="promptbox" id="box-interview">
           <pre id="text-interview"></pre>
@@ -667,7 +667,7 @@ function fillRecap(){
   document.getElementById('recap-mechanism').textContent = val('mechanism');
 }
 
-const WRAPUP_TEXT = "Let's stop the interview here. Looking back at the questions you asked me, what's the pattern? What's the one underlying uncertainty they all point back to?";
+const WRAPUP_TEXT = "Let's stop the interview here. Ask me to state, in my own words, the most important thing I worked out through answering your questions and what it means for my proposal. Wait for my answer. Then briefly reflect back my reasoning, distinguishing what I concluded from what remains uncertain. Do not introduce new risks or recommendations.";
 
 function buildPrompts(project, problem, mechanism, fundedClause){
   fundedClause = fundedClause || "was funded with the full ₹5 crore";
@@ -678,7 +678,7 @@ function buildPrompts(project, problem, mechanism, fundedClause){
 
     challenge: `Here's something about this proposal I haven't told you yet — this is how I believe it actually solves the problem: ${mechanism}\n\nMake the strongest case that this is the wrong intervention, or that this mechanism won't actually produce the outcome I expect. What assumptions does my proposal depend upon? What evidence would make me abandon or substantially redesign it?`,
 
-    interview: `Now reverse it. You already understand the project, the problem, and how I think it works. Interview me as a sceptical senior officer examining whether this proposal deserves public money. Ask me one question at a time. Follow up on my answers. Challenge vague claims and unsupported assumptions. Don't recommend a solution unless I ask.`,
+    interview: `Help me think through the proposal we have been discussing. Your role is to help me discover its assumptions, dependencies and possible failure points through my own reasoning.\n\nBegin by asking me to walk through how the proposal would work in practice and produce its intended outcome.\n\nAsk one short question at a time, and follow up on my answers. Draw on my professional experience: what happens on the ground, who needs to do what, and what conditions must hold. Help me examine where the chain could break down and what that would imply.\n\nDo not give me a list of risks, supply answers to your own questions, or recommend solutions unless I ask. Avoid leading questions that steer me towards your preferred conclusion. Allow me to conclude that a concern is manageable or that the proposal remains sound.\n\nDistinguish observations, assumptions and unknowns. If I lack data, acknowledge and record the gap, then explore what I can reason through from experience. Do not repeatedly demand evidence or let every thread end with 'you need more data'.\n\nIf my answer is vague, ask for a concrete example. If I identify a possible weakness, help me examine its consequences and what I might do about it.\n\nThe purpose is for me to reach and explain my own conclusions, including what to retain, change or investigate. Start with your first question.`,
 
     test: `Assume the project we've been discussing ${fundedClause}. Three years later, it is regarded as a failure. What are the most plausible reasons?`
   };
