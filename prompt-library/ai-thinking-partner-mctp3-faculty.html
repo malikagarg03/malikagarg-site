@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Faculty Dashboard — MCTP-III</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+:root{
+  --navy:#1e3a5f;
+  --gold:#9c6b1f;
+  --gold-light:#f6ede0;
+  --dark:#1f2937;
+  --grey:#6b7280;
+  --border:#e2e8f0;
+  --bg:#f1f5f9;
+  --ok:#2f7a4a;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:var(--bg);color:var(--dark);line-height:1.5;}
+
+/* Login */
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+.login-box{background:#fff;border:1px solid var(--border);border-radius:16px;padding:40px 36px;width:100%;max-width:360px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.07);}
+.login-box .kicker{color:var(--gold);font-weight:700;letter-spacing:.08em;font-size:12px;text-transform:uppercase;margin-bottom:8px;}
+.login-box h1{font-size:20px;font-weight:700;margin:0 0 4px;}
+.login-box p{color:var(--grey);font-size:14px;margin:0 0 24px;}
+.login-box input{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:15px;font-family:inherit;margin-bottom:12px;text-align:center;letter-spacing:.05em;}
+.login-box input:focus{outline:none;border-color:var(--navy);}
+.login-box button{width:100%;background:var(--navy);color:#fff;border:none;padding:11px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;}
+.login-error{color:#b23b3b;font-size:13px;margin-top:10px;display:none;}
+
+/* Dashboard */
+#dashboard{display:none;}
+.dash-header{background:var(--navy);color:#fff;padding:14px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.dash-header-left{flex:1;}
+.dash-header-left .kicker{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#94a3b8;margin-bottom:2px;}
+.dash-header-left h1{font-size:18px;font-weight:700;margin:0;}
+.dash-meta{font-size:12.5px;color:#94a3b8;}
+.hdr-btn{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25);padding:7px 14px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;}
+.hdr-btn:hover{background:rgba(255,255,255,.25);}
+
+.dash-body{max-width:1120px;margin:0 auto;padding:24px 20px 60px;}
+
+.section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--grey);margin:28px 0 12px;}
+
+/* Stat cards */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:4px;}
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px 18px;}
+.stat-num{font-size:30px;font-weight:700;color:var(--navy);line-height:1;}
+.stat-label{font-size:12px;color:var(--grey);margin-top:4px;}
+
+/* Grid layouts */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+@media(max-width:750px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+
+/* Panel */
+.panel{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px 20px;}
+.panel h3{font-size:13.5px;font-weight:700;margin:0 0 4px;color:var(--dark);}
+.panel .panel-sub{font-size:12px;color:var(--grey);margin:0 0 14px;line-height:1.5;}
+
+/* Bar chart */
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.bar-row:last-child{margin-bottom:0;}
+.bar-opt{font-size:12px;font-weight:700;color:var(--navy);width:16px;flex-shrink:0;}
+.bar-track{flex:1;background:#f1f5f9;border-radius:4px;height:20px;overflow:hidden;}
+.bar-fill{height:100%;background:var(--gold);border-radius:4px;transition:width .4s ease;}
+.bar-count{font-size:12px;color:var(--grey);min-width:56px;text-align:right;}
+
+/* Confidence chart */
+.conf-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.conf-num{font-size:12px;font-weight:700;color:var(--grey);width:14px;text-align:center;}
+.conf-track{flex:1;background:#f1f5f9;border-radius:4px;height:18px;overflow:hidden;}
+.conf-fill{height:100%;border-radius:4px;transition:width .4s ease;}
+.conf-fill.initial{background:#3b82f6;}
+.conf-fill.final{background:var(--ok);}
+.conf-count{font-size:12px;color:var(--grey);min-width:32px;text-align:right;}
+
+/* Word cloud */
+.word-cloud{display:flex;flex-wrap:wrap;gap:10px;align-items:center;min-height:60px;}
+.wc-tag{background:var(--gold-light);border:1px solid #e4d3ae;border-radius:20px;padding:5px 14px;color:var(--dark);font-weight:600;line-height:1.3;cursor:default;}
+.wc-zero{font-size:13px;color:var(--grey);}
+
+/* Reflections */
+.reflect-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.r-tab{background:#f1f5f9;border:1px solid var(--border);border-radius:6px;padding:5px 11px;font-size:13px;font-weight:600;cursor:pointer;color:var(--grey);border:none;}
+.r-tab.active{background:var(--navy);color:#fff;}
+.reflect-pane{display:none;}
+.reflect-pane.show{display:block;}
+.reflect-item{border-bottom:1px solid var(--border);padding:10px 0;font-size:14px;line-height:1.65;color:var(--dark);}
+.reflect-item:last-child{border-bottom:none;}
+.no-data{font-size:13.5px;color:var(--grey);padding:8px 0;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="login-screen">
+  <div class="login-box">
+    <div class="kicker">MCTP-III</div>
+    <h1>Faculty Dashboard</h1>
+    <p>Enter your faculty passcode</p>
+    <input type="password" id="pwd-input" placeholder="Passcode" onkeydown="if(event.key==='Enter')checkLogin()">
+    <button onclick="checkLogin()">Enter</button>
+    <div class="login-error" id="login-error">Incorrect passcode.</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="dash-header">
+    <div class="dash-header-left">
+      <div class="kicker">MCTP-III · AI as Your Thinking Partner</div>
+      <h1>Faculty Dashboard</h1>
+    </div>
+    <div class="dash-meta">Updated: <span id="last-updated">—</span></div>
+    <button class="hdr-btn" onclick="loadDashboard()">↻ Refresh</button>
+    <button class="hdr-btn" onclick="exportCSV()">↓ Export CSV</button>
+  </div>
+
+  <div class="dash-body">
+
+    <!-- PARTICIPATION -->
+    <div class="section-title">Participation</div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num" id="stat-participants">—</div><div class="stat-label">Participants</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-proposals">—</div><div class="stat-label">Proposals saved</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-frame">—</div><div class="stat-label">Stage 1 done</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-expand">—</div><div class="stat-label">Stage 2 done</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-challenge">—</div><div class="stat-label">Stage 3 done</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-interview">—</div><div class="stat-label">Stage 4 done</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-writeback">—</div><div class="stat-label">Write-back done</div></div>
+    </div>
+
+    <!-- CONFIDENCE SHIFT -->
+    <div class="section-title">Confidence Shift — Initial vs Final (1 = not confident, 5 = very confident)</div>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Before AI</h3>
+        <p class="panel-sub">Initial confidence in their proposed approach</p>
+        <div id="conf-initial"><p class="no-data">No data yet</p></div>
+      </div>
+      <div class="panel">
+        <h3>After AI</h3>
+        <p class="panel-sub">Final confidence after all stages</p>
+        <div id="conf-final"><p class="no-data">No data yet</p></div>
+      </div>
+    </div>
+
+    <!-- STAGE POLLS -->
+    <div class="section-title">Stage Polls</div>
+    <div class="grid-3">
+      <div class="panel">
+        <h3>Stage 1 — Examine the Problem</h3>
+        <p class="panel-sub">What happened to your understanding of the problem?</p>
+        <div id="poll-frame"><p class="no-data">No responses yet</p></div>
+      </div>
+      <div class="panel">
+        <h3>Stage 2 — Open the Possibilities</h3>
+        <p class="panel-sub">How did AI's alternatives compare with your original proposal?</p>
+        <div id="poll-expand"><p class="no-data">No responses yet</p></div>
+      </div>
+      <div class="panel">
+        <h3>Stage 3 — Manufacture Friction</h3>
+        <p class="panel-sub">How did you respond to AI's strongest criticism?</p>
+        <div id="poll-challenge"><p class="no-data">No responses yet</p></div>
+      </div>
+    </div>
+
+    <!-- STAGE 4 -->
+    <div class="section-title">Stage 4 — What AI's Questions Made Participants Examine Most Closely</div>
+    <div class="panel" style="margin-bottom:14px;">
+      <div class="word-cloud" id="word-cloud"><p class="wc-zero">No responses yet</p></div>
+    </div>
+
+    <!-- FINAL POLL -->
+    <div class="section-title">Final Poll — Where Do Participants Stand Now?</div>
+    <div class="panel" style="margin-bottom:14px;max-width:560px;">
+      <div id="poll-final"><p class="no-data">No responses yet</p></div>
+    </div>
+
+    <!-- WRITTEN REFLECTIONS -->
+    <div class="section-title">Written Reflections</div>
+    <div class="panel">
+      <div class="reflect-tabs" id="reflect-tabs"></div>
+      <div id="reflect-content"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const BATCH_ID = 'MCTP-III-NOV2026';
+const _SB_URL = 'https://rqfmxauytpoijezcrubh.supabase.co';
+const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJxZm14YXV5dHBvaWplemNydWJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4MzI0NjUsImV4cCI6MjEwODQwODQ2NX0.6SWkYJxaUFwC-FDGGdD3XKkgsru1BsJ2YacV-AMW2eg';
+const sb = window.supabase.createClient(_SB_URL, _SB_KEY);
+
+// Faculty passcode: FACULTY3
+const FACULTY_B64 = 'RkFDVUxUWTM=';
+
+let _proposals = [], _stages = [], _activeTab = 'frame';
+
+function checkLogin(){
+  const v = document.getElementById('pwd-input').value.trim().toUpperCase();
+  if(v === atob(FACULTY_B64).toUpperCase()){
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    loadDashboard();
+    setInterval(loadDashboard, 30000);
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+async function loadDashboard(){
+  const [pRes, sRes] = await Promise.all([
+    sb.from('proposals').select('*').eq('batch_id', BATCH_ID),
+    sb.from('stage_responses').select('*').eq('batch_id', BATCH_ID)
+  ]);
+  if(pRes.error || sRes.error){ console.error(pRes.error, sRes.error); return; }
+  _proposals = pRes.data || [];
+  _stages = sRes.data || [];
+  render();
+  document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+}
+
+function render(){
+  const initials  = _proposals.filter(p=>p.stage==='initial');
+  const writebacks = _proposals.filter(p=>p.stage==='writeback');
+  const allPids = new Set([..._proposals.map(p=>p.pid), ..._stages.map(s=>s.pid)]);
+
+  // Stats
+  set('stat-participants', allPids.size);
+  set('stat-proposals', initials.length);
+  set('stat-writeback', writebacks.length);
+  ['frame','expand','challenge','interview','test'].forEach(st=>
+    set('stat-'+st, _stages.filter(s=>s.stage===st).length));
+
+  // Confidence
+  renderConf('conf-initial', 'initial', initials.map(p=>p.confidence).filter(Boolean));
+  renderConf('conf-final',   'final',   writebacks.map(p=>p.confidence).filter(Boolean));
+
+  // Stage polls
+  const pollLabels = {
+    frame:     ['A: Confirmed my problem definition','B: Articulated it more precisely','C: Identified an overlooked aspect','D: Made me question the problem itself'],
+    expand:    ['A: Variations of my idea','B: Different but not practically useful','C: One credible alternative worth considering','D: An alternative that may be better'],
+    challenge: ['A: Agreed — genuine weakness exposed','B: Disagreed — it misunderstood the situation','C: Persuasive but need evidence to judge','D: Challenged AI and modified my assessment']
+  };
+  ['frame','expand','challenge'].forEach(st=>{
+    const vals = _stages.filter(s=>s.stage===st && s.poll_value).map(s=>s.poll_value);
+    renderPoll('poll-'+st, vals, pollLabels[st]);
+  });
+
+  // Stage 4 word cloud
+  const CAT_LABELS = {assumptions:'Assumptions',evidence:'Evidence / data',feasibility:'Feasibility',stakeholders:'Stakeholder needs',implementation:'How it works on ground',risks:'Risks not considered'};
+  const catCounts = Object.fromEntries(Object.keys(CAT_LABELS).map(k=>[k,0]));
+  _stages.filter(s=>s.stage==='interview' && s.poll_value).forEach(s=>{
+    s.poll_value.split(',').forEach(c=>{ if(c in catCounts) catCounts[c]++; });
+  });
+  renderCloud('word-cloud', catCounts, CAT_LABELS);
+
+  // Final poll
+  const finalLabels = ['A: Same proposal, same reasoning','B: Same proposal, better grasp of risks','C: Modified part of my proposal','D: Substantially reconsidering'];
+  renderPoll('poll-final', writebacks.filter(p=>p.final_poll).map(p=>p.final_poll), finalLabels);
+
+  // Reflections
+  renderReflections(initials, writebacks);
+}
+
+function set(id, val){ const el=document.getElementById(id); if(el) el.textContent=val; }
+
+function renderConf(elId, type, vals){
+  const el = document.getElementById(elId);
+  if(!vals.length){ el.innerHTML='<p class="no-data">No data yet</p>'; return; }
+  const counts={1:0,2:0,3:0,4:0,5:0};
+  vals.forEach(v=>{ if(counts[v]!==undefined) counts[v]++; });
+  const max = Math.max(...Object.values(counts),1);
+  el.innerHTML = [1,2,3,4,5].map(n=>`
+    <div class="conf-row">
+      <div class="conf-num">${n}</div>
+      <div class="conf-track"><div class="conf-fill ${type}" style="width:${Math.round(counts[n]/max*100)}%"></div></div>
+      <div class="conf-count">${counts[n]}</div>
+    </div>`).join('');
+}
+
+function renderPoll(elId, vals, labels){
+  const el = document.getElementById(elId);
+  if(!vals.length){ el.innerHTML='<p class="no-data">No responses yet</p>'; return; }
+  const counts={A:0,B:0,C:0,D:0};
+  vals.forEach(v=>{ if(v in counts) counts[v]++; });
+  const total = vals.length;
+  const max = Math.max(...Object.values(counts),1);
+  el.innerHTML = ['A','B','C','D'].map((opt,i)=>`
+    <div class="bar-row" title="${labels[i]||opt}">
+      <div class="bar-opt">${opt}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(counts[opt]/max*100)}%"></div></div>
+      <div class="bar-count">${counts[opt]} · ${total?Math.round(counts[opt]/total*100):0}%</div>
+    </div>`).join('');
+}
+
+function renderCloud(elId, counts, labels){
+  const el = document.getElementById(elId);
+  const max = Math.max(...Object.values(counts),1);
+  const total = Object.values(counts).reduce((a,b)=>a+b,0);
+  if(!total){ el.innerHTML='<p class="wc-zero">No responses yet</p>'; return; }
+  el.innerHTML = Object.entries(counts)
+    .sort((a,b)=>b[1]-a[1])
+    .map(([k,n])=>{
+      if(!n) return '';
+      const sz = Math.round(12 + (n/max)*14);
+      return `<span class="wc-tag" style="font-size:${sz}px" title="${n} of ${total} participants">${labels[k]} <strong>${n}</strong></span>`;
+    }).join('');
+}
+
+// Reflections
+const R_STAGES = [
+  {key:'frame',     label:'Stage 1',      src:'stage'},
+  {key:'expand',    label:'Stage 2',      src:'stage'},
+  {key:'challenge', label:'Stage 3',      src:'stage'},
+  {key:'interview', label:'Stage 4',      src:'stage'},
+  {key:'test',      label:'Stage 5',      src:'stage'},
+  {key:'why',       label:'Why (initial)',src:'prop_initial'},
+  {key:'changed',   label:'What changed', src:'prop_writeback'},
+  {key:'question',  label:'Transfer Q',   src:'prop_writeback'},
+];
+
+function renderReflections(initials, writebacks){
+  const getData = ({key,src})=>{
+    if(src==='stage') return _stages.filter(s=>s.stage===key && s.reflection && s.reflection!=='[not filled in]').map(s=>s.reflection);
+    if(src==='prop_initial') return initials.filter(p=>p[colMap(key)] && p[colMap(key)]!=='[not filled in]').map(p=>p[colMap(key)]);
+    if(src==='prop_writeback') return writebacks.filter(p=>p[colMap(key)] && p[colMap(key)]!=='[not filled in]').map(p=>p[colMap(key)]);
+    return [];
+  };
+  const colMap = k=>({why:'why_confident',changed:'what_changed',question:'transfer_question'}[k]||k);
+
+  const tabs = document.getElementById('reflect-tabs');
+  const content = document.getElementById('reflect-content');
+
+  tabs.innerHTML = R_STAGES.map(({key,label})=>{
+    const items = getData({key, src: R_STAGES.find(r=>r.key===key).src});
+    return `<button class="r-tab${key===_activeTab?' active':''}" onclick="switchTab('${key}',this)">${label} (${items.length})</button>`;
+  }).join('');
+
+  content.innerHTML = R_STAGES.map(({key,src})=>{
+    const items = getData({key,src});
+    return `<div class="reflect-pane${key===_activeTab?' show':''}" id="rpane-${key}">
+      ${items.length
+        ? items.map(r=>`<div class="reflect-item">${esc(r)}</div>`).join('')
+        : '<p class="no-data">No responses yet.</p>'}
+    </div>`;
+  }).join('');
+}
+
+function switchTab(key, btn){
+  _activeTab = key;
+  document.querySelectorAll('.r-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.reflect-pane').forEach(p=>p.classList.remove('show'));
+  btn.classList.add('active');
+  const pane = document.getElementById('rpane-'+key);
+  if(pane) pane.classList.add('show');
+}
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// CSV Export
+function exportCSV(){
+  const rows = [];
+
+  // Proposals
+  rows.push(['table','pid','stage','title','problem_statement','solution_mechanism','confidence','why_confident','revised_problem','revised_proposal','what_changed','what_to_verify','final_poll','transfer_question','created_at']);
+  _proposals.forEach(p=>rows.push(['proposals',p.pid,p.stage,p.title||'',p.problem_statement||'',p.solution_mechanism||'',p.confidence||'',p.why_confident||'',p.revised_problem||'',p.revised_proposal||'',p.what_changed||'',p.what_to_verify||'',p.final_poll||'',p.transfer_question||'',p.created_at||'']));
+
+  rows.push([]);
+  rows.push(['table','pid','stage','poll_value','reflection','created_at']);
+  _stages.forEach(s=>rows.push(['stage_responses',s.pid,s.stage,s.poll_value||'',s.reflection||'',s.created_at||'']));
+
+  const csv = rows.map(r=>r.map(c=>'"'+String(c||'').replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download='mctp3-faculty-export.csv';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
