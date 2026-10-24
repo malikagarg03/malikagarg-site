@@ -12,6 +12,8 @@
   gtag('js', new Date());
   gtag('config', 'G-YZEYRQBYKC');
 </script>
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <style>
 :root{
   --gold:#9c6b1f;
@@ -711,6 +713,30 @@ footer{text-align:center;color:var(--grey);font-size:12.5px;margin-top:30px;}
 </div>
 
 <script>
+// ---- Supabase ----
+const _SB_URL = 'https://rqfmxauytpoijezcrubh.supabase.co';
+const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJxZm14YXV5dHBvaWplemNydWJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4MzI0NjUsImV4cCI6MjEwODQwODQ2NX0.6SWkYJxaUFwC-FDGGdD3XKkgsru1BsJ2YacV-AMW2eg';
+const sb = window.supabase.createClient(_SB_URL, _SB_KEY);
+const BATCH_ID = 'MCTP-III-NOV2026';
+
+async function sbUpsertProposal(stage, fields){
+  try{
+    await sb.from('proposals').upsert(
+      {pid: localStorage.getItem('m3_pid'), batch_id: BATCH_ID, stage, ...fields},
+      {onConflict: 'pid,batch_id,stage'}
+    );
+  }catch(e){ console.error('Supabase proposal error', e); }
+}
+
+async function sbUpsertStage(stage, poll_value, reflection){
+  try{
+    await sb.from('stage_responses').upsert(
+      {pid: localStorage.getItem('m3_pid'), batch_id: BATCH_ID, stage, poll_value, reflection},
+      {onConflict: 'pid,batch_id,stage'}
+    );
+  }catch(e){ console.error('Supabase stage error', e); }
+}
+
 // ---- Passcodes (base64-encoded) ----
 // FRAME3 / EXPAND3 / CHAL3 / INTER3 / TEST3 / WRITE3
 const PASSCODES_B64 = {
@@ -830,11 +856,21 @@ function autoSave6(){
   localStorage.setItem('m3_poll_final', fp ? fp.value : '');
 }
 
-function saveStageResponse(stage){
+async function saveStageResponse(stage){
   autoSavePoll(stage);
   flash('flag-'+stage);
   gtag('event', 'stage_save', {stage: stage});
-  // Phase 2: submit to Supabase here
+  let poll_value = null, reflection = '';
+  if(stage === 'interview'){
+    try{ poll_value = JSON.parse(localStorage.getItem('m3_poll_interview')||'[]').join(','); }catch(e){}
+    reflection = localStorage.getItem('m3_reflect_interview')||'';
+  } else if(stage === 'test'){
+    reflection = localStorage.getItem('m3_reflect_test')||'';
+  } else {
+    poll_value = localStorage.getItem('m3_poll_'+stage)||null;
+    reflection = localStorage.getItem('m3_reflect_'+stage)||'';
+  }
+  await sbUpsertStage(stage, poll_value, reflection);
 }
 
 // ---- Unlock ----
@@ -963,11 +999,18 @@ function downloadRtf(filename,content){
 }
 
 // ---- Download proposal ----
-function saveAndDownloadProposal(){
+async function saveAndDownloadProposal(){
   autoSave0();
   flash('flag-s0');
-  const stamp = new Date().toLocaleString();
   const ci = document.querySelector('input[name="conf-init"]:checked');
+  await sbUpsertProposal('initial', {
+    title: val('s0-title'),
+    problem_statement: val('s0-problem'),
+    solution_mechanism: val('s0-mechanism'),
+    confidence: ci ? parseInt(ci.value) : null,
+    why_confident: val('s0-why')
+  });
+  const stamp = new Date().toLocaleString();
   let doc = RTF_HEADER;
   doc += rtfTitleBlock('MCTP-III','My Original Proposal',`AI as Your Thinking Partner — saved ${stamp}`);
   doc += rtfFieldLabel('Project or problem title'); doc += rtfFieldValue(val('s0-title'));
@@ -981,12 +1024,21 @@ function saveAndDownloadProposal(){
 }
 
 // ---- Download summary ----
-function downloadSummary(){
+async function downloadSummary(){
   autoSave6();
-  const stamp = new Date().toLocaleString();
   const ci = document.querySelector('input[name="conf-init"]:checked');
   const cf = document.querySelector('input[name="conf-final"]:checked');
   const fp = document.querySelector('input[name="poll-final"]:checked');
+  await sbUpsertProposal('writeback', {
+    revised_problem: val('s6-problem'),
+    revised_proposal: val('s6-proposal'),
+    confidence: cf ? parseInt(cf.value) : null,
+    what_changed: val('s6-changed'),
+    what_to_verify: val('s6-verify'),
+    final_poll: fp ? fp.value : null,
+    transfer_question: val('s6-question')
+  });
+  const stamp = new Date().toLocaleString();
   const fpLabel = fp ? fp.closest('label').textContent.trim() : '[not answered]';
 
   const pollLabels = {
