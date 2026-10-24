@@ -84,6 +84,15 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,
 .wc-tag{background:var(--gold-light);border:1px solid #e4d3ae;border-radius:20px;padding:5px 14px;color:var(--dark);font-weight:600;line-height:1.3;cursor:default;}
 .wc-zero{font-size:13px;color:var(--grey);}
 
+/* Proposals wall */
+.proposals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:4px;}
+.prop-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px 20px;}
+.prop-card-title{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:10px;line-height:1.4;}
+.prop-field{margin-bottom:8px;}
+.prop-field:last-child{margin-bottom:0;}
+.prop-field-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--grey);margin-bottom:3px;}
+.prop-field-text{font-size:13px;color:var(--dark);line-height:1.55;}
+
 /* Reflections */
 .reflect-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
 .r-tab{background:#f1f5f9;border:1px solid var(--border);border-radius:6px;padding:5px 11px;font-size:13px;font-weight:600;cursor:pointer;color:var(--grey);border:none;}
@@ -183,6 +192,10 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,
       <div id="poll-final"><p class="no-data">No responses yet</p></div>
     </div>
 
+    <!-- PROPOSALS WALL -->
+    <div class="section-title">Proposals</div>
+    <div class="proposals-grid" id="proposals-wall"></div>
+
     <!-- WRITTEN REFLECTIONS -->
     <div class="section-title">Written Reflections</div>
     <div class="panel">
@@ -266,6 +279,9 @@ function render(){
   // Final poll
   const finalLabels = ['A: Same proposal, same reasoning','B: Same proposal, better grasp of risks','C: Modified part of my proposal','D: Substantially reconsidering'];
   renderPoll('poll-final', writebacks.filter(p=>p.final_poll).map(p=>p.final_poll), finalLabels);
+
+  // Proposals wall
+  renderProposals(initials);
 
   // Reflections
   renderReflections(initials, writebacks);
@@ -367,6 +383,23 @@ function switchTab(key, btn){
 }
 
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderProposals(initials){
+  const el = document.getElementById('proposals-wall');
+  if(!initials.length){ el.innerHTML='<p class="no-data">No proposals saved yet</p>'; return; }
+  el.innerHTML = initials.map(p=>`
+    <div class="prop-card">
+      <div class="prop-card-title">${esc(p.title||'Untitled')}</div>
+      <div class="prop-field">
+        <div class="prop-field-label">Problem</div>
+        <div class="prop-field-text">${esc(p.problem_statement||'—')}</div>
+      </div>
+      <div class="prop-field">
+        <div class="prop-field-label">Proposed Solution / Mechanism</div>
+        <div class="prop-field-text">${esc(p.solution_mechanism||'—')}</div>
+      </div>
+    </div>`).join('');
+}
 
 // CSV Export
 function exportCSV(){
