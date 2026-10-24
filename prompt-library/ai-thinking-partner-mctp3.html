@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI as Your Thinking Partner — MCTP-III</title>
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YZEYRQBYKC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-YZEYRQBYKC');
+</script>
+<style>
+:root{
+  --gold:#9c6b1f;
+  --gold-light:#f6ede0;
+  --dark:#1f2937;
+  --grey:#6b7280;
+  --border:#e2ddd3;
+  --bg:#faf8f5;
+  --ok:#2f7a4a;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--dark);
+  line-height:1.55;
+}
+.wrap{max-width:720px;margin:0 auto;padding:32px 20px 80px;}
+header{text-align:center;margin-bottom:36px;}
+header .kicker{color:var(--gold);font-weight:700;letter-spacing:.08em;font-size:13px;text-transform:uppercase;}
+header h1{font-size:28px;margin:6px 0 4px;font-weight:700;}
+header p{color:var(--grey);margin:0;font-size:15px;}
+
+section{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:24px 24px 26px;
+  margin-bottom:20px;
+}
+section h2{
+  font-size:18px;
+  margin:0 0 4px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+section .step-num{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:24px;height:24px;
+  border-radius:50%;
+  background:var(--gold);
+  color:#fff;
+  font-size:13px;
+  font-weight:700;
+  flex-shrink:0;
+}
+section .sub{color:var(--grey);font-size:14px;margin:0 0 18px;}
+
+label{display:block;font-size:14px;font-weight:600;margin:14px 0 6px;}
+label:first-of-type{margin-top:0;}
+input[type=text],textarea{
+  width:100%;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:10px 12px;
+  font-size:15px;
+  font-family:inherit;
+  background:#fffefc;
+  resize:vertical;
+}
+textarea{min-height:56px;}
+input[type=text]:focus,textarea:focus{outline:2px solid var(--gold-light);border-color:var(--gold);}
+
+.save-row{margin-top:18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+button.primary{
+  background:var(--gold);
+  color:#fff;
+  border:none;
+  padding:10px 18px;
+  border-radius:8px;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+}
+button.primary:hover{opacity:.92;}
+.saved-flag{font-size:13px;color:var(--ok);font-weight:600;opacity:0;transition:opacity .2s;}
+.saved-flag.show{opacity:1;}
+
+button.clearbtn{
+  background:none;
+  border:none;
+  color:var(--grey);
+  font-size:13px;
+  text-decoration:underline;
+  cursor:pointer;
+  padding:0;
+  margin-left:auto;
+}
+button.clearbtn:hover{color:var(--dark);}
+
+.locked{
+  text-align:center;
+  padding:18px 10px;
+  border:1.5px dashed var(--border);
+  border-radius:10px;
+  color:var(--grey);
+  font-size:14px;
+}
+.locked .lockrow{
+  display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap;
+}
+.locked input[type=text]{
+  max-width:180px;
+  text-align:center;
+  letter-spacing:.05em;
+}
+.locked button{
+  background:var(--dark);
+  color:#fff;
+  border:none;
+  padding:10px 16px;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+  font-size:14px;
+}
+.error{color:#b23b3b;font-size:13px;margin-top:8px;display:none;}
+
+.promptbox{display:none;}
+.promptbox.show{display:block;}
+.promptbox pre{
+  white-space:pre-wrap;
+  word-wrap:break-word;
+  background:var(--gold-light);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:14px 16px;
+  font-family:inherit;
+  font-size:14.5px;
+  margin:10px 0 12px;
+}
+
+.copybtn{
+  background:#fff;
+  border:1px solid var(--gold);
+  color:var(--gold);
+  padding:8px 14px;
+  border-radius:8px;
+  font-weight:600;
+  font-size:13.5px;
+  cursor:pointer;
+}
+.copybtn.copied{background:var(--ok);border-color:var(--ok);color:#fff;}
+
+.wrapup-label{
+  font-size:13px;
+  font-weight:600;
+  color:var(--dark);
+  margin:16px 0 4px;
+  padding-top:12px;
+  border-top:1px dashed var(--border);
+}
+
+.stagegroup{margin-bottom:26px;}
+.stagegroup:last-child{margin-bottom:0;}
+.stagegroup h3{font-size:15.5px;margin:0 0 3px;}
+.stagegroup .stage-sub{font-size:13.5px;color:var(--grey);margin:0 0 10px;}
+
+.scenario{
+  background:var(--gold-light);
+  border:1px solid var(--gold);
+  border-radius:12px;
+  padding:20px 22px;
+  margin-bottom:20px;
+}
+.scenario .tag{
+  color:var(--gold);
+  font-weight:700;
+  letter-spacing:.06em;
+  font-size:12px;
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.scenario p{margin:0 0 10px;font-size:15.5px;line-height:1.6;color:var(--dark);}
+.scenario p:last-child{margin-bottom:0;}
+.scenario .prompt-line{font-weight:700;}
+.scenario .scenario-note{
+  font-size:13.5px;
+  font-weight:400;
+  color:#6b5a3f;
+  border-top:1px solid #e4d3ae;
+  padding-top:12px;
+  margin-top:14px;
+  line-height:1.55;
+}
+
+.optionrow{display:flex;flex-direction:column;gap:8px;margin-top:6px;}
+.optionrow label.radio{
+  display:flex;align-items:center;gap:8px;
+  font-weight:500;font-size:14.5px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:9px 12px;
+  cursor:pointer;
+}
+.optionrow input[type=radio]{width:16px;height:16px;}
+
+.stage-content{display:none;}
+.stage-content.show{display:block;}
+
+button.genbtn{
+  background:var(--dark);
+  color:#fff;
+  border:none;
+  padding:9px 16px;
+  border-radius:8px;
+  font-weight:600;
+  font-size:14px;
+  cursor:pointer;
+  margin-bottom:12px;
+}
+button.genbtn:hover{opacity:.9;}
+
+/* Poll section */
+.poll-section{
+  margin-top:22px;
+  padding-top:18px;
+  border-top:1.5px dashed var(--border);
+}
+.poll-section h4{
+  font-size:15px;
+  font-weight:700;
+  margin:0 0 4px;
+  color:var(--dark);
+}
+.poll-section .poll-q{
+  font-size:14.5px;
+  color:var(--dark);
+  margin:0 0 12px;
+  line-height:1.55;
+}
+.poll-section .poll-optional{
+  display:block;
+  font-size:13px;
+  font-weight:400;
+  color:var(--grey);
+  margin:14px 0 4px;
+}
+.poll-save-row{
+  margin-top:14px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+button.savebtn{
+  background:var(--ok);
+  color:#fff;
+  border:none;
+  padding:9px 16px;
+  border-radius:8px;
+  font-weight:600;
+  font-size:14px;
+  cursor:pointer;
+}
+button.savebtn:hover{opacity:.9;}
+
+/* Confidence scale */
+.conf-scale{
+  display:flex;
+  gap:8px;
+  margin-top:6px;
+  flex-wrap:wrap;
+}
+.conf-option{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  flex:1;
+  min-width:54px;
+}
+.conf-option input[type=radio]{width:18px;height:18px;cursor:pointer;}
+.conf-option .conf-label{
+  font-size:13px;
+  font-weight:600;
+  text-align:center;
+  color:var(--dark);
+  cursor:pointer;
+}
+.conf-option .conf-caption{
+  display:block;
+  font-weight:400;
+  color:var(--grey);
+  font-size:11px;
+  text-align:center;
+  line-height:1.3;
+}
+
+/* Checkboxes */
+.checkrow{display:flex;flex-direction:column;gap:6px;margin-top:6px;}
+.checkrow label.check{
+  display:flex;align-items:center;gap:8px;
+  font-weight:500;font-size:14.5px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:8px 12px;
+  cursor:pointer;
+}
+.checkrow input[type=checkbox]{width:16px;height:16px;flex-shrink:0;}
+
+/* Recap */
+.recap{
+  background:var(--gold-light);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:14px 16px;
+  margin:0 0 20px;
+}
+.recap .recap-label{
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:10px;
+}
+.recap .recap-field{font-size:14.5px;margin-bottom:10px;}
+.recap .recap-field:last-child{margin-bottom:0;}
+.recap .recap-field strong{display:block;font-size:12.5px;font-weight:600;color:var(--grey);margin-bottom:2px;}
+
+/* Privacy disclosure */
+.disclosure{
+  background:#f0f4ff;
+  border:1px solid #c7d4f0;
+  border-radius:10px;
+  padding:14px 18px;
+  margin-bottom:20px;
+  font-size:13.5px;
+  color:#2a2f4a;
+  line-height:1.6;
+}
+.disclosure .disc-title{
+  font-weight:700;
+  font-size:14px;
+  margin-bottom:6px;
+  color:var(--dark);
+}
+
+/* Optional stage note */
+.optional-note{
+  display:inline-block;
+  background:#f3f4f6;
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:4px 10px;
+  font-size:12.5px;
+  color:var(--grey);
+  margin-bottom:10px;
+}
+
+footer{text-align:center;color:var(--grey);font-size:12.5px;margin-top:30px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker">MCTP-III</div>
+    <h1>AI as Your Thinking Partner</h1>
+  </header>
+
+  <div class="disclosure">
+    <div class="disc-title">What this page collects</div>
+    Your responses are saved in this browser only and are not transmitted anywhere at this stage. They cannot be linked to your name. Your poll answers and written reflections will be used by faculty for workshop discussion and analysis. Individual written responses will not be displayed publicly. Avoid including sensitive operational details. You may use this exercise to examine any professional problem you choose.
+  </div>
+
+  <div class="scenario">
+    <div class="tag">The scenario</div>
+    <p>You have been given ₹5 crore under the Ministry of Home Affairs' Modernisation of Police Forces (MoPF) scheme. You have been asked to propose one project that would meaningfully improve policing.</p>
+    <p class="prompt-line">What would you propose?</p>
+    <p class="scenario-note">Alternatively, if your facilitator has agreed, you may work on a different professional problem or proposal you genuinely care about. Begin by recording your thinking in Section 1 — without using AI. The prompts will be revealed one stage at a time. Your responses are saved in this browser only.</p>
+  </div>
+
+  <!-- SECTION 1: Initial Proposal -->
+  <section id="s0">
+    <h2><span class="step-num">1</span>Your proposal — without AI</h2>
+    <p class="sub">Record your thinking before using AI. A brief, considered response is enough at this stage — you will develop it further through the stages below.</p>
+
+    <label for="s0-title">Project or problem title — a short phrase</label>
+    <input type="text" id="s0-title" placeholder="e.g. District-level cybercrime investigation cell" oninput="autoSave0()">
+
+    <label for="s0-problem">Problem statement — what problem are you trying to solve, and for whom?</label>
+    <textarea id="s0-problem" placeholder="e.g. Cybercrime complaints remain uninvestigated at station level, leaving complainants without redress" oninput="autoSave0()"></textarea>
+
+    <label for="s0-mechanism">Proposed solution and how it would work — what are you proposing, and how does it actually solve the problem?</label>
+    <textarea id="s0-mechanism" placeholder="e.g. A trained two-officer cell per district headquarters, assuming direct responsibility for digital evidence handling" oninput="autoSave0()"></textarea>
+
+    <label>How confident are you that this is the right approach?</label>
+    <div class="conf-scale">
+      <div class="conf-option">
+        <input type="radio" name="conf-init" id="ci1" value="1" onchange="autoSave0()">
+        <label class="conf-label" for="ci1">1<span class="conf-caption">Not at all<br>confident</span></label>
+      </div>
+      <div class="conf-option">
+        <input type="radio" name="conf-init" id="ci2" value="2" onchange="autoSave0()">
+        <label class="conf-label" for="ci2">2</label>
+      </div>
+      <div class="conf-option">
+        <input type="radio" name="conf-init" id="ci3" value="3" onchange="autoSave0()">
+        <label class="conf-label" for="ci3">3</label>
+      </div>
+      <div class="conf-option">
+        <input type="radio" name="conf-init" id="ci4" value="4" onchange="autoSave0()">
+        <label class="conf-label" for="ci4">4</label>
+      </div>
+      <div class="conf-option">
+        <input type="radio" name="conf-init" id="ci5" value="5" onchange="autoSave0()">
+        <label class="conf-label" for="ci5">5<span class="conf-caption">Very<br>confident</span></label>
+      </div>
+    </div>
+
+    <label for="s0-why" style="margin-top:18px;">Why do you believe this is the right approach?</label>
+    <textarea id="s0-why" placeholder="What experience, evidence or reasoning leads you to this proposal?" oninput="autoSave0()"></textarea>
+
+    <div class="save-row">
+      <button class="primary" onclick="saveAndDownloadProposal()">Save and download my proposal</button>
+      <span class="saved-flag" id="flag-s0">Saved — file downloaded</span>
+      <button class="clearbtn" onclick="clearAll()">Clear all</button>
+    </div>
+    <p class="sub" style="margin:8px 0 0;">This also downloads a Word-compatible document of your proposal — keep it in case this browser is cleared.</p>
+  </section>
+
+  <!-- SECTION 2: AI Stages -->
+  <section id="s-ai">
+    <h2><span class="step-num">2</span>Think it through with AI</h2>
+    <p class="sub">Five stages, conducted as one continuing conversation. Open your AI tool in a separate tab and keep the same conversation running throughout. Your facilitator will give you the passcode when it is time for the next stage.</p>
+
+    <!-- STAGE 1: FRAME -->
+    <div class="stagegroup">
+      <div class="locked" data-stage="frame">
+        <span>Stage locked — enter passcode to reveal</span>
+        <div class="lockrow">
+          <input type="text" placeholder="Passcode">
+          <button onclick="unlock(this,'frame')">Unlock</button>
+        </div>
+        <div class="error">Incorrect passcode.</div>
+      </div>
+      <div class="stage-content" id="content-frame">
+        <h3>Stage 1 — Examine the Problem</h3>
+        <p class="stage-sub">Before evaluating the project, the problem must be established correctly. A project built on a misunderstood problem will not deliver the intended outcome, however well it is designed.</p>
+        <button class="genbtn" onclick="generatePrompt('frame')">Generate prompt</button>
+        <div class="promptbox" id="box-frame">
+          <pre id="text-frame"></pre>
+          <button class="copybtn" onclick="copyPrompt('frame',this)">Copy prompt</button>
+          <div class="poll-section">
+            <h4>After completing this stage in your AI conversation:</h4>
+            <p class="poll-q">What happened to your understanding of the problem?</p>
+            <div class="optionrow">
+              <label class="radio"><input type="radio" name="poll-frame" value="A" onchange="autoSavePoll('frame')"> A. AI largely confirmed my original problem definition.</label>
+              <label class="radio"><input type="radio" name="poll-frame" value="B" onchange="autoSavePoll('frame')"> B. AI helped me articulate the problem more precisely.</label>
+              <label class="radio"><input type="radio" name="poll-frame" value="C" onchange="autoSavePoll('frame')"> C. AI identified an important aspect I had overlooked.</label>
+              <label class="radio"><input type="radio" name="poll-frame" value="D" onchange="autoSavePoll('frame')"> D. AI made me question whether I was solving the right problem.</label>
+            </div>
+            <span class="poll-optional">Optional reflection</span>
+            <label for="reflect-frame" style="font-weight:500;font-size:14px;margin:0 0 4px;">What was the most important question or consideration raised?</label>
+            <textarea id="reflect-frame" oninput="autoSavePoll('frame')"></textarea>
+            <div class="poll-save-row">
+              <button class="savebtn" onclick="saveStageResponse('frame')">Save response</button>
+              <span class="saved-flag" id="flag-frame">Saved</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 2: EXPAND -->
+    <div class="stagegroup">
+      <div class="locked" data-stage="expand">
+        <span>Stage locked — enter passcode to reveal</span>
+        <div class="lockrow">
+          <input type="text" placeholder="Passcode">
+          <button onclick="unlock(this,'expand')">Unlock</button>
+        </div>
+        <div class="error">Incorrect passcode.</div>
+      </div>
+      <div class="stage-content" id="content-expand">
+        <h3>Stage 2 — Open the Possibilities</h3>
+        <p class="stage-sub">Settling on the first solution without comparison risks overlooking a more effective one. Before proceeding, examine the range of alternatives.</p>
+        <button class="genbtn" onclick="generatePrompt('expand')">Generate prompt</button>
+        <div class="promptbox" id="box-expand">
+          <pre id="text-expand"></pre>
+          <button class="copybtn" onclick="copyPrompt('expand',this)">Copy prompt</button>
+          <div class="poll-section">
+            <h4>After completing this stage in your AI conversation:</h4>
+            <p class="poll-q">How did AI's alternatives compare with your original proposal?</p>
+            <div class="optionrow">
+              <label class="radio"><input type="radio" name="poll-expand" value="A" onchange="autoSavePoll('expand')"> A. Mostly variations of my existing idea.</label>
+              <label class="radio"><input type="radio" name="poll-expand" value="B" onchange="autoSavePoll('expand')"> B. Different ideas, but not practically useful.</label>
+              <label class="radio"><input type="radio" name="poll-expand" value="C" onchange="autoSavePoll('expand')"> C. At least one credible alternative worth considering.</label>
+              <label class="radio"><input type="radio" name="poll-expand" value="D" onchange="autoSavePoll('expand')"> D. An alternative that may be better than my original solution.</label>
+            </div>
+            <span class="poll-optional">Optional reflection</span>
+            <label for="reflect-expand" style="font-weight:500;font-size:14px;margin:0 0 4px;">Which alternative, if any, deserves serious consideration, and why?</label>
+            <textarea id="reflect-expand" oninput="autoSavePoll('expand')"></textarea>
+            <div class="poll-save-row">
+              <button class="savebtn" onclick="saveStageResponse('expand')">Save response</button>
+              <span class="saved-flag" id="flag-expand">Saved</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 3: CHALLENGE -->
+    <div class="stagegroup">
+      <div class="locked" data-stage="challenge">
+        <span>Stage locked — enter passcode to reveal</span>
+        <div class="lockrow">
+          <input type="text" placeholder="Passcode">
+          <button onclick="unlock(this,'challenge')">Unlock</button>
+        </div>
+        <div class="error">Incorrect passcode.</div>
+      </div>
+      <div class="stage-content" id="content-challenge">
+        <h3>Stage 3 — Manufacture Friction</h3>
+        <p class="stage-sub">This step reverses the usual use of AI: instead of confirming you are right, ask it to argue you are wrong, surface the assumptions your proposal depends upon, and identify the evidence that would justify abandoning or redesigning it.</p>
+        <button class="genbtn" onclick="generatePrompt('challenge')">Generate prompt</button>
+        <div class="promptbox" id="box-challenge">
+          <pre id="text-challenge"></pre>
+          <button class="copybtn" onclick="copyPrompt('challenge',this)">Copy prompt</button>
+          <div class="poll-section">
+            <h4>After completing this stage in your AI conversation:</h4>
+            <p class="poll-q">How did you respond to AI's strongest criticism?</p>
+            <div class="optionrow">
+              <label class="radio"><input type="radio" name="poll-challenge" value="A" onchange="autoSavePoll('challenge')"> A. I agreed; it exposed a genuine weakness.</label>
+              <label class="radio"><input type="radio" name="poll-challenge" value="B" onchange="autoSavePoll('challenge')"> B. I disagreed; it misunderstood the situation.</label>
+              <label class="radio"><input type="radio" name="poll-challenge" value="C" onchange="autoSavePoll('challenge')"> C. I found it persuasive but need evidence to judge.</label>
+              <label class="radio"><input type="radio" name="poll-challenge" value="D" onchange="autoSavePoll('challenge')"> D. I challenged AI further and modified my assessment.</label>
+            </div>
+            <label for="reflect-challenge" style="font-weight:500;font-size:14px;margin:14px 0 4px;">What was the strongest criticism, and how did you evaluate it?</label>
+            <textarea id="reflect-challenge" oninput="autoSavePoll('challenge')"></textarea>
+            <div class="poll-save-row">
+              <button class="savebtn" onclick="saveStageResponse('challenge')">Save response</button>
+              <span class="saved-flag" id="flag-challenge">Saved</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 4: INTERVIEW -->
+    <div class="stagegroup">
+      <div class="locked" data-stage="interview">
+        <span>Stage locked — enter passcode to reveal</span>
+        <div class="lockrow">
+          <input type="text" placeholder="Passcode">
+          <button onclick="unlock(this,'interview')">Unlock</button>
+        </div>
+        <div class="error">Incorrect passcode.</div>
+      </div>
+      <div class="stage-content" id="content-interview">
+        <h3>Stage 4 — Reverse the Conversation</h3>
+        <p class="stage-sub">Let AI question you one step at a time. Use your experience to work through how the proposal would operate, what it depends on, and where it might fail. Reach your own conclusions about what to retain, change or investigate.</p>
+        <button class="genbtn" onclick="generatePrompt('interview')">Generate prompt</button>
+        <div class="promptbox" id="box-interview">
+          <pre id="text-interview"></pre>
+          <button class="copybtn" onclick="copyPrompt('interview',this)">Copy prompt</button>
+          <p class="wrapup-label">To close the interview: use this prompt when your facilitator signals time is up.</p>
+          <pre id="text-interview-wrapup"></pre>
+          <button class="copybtn" onclick="copyPrompt('interview-wrapup',this)">Copy wrap-up</button>
+          <div class="poll-section">
+            <h4>After completing this stage:</h4>
+            <p class="poll-q">What did AI's questions make you examine most closely? <span style="font-weight:400;font-size:13px;color:var(--grey)">Select all that apply.</span></p>
+            <div class="checkrow" id="interview-checks">
+              <label class="check"><input type="checkbox" value="assumptions" onchange="autoSavePoll('interview')"> Assumptions I was making</label>
+              <label class="check"><input type="checkbox" value="evidence" onchange="autoSavePoll('interview')"> Evidence or data I was relying on</label>
+              <label class="check"><input type="checkbox" value="feasibility" onchange="autoSavePoll('interview')"> Feasibility of implementation</label>
+              <label class="check"><input type="checkbox" value="stakeholders" onchange="autoSavePoll('interview')"> Stakeholder needs or buy-in</label>
+              <label class="check"><input type="checkbox" value="implementation" onchange="autoSavePoll('interview')"> How the proposal would actually work on the ground</label>
+              <label class="check"><input type="checkbox" value="risks" onchange="autoSavePoll('interview')"> Risks I had not adequately considered</label>
+            </div>
+            <label for="reflect-interview" style="font-weight:500;font-size:14px;margin:14px 0 4px;">What important question did AI ask that you had not adequately considered before?</label>
+            <textarea id="reflect-interview" oninput="autoSavePoll('interview')"></textarea>
+            <div class="poll-save-row">
+              <button class="savebtn" onclick="saveStageResponse('interview')">Save response</button>
+              <span class="saved-flag" id="flag-interview">Saved</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 5: TEST (optional) -->
+    <div class="stagegroup">
+      <div class="locked" data-stage="test">
+        <span>Stage locked — enter passcode to reveal</span>
+        <div class="lockrow">
+          <input type="text" placeholder="Passcode">
+          <button onclick="unlock(this,'test')">Unlock</button>
+        </div>
+        <div class="error">Incorrect passcode.</div>
+      </div>
+      <div class="stage-content" id="content-test">
+        <h3>Stage 5 — Assume It Failed</h3>
+        <span class="optional-note">Optional — your facilitator will indicate whether to proceed</span>
+        <p class="stage-sub">This step works backward from failure: assume the project was funded and did not succeed, then ask AI what the most plausible reasons would be.</p>
+        <button class="genbtn" onclick="generatePrompt('test')">Generate prompt</button>
+        <div class="promptbox" id="box-test">
+          <pre id="text-test"></pre>
+          <button class="copybtn" onclick="copyPrompt('test',this)">Copy prompt</button>
+          <div class="poll-section">
+            <h4>After completing this stage:</h4>
+            <label for="reflect-test" style="font-weight:500;font-size:14px;margin:0 0 4px;">If this project fails after three years, what is the most plausible reason, and how could you reduce that risk?</label>
+            <textarea id="reflect-test" oninput="autoSavePoll('test')"></textarea>
+            <div class="poll-save-row">
+              <button class="savebtn" onclick="saveStageResponse('test')">Save response</button>
+              <span class="saved-flag" id="flag-test">Saved</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: WRITE-BACK -->
+  <section id="s-writeback">
+    <h2><span class="step-num">3</span>Return to what you wrote</h2>
+    <div class="locked" data-stage="writeback">
+      <span>Locked — enter passcode to reveal</span>
+      <div class="lockrow">
+        <input type="text" placeholder="Passcode">
+        <button onclick="unlock(this,'writeback')">Unlock</button>
+      </div>
+      <div class="error">Incorrect passcode.</div>
+    </div>
+
+    <div class="promptbox" id="box-writeback">
+      <p class="sub" style="margin-top:0;">Stop using AI now. Read your original proposal below, then respond to the questions that follow.</p>
+
+      <div class="recap" id="recap-writeback">
+        <div class="recap-label">Your original proposal</div>
+        <div class="recap-field"><strong>Project or problem title</strong><span id="recap-title"></span></div>
+        <div class="recap-field"><strong>Problem statement</strong><span id="recap-problem"></span></div>
+        <div class="recap-field"><strong>Proposed solution and mechanism</strong><span id="recap-mechanism"></span></div>
+        <div class="recap-field"><strong>Initial confidence</strong><span id="recap-confidence"></span></div>
+        <div class="recap-field"><strong>Why you believed this was right</strong><span id="recap-why"></span></div>
+      </div>
+
+      <label for="s6-problem">Revised problem statement — how do you now understand the problem?</label>
+      <textarea id="s6-problem" oninput="autoSave6()"></textarea>
+
+      <label for="s6-proposal">Revised proposal or approach — what would you now propose, or how has your thinking shifted?</label>
+      <textarea id="s6-proposal" oninput="autoSave6()"></textarea>
+
+      <label style="margin-top:18px;">Final confidence in your proposal</label>
+      <div class="conf-scale">
+        <div class="conf-option">
+          <input type="radio" name="conf-final" id="cf1" value="1" onchange="autoSave6()">
+          <label class="conf-label" for="cf1">1<span class="conf-caption">Not at all<br>confident</span></label>
+        </div>
+        <div class="conf-option">
+          <input type="radio" name="conf-final" id="cf2" value="2" onchange="autoSave6()">
+          <label class="conf-label" for="cf2">2</label>
+        </div>
+        <div class="conf-option">
+          <input type="radio" name="conf-final" id="cf3" value="3" onchange="autoSave6()">
+          <label class="conf-label" for="cf3">3</label>
+        </div>
+        <div class="conf-option">
+          <input type="radio" name="conf-final" id="cf4" value="4" onchange="autoSave6()">
+          <label class="conf-label" for="cf4">4</label>
+        </div>
+        <div class="conf-option">
+          <input type="radio" name="conf-final" id="cf5" value="5" onchange="autoSave6()">
+          <label class="conf-label" for="cf5">5<span class="conf-caption">Very<br>confident</span></label>
+        </div>
+      </div>
+
+      <label for="s6-changed" style="margin-top:18px;">What changed in your understanding — whether or not your proposal changed?</label>
+      <textarea id="s6-changed" oninput="autoSave6()"></textarea>
+
+      <label for="s6-verify">What do you now need to verify before you could confidently proceed?</label>
+      <textarea id="s6-verify" oninput="autoSave6()"></textarea>
+
+      <label style="margin-top:18px;">Compared with the beginning, where do you stand now?</label>
+      <div class="optionrow">
+        <label class="radio"><input type="radio" name="poll-final" value="A" onchange="autoSave6()"> A. Same proposal, same reasoning.</label>
+        <label class="radio"><input type="radio" name="poll-final" value="B" onchange="autoSave6()"> B. Same proposal, but I understand its assumptions and risks better.</label>
+        <label class="radio"><input type="radio" name="poll-final" value="C" onchange="autoSave6()"> C. I have modified part of my proposal.</label>
+        <label class="radio"><input type="radio" name="poll-final" value="D" onchange="autoSave6()"> D. I am substantially reconsidering the problem or solution.</label>
+      </div>
+
+      <label for="s6-question" style="margin-top:18px;">What is one question you would now ask before approving a similar proposal?</label>
+      <textarea id="s6-question" oninput="autoSave6()"></textarea>
+
+      <div class="save-row" style="margin-top:20px;">
+        <button class="primary" onclick="downloadSummary()">Download Summary</button>
+      </div>
+      <p class="sub" style="margin:8px 0 0;">This document records your original proposal, your final position, all poll responses, and the prompts used at each stage.</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+// ---- Passcodes (base64-encoded) ----
+// FRAME3 / EXPAND3 / CHAL3 / INTER3 / TEST3 / WRITE3
+const PASSCODES_B64 = {
+  frame:     "RlJBTUUz",
+  expand:    "RVhQQU5EMw==",
+  challenge: "Q0hBTDM=",
+  interview: "SU5URVIz",
+  test:      "VEVTVDM=",
+  writeback: "V1JJVEUz"
+};
+function decodeCode(stage){ return atob(PASSCODES_B64[stage]); }
+
+// ---- Anonymous participant ID ----
+function getOrCreatePID(){
+  let pid = localStorage.getItem('m3_pid');
+  if(!pid){
+    pid = 'p-' + Math.random().toString(36).slice(2,10) + Date.now().toString(36);
+    localStorage.setItem('m3_pid', pid);
+  }
+  return pid;
+}
+getOrCreatePID();
+
+// ---- Restore saved state on load ----
+window.addEventListener('DOMContentLoaded', ()=>{
+  // Stage 0 text fields
+  ['s0-title','s0-problem','s0-mechanism','s0-why'].forEach(id=>{
+    const v = localStorage.getItem('m3_'+id);
+    if(v) document.getElementById(id).value = v;
+  });
+  const ci = localStorage.getItem('m3_conf_init');
+  if(ci){ const r = document.querySelector(`input[name="conf-init"][value="${ci}"]`); if(r) r.checked=true; }
+
+  // Stage polls (radio)
+  ['frame','expand','challenge'].forEach(st=>{
+    const pv = localStorage.getItem('m3_poll_'+st);
+    if(pv){ const r = document.querySelector(`input[name="poll-${st}"][value="${pv}"]`); if(r) r.checked=true; }
+    const rv = localStorage.getItem('m3_reflect_'+st);
+    const el = document.getElementById('reflect-'+st);
+    if(rv && el) el.value = rv;
+  });
+
+  // Interview checkboxes
+  try{
+    const cats = JSON.parse(localStorage.getItem('m3_poll_interview')||'[]');
+    document.querySelectorAll('#interview-checks input[type=checkbox]').forEach(cb=>{
+      if(cats.includes(cb.value)) cb.checked=true;
+    });
+  }catch(e){}
+  const irv = localStorage.getItem('m3_reflect_interview');
+  if(irv) document.getElementById('reflect-interview').value = irv;
+
+  // Stage 5 (no poll)
+  const trv = localStorage.getItem('m3_reflect_test');
+  if(trv) document.getElementById('reflect-test').value = trv;
+
+  // Stage 6
+  ['s6-problem','s6-proposal','s6-changed','s6-verify','s6-question'].forEach(id=>{
+    const v = localStorage.getItem('m3_'+id);
+    if(v) document.getElementById(id).value = v;
+  });
+  const cf = localStorage.getItem('m3_conf_final');
+  if(cf){ const r = document.querySelector(`input[name="conf-final"][value="${cf}"]`); if(r) r.checked=true; }
+  const fp = localStorage.getItem('m3_poll_final');
+  if(fp){ const r = document.querySelector(`input[name="poll-final"][value="${fp}"]`); if(r) r.checked=true; }
+
+  // Restore unlocked stages
+  const unlocked = JSON.parse(localStorage.getItem('m3_unlocked')||'[]');
+  unlocked.forEach(stage=>restoreUnlock(stage));
+});
+
+function restoreUnlock(stage){
+  const wrap = document.querySelector(`.locked[data-stage="${stage}"]`);
+  if(wrap) wrap.style.display='none';
+  if(stage === 'writeback'){
+    const box = document.getElementById('box-writeback');
+    if(box){ box.classList.add('show'); fillRecap(); }
+  } else {
+    const content = document.getElementById('content-'+stage);
+    if(content) content.classList.add('show');
+  }
+}
+
+// ---- Autosave ----
+function autoSave0(){
+  ['s0-title','s0-problem','s0-mechanism','s0-why'].forEach(id=>{
+    localStorage.setItem('m3_'+id, document.getElementById(id).value);
+  });
+  const ci = document.querySelector('input[name="conf-init"]:checked');
+  localStorage.setItem('m3_conf_init', ci ? ci.value : '');
+  if(document.getElementById('box-writeback').classList.contains('show')) fillRecap();
+}
+
+function autoSavePoll(stage){
+  if(stage === 'interview'){
+    const cats = [];
+    document.querySelectorAll('#interview-checks input[type=checkbox]:checked').forEach(cb=>cats.push(cb.value));
+    localStorage.setItem('m3_poll_interview', JSON.stringify(cats));
+    localStorage.setItem('m3_reflect_interview', document.getElementById('reflect-interview').value);
+  } else if(stage === 'test'){
+    localStorage.setItem('m3_reflect_test', document.getElementById('reflect-test').value);
+  } else {
+    const pv = document.querySelector(`input[name="poll-${stage}"]:checked`);
+    localStorage.setItem('m3_poll_'+stage, pv ? pv.value : '');
+    const rv = document.getElementById('reflect-'+stage);
+    if(rv) localStorage.setItem('m3_reflect_'+stage, rv.value);
+  }
+}
+
+function autoSave6(){
+  ['s6-problem','s6-proposal','s6-changed','s6-verify','s6-question'].forEach(id=>{
+    localStorage.setItem('m3_'+id, document.getElementById(id).value);
+  });
+  const cf = document.querySelector('input[name="conf-final"]:checked');
+  localStorage.setItem('m3_conf_final', cf ? cf.value : '');
+  const fp = document.querySelector('input[name="poll-final"]:checked');
+  localStorage.setItem('m3_poll_final', fp ? fp.value : '');
+}
+
+function saveStageResponse(stage){
+  autoSavePoll(stage);
+  flash('flag-'+stage);
+  gtag('event', 'stage_save', {stage: stage});
+  // Phase 2: submit to Supabase here
+}
+
+// ---- Unlock ----
+function unlock(btnEl, stage){
+  const wrap = btnEl.closest('.locked');
+  const input = wrap.querySelector('input[type=text]');
+  const err = wrap.querySelector('.error');
+  if(input.value.trim().toUpperCase() === decodeCode(stage).toUpperCase()){
+    wrap.style.display='none';
+    err.style.display='none';
+    const unlocked = JSON.parse(localStorage.getItem('m3_unlocked')||'[]');
+    if(!unlocked.includes(stage)){ unlocked.push(stage); localStorage.setItem('m3_unlocked', JSON.stringify(unlocked)); }
+    if(stage === 'writeback'){
+      const box = document.getElementById('box-writeback');
+      box.classList.add('show');
+      fillRecap();
+    } else {
+      document.getElementById('content-'+stage).classList.add('show');
+    }
+    gtag('event', 'stage_unlock', {stage: stage});
+  } else {
+    err.style.display='block';
+  }
+}
+
+function generatePrompt(stage){
+  fillPrompt(stage);
+  document.getElementById('box-'+stage).classList.add('show');
+}
+
+// ---- Prompt helpers ----
+function val(id){
+  const el = document.getElementById(id);
+  return (el && el.value.trim()) ? el.value.trim() : '[not filled in]';
+}
+
+function fillRecap(){
+  document.getElementById('recap-title').textContent = val('s0-title');
+  document.getElementById('recap-problem').textContent = val('s0-problem');
+  document.getElementById('recap-mechanism').textContent = val('s0-mechanism');
+  const ci = document.querySelector('input[name="conf-init"]:checked');
+  document.getElementById('recap-confidence').textContent = ci ? ci.value + ' / 5' : '[not answered]';
+  document.getElementById('recap-why').textContent = val('s0-why');
+}
+
+const WRAPUP_TEXT = "Let's stop the interview here. Ask me to state, in my own words, the most important thing I worked out through answering your questions and what it means for my proposal. Wait for my answer. Then briefly reflect back my reasoning, distinguishing what I concluded from what remains uncertain. Do not introduce new risks or recommendations.";
+
+function buildPrompts(project, problem, mechanism, fundedClause){
+  fundedClause = fundedClause || "was funded with the full ₹5 crore";
+  return {
+    frame: `This is a proposal for the Indian police, to be funded under a government police modernisation scheme.\n\nI'm considering the following project: ${project}\n\nThe problem I believe it solves, and for whom: ${problem}\n\nDon't evaluate the solution yet. Help me examine the problem I'm actually trying to solve. What would I need to establish to know this is a significant problem? What information should I seek before deciding whether to intervene?\n\nGive me your answer as a short list — your 4-5 sharpest questions or points, not a full framework. If there's more depth worth going into on any point, just flag it and I'll ask you to expand.`,
+
+    expand: `Staying with the same project we've been discussing — have I jumped too quickly to one solution? What other interventions could address the same underlying problem? Include interventions that don't require new technology or procurement.\n\nGive me your answer as a short list — your best 4-5 alternatives, not an exhaustive one. If there's more depth worth going into on any option, just flag it and I'll ask you to expand.`,
+
+    challenge: `Here's something about this proposal I haven't told you yet — this is how I believe it actually solves the problem: ${mechanism}\n\nMake the strongest case that this is the wrong intervention, or that this mechanism won't actually produce the outcome I expect. What assumptions does my proposal depend upon? What evidence would make me abandon or substantially redesign it?`,
+
+    interview: `Help me think through the proposal we have been discussing. Your role is to help me discover its assumptions, dependencies and possible failure points through my own reasoning.\n\nBegin by asking me to walk through how the proposal would work in practice and produce its intended outcome.\n\nAsk one short question at a time, and follow up on my answers. Draw on my professional experience: what happens on the ground, who needs to do what, and what conditions must hold. Help me examine where the chain could break down and what that would imply.\n\nDo not give me a list of risks, supply answers to your own questions, or recommend solutions unless I ask. Avoid leading questions that steer me towards your preferred conclusion. Allow me to conclude that a concern is manageable or that the proposal remains sound.\n\nDistinguish observations, assumptions and unknowns. If I lack data, acknowledge and record the gap, then explore what I can reason through from experience. Do not repeatedly demand evidence or let every thread end with 'you need more data'.\n\nIf my answer is vague, ask for a concrete example. If I identify a possible weakness, help me examine its consequences and what I might do about it.\n\nThe purpose is for me to reach and explain my own conclusions, including what to retain, change or investigate. Start with your first question.`,
+
+    test: `Assume the project we've been discussing ${fundedClause}. Three years later, it is regarded as a failure. What are the most plausible reasons?`
+  };
+}
+
+function fillPrompt(stage){
+  const project = val('s0-title');
+  const problem = val('s0-problem');
+  const mechanism = val('s0-mechanism');
+  const prompts = buildPrompts(project, problem, mechanism);
+  document.getElementById('text-'+stage).textContent = prompts[stage];
+  if(stage === 'interview'){
+    document.getElementById('text-interview-wrapup').textContent = WRAPUP_TEXT;
+  }
+}
+
+function copyPrompt(stage, btn){
+  const el = document.getElementById('text-'+stage);
+  if(!el) return;
+  navigator.clipboard.writeText(el.textContent).then(()=>{
+    btn.classList.add('copied');
+    const orig = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(()=>{ btn.classList.remove('copied'); btn.textContent = orig; }, 1500);
+  });
+}
+
+function flash(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 1800);
+}
+
+// ---- Clear all ----
+function clearAll(){
+  if(!confirm('This will clear all your responses and unlock history in this browser. This cannot be undone.')) return;
+  Object.keys(localStorage).filter(k=>k.startsWith('m3_')).forEach(k=>localStorage.removeItem(k));
+  location.reload();
+}
+
+// ---- RTF helpers ----
+function rtfEscape(str){
+  if(str==null) return '';
+  let out='';
+  for(const ch of String(str)){
+    if(ch==='\\') out+='\\\\';
+    else if(ch==='{') out+='\\{';
+    else if(ch==='}') out+='\\}';
+    else if(ch==='\n') out+='\\line ';
+    else{ const c=ch.codePointAt(0); if(c>127) out+=`\\u${c>32767?c-65536:c}?`; else out+=ch; }
+  }
+  return out;
+}
+const RTF_HEADER='{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\n{\\fonttbl{\\f0\\fswiss\\fcharset0 Calibri;}{\\f1\\fswiss\\fcharset0 Calibri Light;}}\n{\\colortbl;\\red156\\green107\\blue31;\\red31\\green41\\blue55;\\red107\\green114\\blue128;\\red246\\green237\\blue224;}\n\\f0\\fs20\\cf2\n';
+function rtfTitleBlock(k,t,m){return`{\\pard\\sa60\\f1\\fs20\\cf3 ${rtfEscape(k)}\\par}\n{\\pard\\sa200\\b\\fs36\\cf2 ${rtfEscape(t)}\\par}\n{\\pard\\sa400\\fs18\\cf3 ${rtfEscape(m)}\\par}\n`;}
+function rtfSectionHeading(t){return`{\\pard\\sb200\\sa160\\b\\fs26\\cf1\\brdrb\\brdrs\\brdrw10\\brdrcf1\\brsp20 ${rtfEscape(t)}\\par}\n`;}
+function rtfFieldLabel(t){return`{\\pard\\sa40\\b\\fs18\\cf3\\caps ${rtfEscape(t)}\\par}\n`;}
+function rtfFieldValue(t){return`{\\pard\\sa240\\fs20\\cf2 ${rtfEscape(t)}\\par}\n`;}
+function rtfStageName(t){return`{\\pard\\sa40\\b\\fs19\\cf1 ${rtfEscape(t)}\\par}\n`;}
+function rtfPromptBlock(t){return`{\\pard\\sa240\\fs18\\cf2\\highlight4 ${rtfEscape(t)}\\par}\n`;}
+function downloadRtf(filename,content){
+  const blob=new Blob([content],{type:'application/rtf'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+// ---- Download proposal ----
+function saveAndDownloadProposal(){
+  autoSave0();
+  flash('flag-s0');
+  const stamp = new Date().toLocaleString();
+  const ci = document.querySelector('input[name="conf-init"]:checked');
+  let doc = RTF_HEADER;
+  doc += rtfTitleBlock('MCTP-III','My Original Proposal',`AI as Your Thinking Partner — saved ${stamp}`);
+  doc += rtfFieldLabel('Project or problem title'); doc += rtfFieldValue(val('s0-title'));
+  doc += rtfFieldLabel('Problem statement'); doc += rtfFieldValue(val('s0-problem'));
+  doc += rtfFieldLabel('Proposed solution and mechanism'); doc += rtfFieldValue(val('s0-mechanism'));
+  doc += rtfFieldLabel('Initial confidence (1–5)'); doc += rtfFieldValue(ci ? ci.value+' / 5' : '[not answered]');
+  doc += rtfFieldLabel('Why I believe this is the right approach'); doc += rtfFieldValue(val('s0-why'));
+  doc += '}';
+  downloadRtf('my-proposal-before-mctp3.rtf', doc);
+  gtag('event', 'proposal_download');
+}
+
+// ---- Download summary ----
+function downloadSummary(){
+  autoSave6();
+  const stamp = new Date().toLocaleString();
+  const ci = document.querySelector('input[name="conf-init"]:checked');
+  const cf = document.querySelector('input[name="conf-final"]:checked');
+  const fp = document.querySelector('input[name="poll-final"]:checked');
+  const fpLabel = fp ? fp.closest('label').textContent.trim() : '[not answered]';
+
+  const pollLabels = {
+    frame: {A:'A. AI largely confirmed my original problem definition.',B:'B. AI helped me articulate the problem more precisely.',C:'C. AI identified an important aspect I had overlooked.',D:'D. AI made me question whether I was solving the right problem.'},
+    expand: {A:'A. Mostly variations of my existing idea.',B:'B. Different ideas, but not practically useful.',C:'C. At least one credible alternative worth considering.',D:'D. An alternative that may be better than my original solution.'},
+    challenge: {A:'A. I agreed; it exposed a genuine weakness.',B:'B. I disagreed; it misunderstood the situation.',C:'C. I found it persuasive but need evidence to judge.',D:'D. I challenged AI further and modified my assessment.'}
+  };
+  function getPollLabel(stage){
+    const v = localStorage.getItem('m3_poll_'+stage);
+    return (v && pollLabels[stage]) ? (pollLabels[stage][v]||v) : '[not answered]';
+  }
+  function getInterviewCats(){
+    try{ const c=JSON.parse(localStorage.getItem('m3_poll_interview')||'[]'); return c.length ? c.join(', ') : '[not answered]'; }catch(e){ return '[not answered]'; }
+  }
+  function ls(k){ return localStorage.getItem(k)||'[not filled in]'; }
+
+  const project = val('s0-title');
+  const problem = val('s0-problem');
+  const mechanism = val('s0-mechanism');
+  const prompts = buildPrompts(project, problem, mechanism);
+  const generic = buildPrompts('[your project/problem]','[the problem and who it affects]','[how it actually solves the problem]','was fully funded and implemented');
+
+  let doc = RTF_HEADER;
+  doc += rtfTitleBlock('MCTP-III','AI as Your Thinking Partner',`Saved ${stamp}`);
+
+  doc += rtfSectionHeading('Original Proposal');
+  doc += rtfFieldLabel('Project or problem title'); doc += rtfFieldValue(project);
+  doc += rtfFieldLabel('Problem statement'); doc += rtfFieldValue(problem);
+  doc += rtfFieldLabel('Proposed solution and mechanism'); doc += rtfFieldValue(mechanism);
+  doc += rtfFieldLabel('Initial confidence (1–5)'); doc += rtfFieldValue(ci ? ci.value+' / 5' : '[not answered]');
+  doc += rtfFieldLabel('Why I believed this was right'); doc += rtfFieldValue(val('s0-why'));
+
+  doc += rtfSectionHeading('Stage Responses');
+  doc += rtfFieldLabel('Stage 1 — What happened to your problem understanding?'); doc += rtfFieldValue(getPollLabel('frame'));
+  doc += rtfFieldLabel('Stage 1 — Reflection'); doc += rtfFieldValue(ls('m3_reflect_frame'));
+  doc += rtfFieldLabel('Stage 2 — How did alternatives compare?'); doc += rtfFieldValue(getPollLabel('expand'));
+  doc += rtfFieldLabel('Stage 2 — Reflection'); doc += rtfFieldValue(ls('m3_reflect_expand'));
+  doc += rtfFieldLabel('Stage 3 — Response to AI\'s criticism'); doc += rtfFieldValue(getPollLabel('challenge'));
+  doc += rtfFieldLabel('Stage 3 — Reflection'); doc += rtfFieldValue(ls('m3_reflect_challenge'));
+  doc += rtfFieldLabel('Stage 4 — What AI\'s questions made you examine'); doc += rtfFieldValue(getInterviewCats());
+  doc += rtfFieldLabel('Stage 4 — Reflection'); doc += rtfFieldValue(ls('m3_reflect_interview'));
+  doc += rtfFieldLabel('Stage 5 — Most plausible failure reason and mitigation'); doc += rtfFieldValue(ls('m3_reflect_test'));
+
+  doc += rtfSectionHeading('Final Position');
+  doc += rtfFieldLabel('Revised problem statement'); doc += rtfFieldValue(val('s6-problem'));
+  doc += rtfFieldLabel('Revised proposal or approach'); doc += rtfFieldValue(val('s6-proposal'));
+  doc += rtfFieldLabel('Final confidence (1–5)'); doc += rtfFieldValue(cf ? cf.value+' / 5' : '[not answered]');
+  doc += rtfFieldLabel('What changed in my understanding'); doc += rtfFieldValue(val('s6-changed'));
+  doc += rtfFieldLabel('What I now need to verify'); doc += rtfFieldValue(val('s6-verify'));
+  doc += rtfFieldLabel('Where I stand now'); doc += rtfFieldValue(fpLabel);
+  doc += rtfFieldLabel('One question I would now ask before approving a similar proposal'); doc += rtfFieldValue(val('s6-question'));
+
+  doc += rtfSectionHeading('The Prompts Used At Each Stage');
+  [
+    ['Stage 1 — Examine the Problem', prompts.frame],
+    ['Stage 2 — Open the Possibilities', prompts.expand],
+    ['Stage 3 — Manufacture Friction', prompts.challenge],
+    ['Stage 4 — Reverse the Conversation', prompts.interview],
+    ['Stage 4 — Wrap-up prompt', WRAPUP_TEXT],
+    ['Stage 5 — Assume It Failed', prompts.test]
+  ].forEach(([name,text])=>{ doc+=rtfStageName(name); doc+=rtfPromptBlock(text); });
+
+  doc += rtfSectionHeading('Reusable Prompts (Blank Version)');
+  doc += rtfFieldValue('The same prompts with your project details removed — apply them to any future problem without this tool.');
+  [
+    ['Stage 1 — Examine the Problem', generic.frame],
+    ['Stage 2 — Open the Possibilities', generic.expand],
+    ['Stage 3 — Manufacture Friction', generic.challenge],
+    ['Stage 4 — Reverse the Conversation', generic.interview],
+    ['Stage 5 — Assume It Failed', generic.test]
+  ].forEach(([name,text])=>{ doc+=rtfStageName(name); doc+=rtfPromptBlock(text); });
+
+  doc += '}';
+  downloadRtf('my-ai-thinking-partner-summary-mctp3.rtf', doc);
+  gtag('event', 'summary_download');
+}
+</script>
+</body>
+</html>
