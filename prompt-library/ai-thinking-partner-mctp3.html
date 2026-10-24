@@ -737,6 +737,9 @@ async function sbUpsertStage(stage, poll_value, reflection){
   }catch(e){ console.error('Supabase stage error', e); }
 }
 
+// ---- Set to false before the actual session ----
+const TEST_MODE = true;
+
 // ---- Passcodes (base64-encoded) ----
 // FRAME3 / EXPAND3 / CHAL3 / INTER3 / TEST3 / WRITE3
 const PASSCODES_B64 = {
@@ -803,9 +806,13 @@ window.addEventListener('DOMContentLoaded', ()=>{
   const fp = localStorage.getItem('m3_poll_final');
   if(fp){ const r = document.querySelector(`input[name="poll-final"][value="${fp}"]`); if(r) r.checked=true; }
 
-  // Restore unlocked stages
-  const unlocked = JSON.parse(localStorage.getItem('m3_unlocked')||'[]');
-  unlocked.forEach(stage=>restoreUnlock(stage));
+  // Restore unlocked stages (or unlock all in test mode)
+  if(TEST_MODE){
+    ['frame','expand','challenge','interview','test','writeback'].forEach(s=>restoreUnlock(s));
+  } else {
+    const unlocked = JSON.parse(localStorage.getItem('m3_unlocked')||'[]');
+    unlocked.forEach(stage=>restoreUnlock(stage));
+  }
 });
 
 function restoreUnlock(stage){
@@ -878,7 +885,7 @@ function unlock(btnEl, stage){
   const wrap = btnEl.closest('.locked');
   const input = wrap.querySelector('input[type=text]');
   const err = wrap.querySelector('.error');
-  if(input.value.trim().toUpperCase() === decodeCode(stage).toUpperCase()){
+  if(TEST_MODE || input.value.trim().toUpperCase() === decodeCode(stage).toUpperCase()){
     wrap.style.display='none';
     err.style.display='none';
     const unlocked = JSON.parse(localStorage.getItem('m3_unlocked')||'[]');
