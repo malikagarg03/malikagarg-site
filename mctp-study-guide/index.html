@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCTP III Study Guide</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YZEYRQBYKC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YZEYRQBYKC');
+  </script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: #1e3a5f;
+      color: #fff;
+      padding: 32px 24px 28px;
+      text-align: center;
+    }
+    header h1 { font-size: 1.55rem; font-weight: 700; margin-bottom: 6px; }
+    header p  { font-size: 0.88rem; color: #94a3b8; }
+
+    /* ── Week nav ── */
+    .week-nav {
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 16px;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+    }
+    .week-btn {
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #64748b;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .week-btn:hover { color: #1e3a5f; }
+    .week-btn.active { color: #1e3a5f; border-bottom-color: #1e3a5f; }
+
+    /* ── Day nav ── */
+    .day-nav {
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 10px 16px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+    }
+    .day-btn {
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #475569;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.12s, color 0.12s, border-color 0.12s;
+    }
+    .day-btn:hover { background: #e2e8f0; }
+    .day-btn.active {
+      background: #1e3a5f;
+      color: #fff;
+      border-color: #1e3a5f;
+    }
+    .day-btn.today-marker { position: relative; }
+    .day-btn.today-marker::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 5px;
+      height: 5px;
+      background: #f59e0b;
+      border-radius: 50%;
+    }
+
+    /* ── Main content ── */
+    .content {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 20px 16px 48px;
+    }
+
+    .day-header {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      margin-bottom: 14px;
+    }
+
+    /* ── Session card ── */
+    .session-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .session-main {
+      padding: 16px 18px;
+    }
+
+    .session-meta {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+    .tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.03em;
+    }
+    .tag-time { background: #f1f5f9; color: #475569; }
+    .tag-topic { background: #dbeafe; color: #1d4ed8; }
+    .tag-coming { background: #fef3c7; color: #92400e; }
+    .tag-visit  { background: #d1fae5; color: #065f46; }
+
+    .session-title {
+      font-size: 0.97rem;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+    .session-speaker {
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+
+    .session-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .btn-summary, .btn-quiz {
+      padding: 7px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid;
+      transition: background 0.12s, color 0.12s;
+    }
+    .btn-summary {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      color: #334155;
+    }
+    .btn-summary:hover { background: #e2e8f0; }
+    .btn-summary.open { background: #1e3a5f; color: #fff; border-color: #1e3a5f; }
+
+    .btn-quiz {
+      background: #eff6ff;
+      border-color: #93c5fd;
+      color: #1d4ed8;
+    }
+    .btn-quiz:hover { background: #dbeafe; }
+    .btn-quiz.open { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+
+    .btn-disabled {
+      padding: 7px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      color: #cbd5e1;
+      cursor: default;
+    }
+
+    /* ── Summary panel ── */
+    .summary-panel {
+      display: none;
+      border-top: 1px solid #e2e8f0;
+      padding: 16px 18px;
+      background: #fafcff;
+    }
+    .summary-panel.open { display: block; }
+
+    .summary-panel h4 {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #64748b;
+      margin: 12px 0 7px;
+    }
+    .summary-panel h4:first-child { margin-top: 0; }
+    .summary-panel ul { padding-left: 16px; }
+    .summary-panel li, .summary-panel p {
+      font-size: 0.88rem;
+      color: #334155;
+      line-height: 1.65;
+      margin-bottom: 4px;
+    }
+    .summary-panel .note-box {
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: #fefce8;
+      border-left: 3px solid #f59e0b;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.85rem;
+      color: #713f12;
+    }
+
+    /* ── Quiz panel ── */
+    .quiz-panel {
+      display: none;
+      border-top: 1px solid #e2e8f0;
+      padding: 16px 18px;
+      background: #f8fafc;
+    }
+    .quiz-panel.open { display: block; }
+
+    .quiz-score {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .quiz-score span { font-size: 0.82rem; color: #475569; }
+    .quiz-score strong { color: #1e3a5f; }
+    .btn-reset {
+      margin-left: auto;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 5px;
+      cursor: pointer;
+      color: #475569;
+    }
+    .btn-reset:hover { background: #e2e8f0; }
+
+    .mcq-item { margin-bottom: 14px; }
+    .mcq-q {
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+    .mcq-opts { display: flex; flex-direction: column; gap: 6px; }
+    .mcq-opt {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.84rem;
+      line-height: 1.4;
+      transition: background 0.1s;
+      background: #fff;
+    }
+    .mcq-opt:hover:not(.locked) { background: #f1f5f9; }
+    .mcq-opt.correct { background: #dcfce7; border-color: #86efac; }
+    .mcq-opt.wrong   { background: #fee2e2; border-color: #fca5a5; }
+    .mcq-opt.show-correct { background: #dcfce7; border-color: #86efac; }
+
+    .opt-l {
+      flex-shrink: 0;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      color: #475569;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mcq-opt.correct .opt-l   { background: #16a34a; color: #fff; }
+    .mcq-opt.wrong .opt-l     { background: #dc2626; color: #fff; }
+    .mcq-opt.show-correct .opt-l { background: #16a34a; color: #fff; }
+
+    .mcq-exp {
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: #f8fafc;
+      border-left: 3px solid #1e3a5f;
+      font-size: 0.82rem;
+      color: #334155;
+      border-radius: 0 4px 4px 0;
+      display: none;
+      line-height: 1.6;
+    }
+
+    /* ── Coming soon state ── */
+    .coming-soon {
+      text-align: center;
+      padding: 20px;
+      color: #94a3b8;
+      font-size: 0.85rem;
+    }
+
+    /* ── Empty day ── */
+    .admin-day {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 20px 18px;
+      font-size: 0.88rem;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.25rem; }
+      .week-btn { padding: 12px 14px; font-size: 0.82rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>28th MCTP Phase-III — Study Guide</h1>
+  <p>26 Oct – 20 Nov 2026 &nbsp;·&nbsp; SVP NPA, Hyderabad</p>
+</header>
+
+<!-- Week nav -->
+<nav class="week-nav" id="week-nav"></nav>
+
+<!-- Day nav -->
+<nav class="day-nav" id="day-nav"></nav>
+
+<!-- Content -->
+<div class="content">
+  <div class="day-header" id="day-header"></div>
+  <div id="session-list"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════════════════
+
+const SCHEDULE = [
+  // ────────────── WEEK 1 ──────────────
+  {
+    weekId: 'w1', weekLabel: 'Week 1', weekDates: '26–30 Oct',
+    days: [
+      {
+        dateStr: '2026-10-26', label: 'Mon 26', full: 'Monday, 26 Oct',
+        admin: 'Joining Formalities, Inaugural Session & Ice Breaking — no class summary.',
+      },
+      {
+        dateStr: '2026-10-27', label: 'Tue 27', full: 'Tuesday, 27 Oct',
+        sessions: [
+          {
+            id: 'w1-t1', time: '09:30–11:00', topic: 'Cybercrime',
+            title: 'Importance of OSINT in Investigation',
+            speaker: 'Parmesh Naik & Shriya Nagar, Cyber-X Team',
+            summary: null,
+            mcqs: [
+              {
+                q: 'OSINT stands for:',
+                opts: ['Open Security Intelligence Network', 'Open Source Intelligence', 'Online Surveillance and Intelligence Tracking', 'Operational Security Information Network'],
+                ans: 1,
+                exp: 'OSINT = Open Source Intelligence — intelligence gathered from publicly available (open) sources without covert access.',
+              },
+              {
+                q: 'Which tool is best known for searching internet-connected devices by IP, port and banner?',
+                opts: ['Maltego', 'theHarvester', 'Shodan', 'Wireshark'],
+                ans: 2,
+                exp: 'Shodan is a search engine that indexes internet-connected devices; investigators use it to find exposed cameras, routers and servers linked to suspects.',
+              },
+              {
+                q: 'Passive OSINT recon differs from active recon in that it:',
+                opts: [
+                  'Requires a court order',
+                  'Uses paid databases only',
+                  'Avoids any direct contact with the target or their systems',
+                  'Can only be conducted by cyber-forensics labs',
+                ],
+                ans: 2,
+                exp: 'Passive recon uses only publicly available data and never touches the target\'s systems, keeping the investigation covert and legally safe.',
+              },
+            ],
+          },
+          {
+            id: 'w1-t2', time: '11:20–13:30', topic: 'Cybercrime',
+            title: 'Introduction to Deep Web / Dark Web & Monitoring',
+            speaker: 'Mohammed Nazim & Shriya Nagar, Cyber-X Team',
+            summary: null,
+            mcqs: [
+              {
+                q: 'The Dark Web is accessible through which network/browser?',
+                opts: ['Google Chrome Incognito', 'VPN alone', 'Tor Browser', 'Firefox Private Mode'],
+                ans: 2,
+                exp: 'The Tor Browser routes traffic through the Tor anonymity network, allowing access to .onion sites on the Dark Web.',
+              },
+              {
+                q: 'Which layer of the web requires login credentials but is NOT the Dark Web?',
+                opts: ['Surface Web', 'Deep Web', 'Dark Web', 'Shadow Web'],
+                ans: 1,
+                exp: 'The Deep Web includes all pages not indexed by search engines — banking portals, email inboxes, subscription content — but these are accessed with normal browsers.',
+              },
+            ],
+          },
+          {
+            id: 'w1-t3', time: '15:15–17:30', topic: 'Cybercrime',
+            title: 'Securing Personal Data, Devices & Organisational Security',
+            speaker: 'Syed Sayeed Ahmed & Mohammed Amaan, Cyber-X Team',
+            summary: null,
+            mcqs: [
+              {
+                q: 'A SIM-swap attack is primarily used to:',
+                opts: [
+                  'Clone a phone physically',
+                  'Bypass two-factor authentication linked to a phone number',
+                  'Eavesdrop on voice calls',
+                  'Track the victim\'s GPS location',
+                ],
+                ans: 1,
+                exp: 'In a SIM-swap, attackers convince the telecom to port the victim\'s number to a new SIM, allowing them to intercept OTPs and bypass SMS-based 2FA.',
+              },
+              {
+                q: 'The zero-trust security model operates on which core principle?',
+                opts: [
+                  'Trust users inside the network perimeter by default',
+                  'Only external traffic requires verification',
+                  'Never trust, always verify — regardless of network location',
+                  'Physical access controls replace digital authentication',
+                ],
+                ans: 2,
+                exp: 'Zero-trust assumes no user or device is trusted by default, even inside the internal network. Every access request must be authenticated, authorized and continuously validated.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        dateStr: '2026-10-28', label: 'Wed 28', full: 'Wednesday, 28 Oct',
+        sessions: [
+          {
+            id: 'w1-w1', time: '09:30–11:00', topic: 'Cybercrime',
+            title: 'Investigation of Cases Involving VoIP Calls',
+            speaker: 'Mohammed Arif Ali Khan & Parmesh Naik, Cyber-X Team',
+            summary: null,
+            mcqs: [
+              {
+                q: 'VoIP call records are captured in which type of record (unlike regular calls)?',
+                opts: ['CDR (Call Detail Record)', 'IPDR (Internet Protocol Detail Record)', 'SDR (Session Detail Record)', 'PSTN Log'],
+                ans: 1,
+                exp: 'VoIP calls travel over the internet, so they do not generate CDRs at telecom level. IPDR from ISPs captures source/destination IPs for these sessions.',
+              },
+              {
+                q: 'Under which section of the IT Act can police compel an ISP to share subscriber details for a given IP address?',
+                opts: ['Section 43', 'Section 65', 'Section 69', 'Section 72'],
+                ans: 2,
+                exp: 'Section 69 of the IT Act empowers the government/investigating agency to direct any agency, including ISPs, to provide interception and monitoring assistance.',
+              },
+            ],
+          },
+          {
+            id: 'w1-w2', time: '11:20–12:20', topic: 'Cybercrime',
+            title: 'Appreciation of Digital Evidence',
+            speaker: 'Dr. Nisheeth Dixit, Advocate — Supreme Court & Rajasthan HC',
+            summary: null,
+            mcqs: [
+              {
+                q: 'Under which section of the Indian Evidence Act is a certificate required for admissibility of electronic records?',
+                opts: ['Section 45A', 'Section 65A', 'Section 65B', 'Section 67A'],
+                ans: 2,
+                exp: 'Section 65B IEA (now BSA 2023 equivalent) lays down the conditions under which a computer-generated electronic record is admissible, including the requirement of an authenticity certificate.',
+              },
+              {
+                q: 'What is the purpose of a write-blocker in digital forensics?',
+                opts: [
+                  'To encrypt the seized device',
+                  'To prevent any writes to the original evidence media during imaging',
+                  'To block wireless signals from the device',
+                  'To speed up the forensic imaging process',
+                ],
+                ans: 1,
+                exp: 'A write-blocker (hardware or software) ensures that the forensic tool can only read from the seized device, preventing accidental modification that could invalidate the evidence.',
+              },
+              {
+                q: 'Hash values (MD5/SHA-256) of a forensic image are used to:',
+                opts: [
+                  'Encrypt the image for secure storage',
+                  'Identify the device manufacturer',
+                  'Prove the forensic copy is identical to the original',
+                  'Locate deleted files on the device',
+                ],
+                ans: 2,
+                exp: 'Matching hash values before and after imaging mathematically prove that not a single bit was altered, establishing forensic integrity of the copy.',
+              },
+            ],
+          },
+          {
+            id: 'w1-w3', time: '15:15–16:15', topic: 'Cybercrime',
+            title: 'Architecture of Cellular Communication & IPDR/CDR Analysis',
+            speaker: 'Gurcharan Singh, Faculty Cybercrime, CDTI Chandigarh',
+            summary: null,
+            mcqs: [
+              {
+                q: 'IMEI is used to identify the:',
+                opts: ['SIM card subscriber', 'Mobile handset', 'Network operator', 'Cell tower'],
+                ans: 1,
+                exp: 'IMEI (International Mobile Equipment Identity) is a unique 15-digit number that identifies the physical handset, regardless of which SIM is inserted.',
+              },
+              {
+                q: 'A "tower dump" provides investigators with:',
+                opts: [
+                  'All call recordings made from a tower',
+                  'A list of all IMEIs/IMSIs that connected to a tower in a specific time window',
+                  'The GPS coordinates of every device in a district',
+                  'SMS content for all messages relayed by the tower',
+                ],
+                ans: 1,
+                exp: 'A tower dump is a bulk data request to the telecom operator for all device identifiers that connected to a specific cell tower during a defined time window — useful for placing suspects at a crime scene.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        dateStr: '2026-10-29', label: 'Thu 29', full: 'Thursday, 29 Oct',
+        sessions: [
+          {
+            id: 'w1-th1', time: '09:30–16:15', topic: 'Leadership',
+            title: 'Strategic Social Media Management for Modern Policing',
+            speaker: 'Prof. Prakash Bagri, ISB (Domestic Speaker)',
+            summary: null,
+            mcqs: [
+              {
+                q: 'In the context of social media crisis management for police, "dark posts" refer to:',
+                opts: [
+                  'Posts made on the dark web',
+                  'Illegal police surveillance of social accounts',
+                  'Targeted platform ads visible only to selected audiences, not the general public timeline',
+                  'Posts made from anonymous police accounts',
+                ],
+                ans: 2,
+                exp: 'Dark posts (or unpublished/boosted posts) are paid social media ads that appear in specific users\' feeds without appearing on the page\'s public timeline — useful for counter-messaging to specific communities.',
+              },
+              {
+                q: 'WhatsApp rumours are particularly challenging for police because:',
+                opts: [
+                  'WhatsApp is illegal in India',
+                  'Messages spread in closed groups, making monitoring and counter-messaging difficult',
+                  'WhatsApp stores messages on government servers',
+                  'Police have no legal authority to approach WhatsApp',
+                ],
+                ans: 1,
+                exp: 'Closed WhatsApp groups amplify rumours without public visibility. Police cannot easily monitor them and counter-messaging cannot be targeted at specific group members.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        dateStr: '2026-10-30', label: 'Fri 30', full: 'Friday, 30 Oct',
+        sessions: [
+          {
+            id: 'w1-f1', time: '09:30–11:00', topic: 'Technology',
+            title: 'NATGRID: Database for Policing & Data Sharing with LEAs',
+            speaker: 'Hirdesh Kumar, CEO, NATGRID',
+            summary: null,
+            mcqs: [
+              {
+                q: 'NATGRID is primarily designed to aggregate data for:',
+                opts: ['Revenue intelligence', 'Counter-terrorism and serious crime investigation', 'Border management', 'Electoral verification'],
+                ans: 1,
+                exp: 'NATGRID was set up post-26/11 to enable law enforcement to query multiple national databases (telecom, finance, immigration) through a single interface for counter-terrorism and serious crime.',
+              },
+            ],
+          },
+          {
+            id: 'w1-f2', time: '11:20–13:30', topic: 'Technology',
+            title: 'Drones, Rogue Drones & Anti-Drone Systems',
+            speaker: 'Dr. Atul Fulzele, IPS, IG BSF Punjab & Abdul Hannan Khan, BSF Drone Analysis Lab',
+            summary: null,
+            mcqs: [
+              {
+                q: 'Under DGCA Drone Rules 2021, a drone weighing between 250g and 2kg is classified as:',
+                opts: ['Nano', 'Micro', 'Small', 'Medium'],
+                ans: 1,
+                exp: 'DGCA categories: Nano (<250g), Micro (250g–2kg), Small (2–25kg), Medium (25–150kg), Large (>150kg). Each category has different registration and operational requirements.',
+              },
+              {
+                q: 'RF jamming as a counter-drone measure works by:',
+                opts: [
+                  'Physically destroying the drone with a projectile',
+                  'Disrupting the radio frequency link between the drone and its controller',
+                  'Spoofing the drone\'s GPS to redirect it',
+                  'Using a high-powered laser to disable the drone\'s camera',
+                ],
+                ans: 1,
+                exp: 'RF jamming floods the frequency band (typically 2.4GHz or 5.8GHz) that the drone uses to communicate with its controller, causing the drone to lose control and typically hover, land or return home.',
+              },
+            ],
+          },
+          {
+            id: 'w1-f3', time: '15:15–16:15', topic: 'HR & Admin',
+            title: 'Police Recruitment — Challenges and Solutions',
+            speaker: 'Ms. Radhika G, IPS, DD (CoE), SVP NPA',
+            summary: null,
+            mcqs: [
+              {
+                q: 'The TPIN (Transmission PIN) system in police recruitment is used to:',
+                opts: [
+                  'Track candidates during the exam',
+                  'Encrypt and securely transmit question papers to exam centres',
+                  'Generate biometric tokens for candidates',
+                  'Manage results publication on the portal',
+                ],
+                ans: 1,
+                exp: 'TPIN systems ensure question papers are encrypted end-to-end and can only be decrypted at authorised exam centres at the designated time, reducing the window for paper leaks.',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // ────────────── WEEK 2 ──────────────
+  {
+    weekId: 'w2', weekLabel: 'Week 2', weekDates: '2–6 Nov',
+    placeholder: true,
+    days: [
+      { dateStr: '2026-11-02', label: 'Mon 2', full: 'Monday, 2 Nov' },
+      { dateStr: '2026-11-03', label: 'Tue 3', full: 'Tuesday, 3 Nov' },
+      { dateStr: '2026-11-04', label: 'Wed 4', full: 'Wednesday, 4 Nov' },
+      { dateStr: '2026-11-05', label: 'Thu 5', full: 'Thursday, 5 Nov' },
+      { dateStr: '2026-11-06', label: 'Fri 6', full: 'Friday, 6 Nov' },
+    ],
+  },
+
+  // ────────────── WEEK 3 ──────────────
+  {
+    weekId: 'w3', weekLabel: 'Week 3', weekDates: '9–13 Nov',
+    placeholder: true,
+    days: [
+      { dateStr: '2026-11-09', label: 'Mon 9', full: 'Monday, 9 Nov' },
+      { dateStr: '2026-11-10', label: 'Tue 10', full: 'Tuesday, 10 Nov' },
+      { dateStr: '2026-11-11', label: 'Wed 11', full: 'Wednesday, 11 Nov' },
+      { dateStr: '2026-11-12', label: 'Thu 12', full: 'Thursday, 12 Nov' },
+      { dateStr: '2026-11-13', label: 'Fri 13', full: 'Friday, 13 Nov' },
+    ],
+  },
+
+  // ────────────── WEEK 4 ──────────────
+  {
+    weekId: 'w4', weekLabel: 'Week 4', weekDates: '16–20 Nov',
+    placeholder: true,
+    days: [
+      { dateStr: '2026-11-16', label: 'Mon 16', full: 'Monday, 16 Nov' },
+      { dateStr: '2026-11-17', label: 'Tue 17', full: 'Tuesday, 17 Nov' },
+      { dateStr: '2026-11-18', label: 'Wed 18', full: 'Wednesday, 18 Nov' },
+      { dateStr: '2026-11-19', label: 'Thu 19', full: 'Thursday, 19 Nov' },
+      { dateStr: '2026-11-20', label: 'Fri 20', full: 'Friday, 20 Nov' },
+    ],
+  },
+];
+
+// ═══════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════
+
+const TODAY = '2026-10-27';
+let activeWeek = 'w1';
+let activeDay  = TODAY;
+
+// Per session: which panel is open ('summary'|'quiz'|null)
+const openPanel = {};
+// Per MCQ: { chosen, correct }
+const mcqState = {};
+
+// ═══════════════════════════════════════════════════════════
+//  BUILD WEEK NAV
+// ═══════════════════════════════════════════════════════════
+function buildWeekNav() {
+  const nav = document.getElementById('week-nav');
+  nav.innerHTML = SCHEDULE.map(w => `
+    <button class="week-btn ${w.weekId === activeWeek ? 'active' : ''}"
+            onclick="selectWeek('${w.weekId}')">
+      ${w.weekLabel} <span style="font-weight:400;opacity:.75;">${w.weekDates}</span>
+    </button>
+  `).join('');
+}
+
+function selectWeek(wid) {
+  activeWeek = wid;
+  const week = SCHEDULE.find(w => w.weekId === wid);
+  // Default to today if in this week, else first day
+  const dayIds = week.days.map(d => d.dateStr);
+  activeDay = dayIds.includes(TODAY) ? TODAY : dayIds[0];
+  buildWeekNav();
+  buildDayNav();
+  buildSessions();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  BUILD DAY NAV
+// ═══════════════════════════════════════════════════════════
+function buildDayNav() {
+  const week = SCHEDULE.find(w => w.weekId === activeWeek);
+  const nav  = document.getElementById('day-nav');
+  nav.innerHTML = week.days.map(d => {
+    const isToday   = d.dateStr === TODAY;
+    const isCurrent = d.dateStr === activeDay;
+    return `
+      <button class="day-btn ${isCurrent ? 'active' : ''} ${isToday ? 'today-marker' : ''}"
+              onclick="selectDay('${d.dateStr}')">
+        ${d.label}${isToday ? ' ●' : ''}
+      </button>
+    `;
+  }).join('');
+}
+
+function selectDay(dateStr) {
+  activeDay = dateStr;
+  buildDayNav();
+  buildSessions();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  BUILD SESSION LIST
+// ═══════════════════════════════════════════════════════════
+function buildSessions() {
+  const week = SCHEDULE.find(w => w.weekId === activeWeek);
+  const day  = week.days.find(d => d.dateStr === activeDay);
+  const hdr  = document.getElementById('day-header');
+  const list = document.getElementById('session-list');
+
+  hdr.textContent = day.full;
+
+  if (day.admin) {
+    list.innerHTML = `<div class="admin-day">${day.admin}</div>`;
+    return;
+  }
+
+  if (week.placeholder || !day.sessions) {
+    list.innerHTML = `<div class="admin-day" style="text-align:center;padding:32px;">
+      Sessions for this week will be added as classes happen.
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = day.sessions.map(s => renderSession(s)).join('');
+}
+
+function topicColor(topic) {
+  const map = {
+    'Cybercrime': '#dbeafe|#1d4ed8',
+    'Leadership': '#fce7f3|#9d174d',
+    'Technology': '#d1fae5|#065f46',
+    'Law': '#fef3c7|#92400e',
+    'Law & Order': '#fee2e2|#991b1b',
+    'HR & Admin': '#ede9fe|#5b21b6',
+    'Intelligence': '#e0e7ff|#3730a3',
+    'Drugs': '#fef9c3|#854d0e',
+    'Activity': '#f1f5f9|#475569',
+    'Visit': '#d1fae5|#065f46',
+  };
+  const val = map[topic] || '#f1f5f9|#475569';
+  const [bg, fg] = val.split('|');
+  return { bg, fg };
+}
+
+function renderSession(s) {
+  const { bg, fg } = topicColor(s.topic);
+  const topicTag = `<span class="tag" style="background:${bg};color:${fg}">${s.topic}</span>`;
+  const timeTag  = `<span class="tag tag-time">${s.time}</span>`;
+
+  let visitBadge = '';
+  if (s.isVisit) visitBadge = `<span class="tag tag-visit">${s.visitLabel}</span>`;
+
+  let actionButtons = '';
+  if (s.comingSoon) {
+    actionButtons = `<span class="btn-disabled">Summary — after class</span>`;
+  } else if (s.isVisit) {
+    actionButtons = '';
+  } else {
+    const sp = openPanel[s.id];
+    const hasSummary = !!s.summary;
+    const summaryBtn = hasSummary
+      ? `<button class="btn-summary ${sp === 'summary' ? 'open' : ''}"
+                 onclick="togglePanel('${s.id}','summary')">
+           ${sp === 'summary' ? '▲ Summary' : '▼ Read Summary'}
+         </button>`
+      : `<span class="btn-disabled">Summary — coming soon</span>`;
+    const quizBtn = (s.mcqs && hasSummary)
+      ? `<button class="btn-quiz ${sp === 'quiz' ? 'open' : ''}"
+                 onclick="togglePanel('${s.id}','quiz')">
+           ${sp === 'quiz' ? '▲ Quiz' : '⚡ Practice Quiz'}
+         </button>`
+      : `<span class="btn-disabled">Quiz — coming soon</span>`;
+    actionButtons = summaryBtn + quizBtn;
+  }
+
+  const summaryHTML = (!s.comingSoon && !s.isVisit && s.summary) ? renderSummaryPanel(s) : '';
+  const quizHTML    = (!s.comingSoon && !s.isVisit && s.mcqs)    ? renderQuizPanel(s)    : '';
+
+  return `
+    <div class="session-card" id="card-${s.id}">
+      <div class="session-main">
+        <div class="session-meta">
+          ${timeTag}${topicTag}${visitBadge}
+        </div>
+        <div class="session-title">${s.title}</div>
+        ${s.speaker ? `<div class="session-speaker">${s.speaker}</div>` : ''}
+        ${actionButtons ? `<div class="session-actions">${actionButtons}</div>` : ''}
+      </div>
+      ${summaryHTML}
+      ${quizHTML}
+    </div>
+  `;
+}
+
+function renderSummaryPanel(s) {
+  const isOpen = openPanel[s.id] === 'summary';
+  const sm = s.summary;
+  return `
+    <div class="summary-panel ${isOpen ? 'open' : ''}" id="summary-${s.id}">
+      <h4>Key Points</h4>
+      <ul>${sm.keypoints.map(k => `<li>${k}</li>`).join('')}</ul>
+      ${sm.note ? `<div class="note-box"><strong>Note:</strong> ${sm.note}</div>` : ''}
+    </div>
+  `;
+}
+
+function renderQuizPanel(s) {
+  const isOpen = openPanel[s.id] === 'quiz';
+  const letters = ['A','B','C','D'];
+  const answered = s.mcqs.map(q => mcqState[s.id + '-' + q.q.slice(0,20)]).filter(Boolean);
+  const correct  = answered.filter(a => a.correct).length;
+
+  const mcqHTML = s.mcqs.map((q, qi) => {
+    const key   = s.id + '-' + q.q.slice(0,20);
+    const state = mcqState[key];
+    return `
+      <div class="mcq-item">
+        <div class="mcq-q">${qi + 1}. ${q.q}</div>
+        <div class="mcq-opts">
+          ${q.opts.map((opt, oi) => {
+            let cls = '';
+            if (state) {
+              cls = ' locked';
+              if (oi === q.ans) cls += state.chosen === oi ? ' correct' : ' show-correct';
+              else if (oi === state.chosen) cls += ' wrong';
+            }
+            return `<div class="mcq-opt${cls}" onclick="answerMCQ('${key}',${oi},${q.ans},'${s.id}')">
+              <span class="opt-l">${letters[oi]}</span>${opt}
+            </div>`;
+          }).join('')}
+        </div>
+        <div class="mcq-exp" id="exp-${key}" ${state ? 'style="display:block"' : ''}>
+          <strong>Explanation:</strong> ${q.exp}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="quiz-panel ${isOpen ? 'open' : ''}" id="quiz-${s.id}">
+      <div class="quiz-score">
+        <span>Answered: <strong>${answered.length}/${s.mcqs.length}</strong></span>
+        <span>Correct: <strong>${correct}</strong></span>
+        ${answered.length ? `<span>Score: <strong>${Math.round(correct/answered.length*100)}%</strong></span>` : ''}
+        <button class="btn-reset" onclick="resetQuiz('${s.id}')">Reset</button>
+      </div>
+      ${mcqHTML}
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  INTERACTIONS
+// ═══════════════════════════════════════════════════════════
+
+function togglePanel(sid, panel) {
+  const current = openPanel[sid];
+  openPanel[sid] = current === panel ? null : panel;
+  gtag('event', openPanel[sid] ? 'panel_open' : 'panel_close', { session: sid, panel });
+  buildSessions();
+  // Scroll the card into view
+  setTimeout(() => {
+    const el = document.getElementById('card-' + sid);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 50);
+}
+
+function answerMCQ(key, chosen, correct, sid) {
+  if (mcqState[key]) return;
+  const isCorrect = chosen === correct;
+  mcqState[key] = { chosen, correct: isCorrect };
+  gtag('event', 'mcq_answered', { session: sid, correct: isCorrect });
+  buildSessions();
+}
+
+function resetQuiz(sid) {
+  const week = SCHEDULE.find(w => w.weekId === activeWeek);
+  const day  = week.days.find(d => d.dateStr === activeDay);
+  const sess = day.sessions.find(s => s.id === sid);
+  if (sess && sess.mcqs) {
+    sess.mcqs.forEach(q => {
+      const key = sid + '-' + q.q.slice(0,20);
+      delete mcqState[key];
+    });
+  }
+  buildSessions();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════
+buildWeekNav();
+buildDayNav();
+buildSessions();
+</script>
+</body>
+</html>
