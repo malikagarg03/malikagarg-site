@@ -683,6 +683,45 @@ const SCHEDULE = [
 ];
 
 // ═══════════════════════════════════════════════════════════
+//  SUPABASE
+// ═══════════════════════════════════════════════════════════
+
+const SB_URL = 'https://uuwqsgizzcnqpbnxuurx.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1d3FzZ2l6emNucXBibnh1dXJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwOTUzOTgsImV4cCI6MjEwODY3MTM5OH0.wfEfd8dTqEMMIPTT23RYeTmWSOoVSsJYW5o0uXnX02c';
+
+// Random ID per browser session — no PII
+const VISITOR_ID = (() => {
+  let id = sessionStorage.getItem('mctp_sid');
+  if (!id) { id = crypto.randomUUID(); sessionStorage.setItem('mctp_sid', id); }
+  return id;
+})();
+
+async function logAttempt(sid, question, isCorrect) {
+  const sess = SCHEDULE.flatMap(w => w.days || [])
+                       .flatMap(d => d.sessions || [])
+                       .find(s => s.id === sid);
+  const week = SCHEDULE.find(w => (w.days || []).some(d => (d.sessions || []).some(s => s.id === sid)));
+  try {
+    await fetch(`${SB_URL}/rest/v1/mctp_quiz_attempts`, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify({
+        session_id:    VISITOR_ID,
+        week:          week ? week.weekLabel : '',
+        session_title: sess ? sess.title : sid,
+        question:      question,
+        is_correct:    isCorrect,
+      }),
+    });
+  } catch (e) { /* silent — don't break the quiz */ }
+}
+
+// ═══════════════════════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════════════════════
 
@@ -915,6 +954,10 @@ function answerMCQ(key, chosen, correct, sid) {
   const isCorrect = chosen === correct;
   mcqState[key] = { chosen, correct: isCorrect };
   gtag('event', 'mcq_answered', { session: sid, correct: isCorrect });
+  // strip the sid prefix to get the question text key, then find the full question
+  const sess = SCHEDULE.flatMap(w => w.days || []).flatMap(d => d.sessions || []).find(s => s.id === sid);
+  const qText = sess ? (sess.mcqs || []).find(q => key === sid + '-' + q.q.slice(0,20))?.q || key : key;
+  logAttempt(sid, qText, isCorrect);
   buildSessions();
 }
 
