@@ -376,7 +376,7 @@ const SCHEDULE = [
             id: 'w1-t1', time: '09:30–11:00', topic: 'Cybercrime',
             title: 'Importance of OSINT in Investigation',
             speaker: 'Parmesh Naik & Shriya Nagar, Cyber-X Team',
-            summary: null,
+            summary: `<strong>What is OSINT?</strong><br>Open Source Intelligence (OSINT) is the collection and analysis of data gathered from publicly available sources. For investigators, it is a lawful, non-intrusive method to build a picture of a suspect, network, or incident before committing to more invasive investigative steps.<br><br><strong>Key Sources</strong><ul><li><strong>Social media</strong> — profiles, connections, check-ins, metadata in photos (geolocation, device type)</li><li><strong>WHOIS / domain records</strong> — registration details for websites and email domains</li><li><strong>Shodan</strong> — search engine for internet-connected devices; useful for identifying exposed infrastructure linked to suspects</li><li><strong>Google dorking</strong> — advanced search operators (site:, filetype:, inurl:) to surface hidden or cached pages</li><li><strong>Public court records, company filings, property records</strong></li></ul><br><strong>Passive vs Active Recon</strong><br>Passive OSINT avoids any direct contact with the target's systems — it uses only what is publicly accessible. Active recon involves probing a target's systems directly (e.g., port scanning) and may require legal authority. Always start passive.<br><br><strong>Key Tools Covered</strong><br>Maltego (link analysis &amp; entity mapping), theHarvester (email/domain harvesting), SpiderFoot (automated recon), and manual Google dorking.<br><br><strong>Legal Reminder</strong><br>OSINT from public sources is generally permissible without a warrant, but documentation of each source and timestamp is essential for court admissibility. Evidence gathered must be preserved in its original form with a clear chain of custody.`,
             mcqs: [
               {
                 q: 'OSINT stands for:',
@@ -407,7 +407,7 @@ const SCHEDULE = [
             id: 'w1-t2', time: '11:20–13:30', topic: 'Cybercrime',
             title: 'Introduction to Deep Web / Dark Web & Monitoring',
             speaker: 'Mohammed Nazim & Shriya Nagar, Cyber-X Team',
-            summary: null,
+            summary: `<strong>The Three Layers of the Web</strong><ul><li><strong>Surface Web</strong> — indexed by search engines (Google, Bing); about 5% of total internet content</li><li><strong>Deep Web</strong> — not indexed; includes email inboxes, banking portals, subscription databases, and private intranets. Accessed with standard browsers but requires login credentials.</li><li><strong>Dark Web</strong> — a subset of the Deep Web accessible only via special software (Tor Browser). Hosts .onion sites with strong anonymity features.</li></ul><br><strong>Tor Network</strong><br>Tor (The Onion Router) routes traffic through a series of volunteer-run nodes, encrypting data at each layer. This makes it extremely difficult to trace traffic back to the originating IP. Investigators need to understand this architecture to appreciate why standard IP-tracing fails on the Dark Web.<br><br><strong>What Police Find on the Dark Web</strong><br>Drugs, weapons, stolen credentials, CSAM, counterfeit documents, hacking-as-a-service, and ransomware infrastructure. Markets operate like e-commerce platforms with ratings and escrow.<br><br><strong>Monitoring Approaches</strong><ul><li>Setting up personas to monitor forums (requires controlled ops approval)</li><li>Tracking Bitcoin/crypto wallet addresses using blockchain analysis tools (Chainalysis, CipherTrace)</li><li>Monitoring Tor exit nodes (limited, requires inter-agency coordination)</li><li>Using law enforcement-specific databases of known .onion addresses</li></ul><br><strong>Key Point</strong><br>Merely accessing the Dark Web is not illegal in India. Purchasing or facilitating illegal activity on it is. Investigators need clear documented authority before going undercover on Dark Web platforms.`,
             mcqs: [
               {
                 q: 'The Dark Web is accessible through which network/browser?',
@@ -427,7 +427,7 @@ const SCHEDULE = [
             id: 'w1-t3', time: '15:15–17:30', topic: 'Cybercrime',
             title: 'Securing Personal Data, Devices & Organisational Security',
             speaker: 'Syed Sayeed Ahmed & Mohammed Amaan, Cyber-X Team',
-            summary: null,
+            summary: `<strong>Why This Matters for Officers</strong><br>IPS officers are high-value targets for social engineering, SIM-swap attacks, and spyware given their access to sensitive information and decision-making power. Personal security hygiene is an operational security requirement, not just personal choice.<br><br><strong>Common Attack Vectors</strong><ul><li><strong>Phishing</strong> — deceptive emails/messages that trick users into revealing credentials or clicking malicious links</li><li><strong>SIM-swap</strong> — attackers convince telecom to port your number, allowing them to intercept OTPs and bypass SMS-based 2FA</li><li><strong>Spyware / Stalkerware</strong> — covertly installed on devices; Pegasus-type tools exploit zero-day vulnerabilities</li><li><strong>Shoulder surfing &amp; tailgating</strong> — physical security lapses in public spaces</li></ul><br><strong>Personal Security Checklist</strong><ul><li>Use app-based 2FA (TOTP: Google Authenticator, Authy) instead of SMS 2FA wherever possible</li><li>Use a password manager; never reuse passwords across accounts</li><li>Enable full-disk encryption on all devices</li><li>Keep OS and apps updated — most exploits target known, unpatched vulnerabilities</li><li>Be cautious with public Wi-Fi; use a trusted VPN</li></ul><br><strong>Zero-Trust Model for Organisations</strong><br>The zero-trust model operates on "never trust, always verify" — no user or device is trusted by default, even inside the internal network. Every access request must be authenticated, authorized and continuously validated. This is increasingly the standard for government and police IT systems.<br><br><strong>Organisational Controls</strong><br>Role-based access control (RBAC), audit logs, network segmentation, incident response plans, and regular security drills. Officers should push for these in their units rather than waiting for central mandates.`,
             mcqs: [
               {
                 q: 'A SIM-swap attack is primarily used to:',
@@ -733,6 +733,8 @@ let activeDay  = TODAY;
 const openPanel = {};
 // Per MCQ: { chosen, correct }
 const mcqState = {};
+// Per session: which question index is currently shown
+const quizIndex = {};
 
 // ═══════════════════════════════════════════════════════════
 //  BUILD WEEK NAV
@@ -889,48 +891,100 @@ function renderSummaryPanel(s) {
 }
 
 function renderQuizPanel(s) {
-  const isOpen = openPanel[s.id] === 'quiz';
+  const isOpen  = openPanel[s.id] === 'quiz';
   const letters = ['A','B','C','D'];
+  const total   = s.mcqs.length;
+  const qi      = quizIndex[s.id] ?? 0;
   const answered = s.mcqs.map(q => mcqState[s.id + '-' + q.q.slice(0,20)]).filter(Boolean);
   const correct  = answered.filter(a => a.correct).length;
+  const done     = answered.length === total;
 
-  const mcqHTML = s.mcqs.map((q, qi) => {
-    const key   = s.id + '-' + q.q.slice(0,20);
-    const state = mcqState[key];
+  // ── Results screen ──
+  if (done) {
+    const pct = Math.round(correct / total * 100);
+    const emoji = pct === 100 ? '🏆' : pct >= 70 ? '✅' : '📖';
+    const reviewCards = s.mcqs.map((q, i) => {
+      const key   = s.id + '-' + q.q.slice(0,20);
+      const state = mcqState[key];
+      const icon  = state.correct ? '✓' : '✗';
+      const color = state.correct ? '#16a34a' : '#dc2626';
+      return `
+        <div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:10px;background:#fff;">
+          <div style="font-size:0.82rem;color:#64748b;margin-bottom:6px;">Q${i+1}</div>
+          <div style="font-size:0.9rem;font-weight:600;margin-bottom:10px;">${q.q}</div>
+          <div style="display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:6px;background:${state.correct?'#dcfce7':'#fee2e2'};border:1px solid ${state.correct?'#86efac':'#fca5a5'};">
+            <span style="color:${color};font-weight:700;flex-shrink:0;">${icon}</span>
+            <span style="font-size:0.85rem;">${q.opts[state.chosen]}</span>
+          </div>
+          ${!state.correct ? `<div style="margin-top:6px;padding:6px 10px;background:#dcfce7;border-radius:6px;border:1px solid #86efac;font-size:0.82rem;color:#166534;"><strong>Correct:</strong> ${q.opts[q.ans]}</div>` : ''}
+          <div style="margin-top:8px;padding:8px 12px;background:#f8fafc;border-left:3px solid #1e3a5f;border-radius:0 4px 4px 0;font-size:0.82rem;color:#334155;">${q.exp}</div>
+        </div>`;
+    }).join('');
+
     return `
-      <div class="mcq-item">
-        <div class="mcq-q">${qi + 1}. ${q.q}</div>
-        <div class="mcq-opts">
-          ${q.opts.map((opt, oi) => {
-            let cls = '';
-            if (state) {
-              cls = ' locked';
-              if (oi === q.ans) cls += state.chosen === oi ? ' correct' : ' show-correct';
-              else if (oi === state.chosen) cls += ' wrong';
-            }
-            return `<div class="mcq-opt${cls}" onclick="answerMCQ('${key}',${oi},${q.ans},'${s.id}')">
-              <span class="opt-l">${letters[oi]}</span>${opt}
-            </div>`;
-          }).join('')}
+      <div class="quiz-panel ${isOpen ? 'open' : ''}" id="quiz-${s.id}">
+        <div style="text-align:center;padding:20px 0 16px;">
+          <div style="font-size:2rem;margin-bottom:8px;">${emoji}</div>
+          <div style="font-size:1.4rem;font-weight:700;color:#1e3a5f;">${correct}/${total}</div>
+          <div style="font-size:0.85rem;color:#64748b;margin-top:4px;">${pct}% correct</div>
+          <button class="btn-reset" style="margin-top:12px;" onclick="resetQuiz('${s.id}')">Try again</button>
         </div>
-        <div class="mcq-exp" id="exp-${key}" ${state ? 'style="display:block"' : ''}>
-          <strong>Explanation:</strong> ${q.exp}
-        </div>
+        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#64748b;margin-bottom:10px;">Review</div>
+        ${reviewCards}
+      </div>`;
+  }
+
+  // ── Progress bar ──
+  const progress = Math.round((answered.length / total) * 100);
+  const progressBar = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;">
+        <div style="height:100%;width:${progress}%;background:#1e3a5f;border-radius:3px;transition:width .3s;"></div>
       </div>
-    `;
+      <span style="font-size:0.78rem;color:#64748b;white-space:nowrap;flex-shrink:0;">Q${qi+1} of ${total}</span>
+      <button class="btn-reset" onclick="resetQuiz('${s.id}')">Reset</button>
+    </div>`;
+
+  // ── Current question ──
+  const q     = s.mcqs[qi];
+  const key   = s.id + '-' + q.q.slice(0,20);
+  const state = mcqState[key];
+
+  const optsHTML = q.opts.map((opt, oi) => {
+    let cls = '';
+    if (state) {
+      cls = ' locked';
+      if (oi === q.ans)        cls += state.chosen === oi ? ' correct' : ' show-correct';
+      else if (oi === state.chosen) cls += ' wrong';
+    }
+    return `<div class="mcq-opt${cls}" onclick="answerMCQ('${key}',${oi},${q.ans},'${s.id}')">
+      <span class="opt-l">${letters[oi]}</span>${opt}
+    </div>`;
   }).join('');
+
+  const expHTML = state
+    ? `<div class="mcq-exp" style="display:block;margin-top:12px;">
+        <strong>${state.correct ? '✓ Correct!' : '✗ Not quite.'}</strong> ${q.exp}
+       </div>`
+    : '';
+
+  const nextBtn = state
+    ? `<button onclick="nextQuestion('${s.id}')"
+         style="margin-top:14px;width:100%;padding:10px;background:#1e3a5f;color:#fff;border:none;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer;">
+         ${qi + 1 < total ? 'Next question →' : 'See results →'}
+       </button>`
+    : '';
 
   return `
     <div class="quiz-panel ${isOpen ? 'open' : ''}" id="quiz-${s.id}">
-      <div class="quiz-score">
-        <span>Answered: <strong>${answered.length}/${s.mcqs.length}</strong></span>
-        <span>Correct: <strong>${correct}</strong></span>
-        ${answered.length ? `<span>Score: <strong>${Math.round(correct/answered.length*100)}%</strong></span>` : ''}
-        <button class="btn-reset" onclick="resetQuiz('${s.id}')">Reset</button>
+      ${progressBar}
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:18px;">
+        <div class="mcq-q">${q.q}</div>
+        <div class="mcq-opts">${optsHTML}</div>
+        ${expHTML}
+        ${nextBtn}
       </div>
-      ${mcqHTML}
-    </div>
-  `;
+    </div>`;
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -961,16 +1015,21 @@ function answerMCQ(key, chosen, correct, sid) {
   buildSessions();
 }
 
+function nextQuestion(sid) {
+  quizIndex[sid] = (quizIndex[sid] ?? 0) + 1;
+  buildSessions();
+  setTimeout(() => {
+    const el = document.getElementById('quiz-' + sid);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 50);
+}
+
 function resetQuiz(sid) {
-  const week = SCHEDULE.find(w => w.weekId === activeWeek);
-  const day  = week.days.find(d => d.dateStr === activeDay);
-  const sess = day.sessions.find(s => s.id === sid);
+  const sess = SCHEDULE.flatMap(w => w.days || []).flatMap(d => d.sessions || []).find(s => s.id === sid);
   if (sess && sess.mcqs) {
-    sess.mcqs.forEach(q => {
-      const key = sid + '-' + q.q.slice(0,20);
-      delete mcqState[key];
-    });
+    sess.mcqs.forEach(q => { delete mcqState[sid + '-' + q.q.slice(0,20)]; });
   }
+  delete quizIndex[sid];
   buildSessions();
 }
 
