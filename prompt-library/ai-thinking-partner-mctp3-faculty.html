@@ -99,9 +99,30 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,
 .r-tab.active{background:var(--navy);color:#fff;}
 .reflect-pane{display:none;}
 .reflect-pane.show{display:block;}
-.reflect-item{border-bottom:1px solid var(--border);padding:10px 0;font-size:14px;line-height:1.65;color:var(--dark);}
+.reflect-item{border-bottom:1px solid var(--border);padding:10px 0;cursor:pointer;transition:background .1s;}
 .reflect-item:last-child{border-bottom:none;}
+.reflect-item:hover{background:#f8fafc;border-radius:6px;padding-left:6px;}
+.reflect-prop-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gold);margin-bottom:4px;}
+.reflect-text{font-size:14px;line-height:1.65;color:var(--dark);}
 .no-data{font-size:13.5px;color:var(--grey);padding:8px 0;}
+
+/* Proposal side panel */
+.prop-panel{position:fixed;top:0;right:0;width:380px;max-width:100vw;height:100vh;background:#fff;border-left:1px solid var(--border);box-shadow:-4px 0 24px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .25s ease;z-index:300;display:flex;flex-direction:column;}
+.prop-panel.open{transform:translateX(0);}
+.prop-panel-head{padding:14px 18px;border-bottom:1px solid var(--border);background:var(--navy);color:#fff;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.prop-panel-head .pp-title{flex:1;font-size:14px;font-weight:700;line-height:1.4;}
+.prop-panel-close{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:0;line-height:1;opacity:.8;}
+.prop-panel-close:hover{opacity:1;}
+.prop-panel-body{padding:18px 20px;overflow-y:auto;flex:1;}
+.pp-section{margin-bottom:18px;}
+.pp-section:last-child{margin-bottom:0;}
+.pp-section-head{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gold);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.pp-field{margin-bottom:12px;}
+.pp-field:last-child{margin-bottom:0;}
+.pp-label{font-size:11px;font-weight:700;color:var(--grey);margin-bottom:3px;}
+.pp-text{font-size:13.5px;color:var(--dark);line-height:1.6;}
+.panel-overlay{display:none;position:fixed;inset:0;z-index:299;}
+.panel-overlay.show{display:block;}
 </style>
 </head>
 <body>
@@ -204,6 +225,16 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,
     </div>
 
   </div>
+</div>
+
+<!-- PROPOSAL SIDE PANEL -->
+<div class="panel-overlay" id="panel-overlay" onclick="closePropPanel()"></div>
+<div class="prop-panel" id="prop-panel">
+  <div class="prop-panel-head">
+    <div class="pp-title" id="pp-head-title">Proposal</div>
+    <button class="prop-panel-close" onclick="closePropPanel()">×</button>
+  </div>
+  <div class="prop-panel-body" id="pp-body"></div>
 </div>
 
 <script>
@@ -347,13 +378,14 @@ const R_STAGES = [
 ];
 
 function renderReflections(initials, writebacks){
+  const colMap = k=>({why:'why_confident',changed:'what_changed',question:'transfer_question'}[k]||k);
   const getData = ({key,src})=>{
-    if(src==='stage') return _stages.filter(s=>s.stage===key && s.reflection && s.reflection!=='[not filled in]').map(s=>s.reflection);
-    if(src==='prop_initial') return initials.filter(p=>p[colMap(key)] && p[colMap(key)]!=='[not filled in]').map(p=>p[colMap(key)]);
-    if(src==='prop_writeback') return writebacks.filter(p=>p[colMap(key)] && p[colMap(key)]!=='[not filled in]').map(p=>p[colMap(key)]);
+    if(src==='stage') return _stages.filter(s=>s.stage===key && s.reflection && s.reflection!=='[not filled in]').map(s=>({text:s.reflection,pid:s.pid}));
+    if(src==='prop_initial') return initials.filter(p=>p[colMap(key)] && p[colMap(key)]!=='[not filled in]').map(p=>({text:p[colMap(key)],pid:p.pid}));
+    if(src==='prop_writeback') return writebacks.filter(p=>p[colMap(key)] && p[colMap(key)]!=='[not filled in]').map(p=>({text:p[colMap(key)],pid:p.pid}));
     return [];
   };
-  const colMap = k=>({why:'why_confident',changed:'what_changed',question:'transfer_question'}[k]||k);
+  const propTitle = pid=>{ const p=_proposals.find(x=>x.pid===pid&&x.stage==='initial'); return p&&p.title?p.title:null; };
 
   const tabs = document.getElementById('reflect-tabs');
   const content = document.getElementById('reflect-content');
@@ -367,7 +399,13 @@ function renderReflections(initials, writebacks){
     const items = getData({key,src});
     return `<div class="reflect-pane${key===_activeTab?' show':''}" id="rpane-${key}">
       ${items.length
-        ? items.map(r=>`<div class="reflect-item">${esc(r)}</div>`).join('')
+        ? items.map(r=>{
+            const title = propTitle(r.pid);
+            return `<div class="reflect-item" onclick="showPropPanel('${r.pid}')">
+              ${title?`<div class="reflect-prop-label">${esc(title)}</div>`:''}
+              <div class="reflect-text">${esc(r.text)}</div>
+            </div>`;
+          }).join('')
         : '<p class="no-data">No responses yet.</p>'}
     </div>`;
   }).join('');
@@ -383,6 +421,35 @@ function switchTab(key, btn){
 }
 
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function showPropPanel(pid){
+  const initial  = _proposals.find(p=>p.pid===pid && p.stage==='initial');
+  const writeback = _proposals.find(p=>p.pid===pid && p.stage==='writeback');
+  if(!initial){ return; }
+  document.getElementById('pp-head-title').textContent = initial.title || 'Proposal';
+  let html = `<div class="pp-section">
+    <div class="pp-section-head">Original proposal</div>
+    <div class="pp-field"><div class="pp-label">Problem</div><div class="pp-text">${esc(initial.problem_statement||'—')}</div></div>
+    <div class="pp-field"><div class="pp-label">Proposed solution</div><div class="pp-text">${esc(initial.solution_mechanism||'—')}</div></div>
+  </div>`;
+  if(writeback){
+    html += `<div class="pp-section">
+      <div class="pp-section-head">After AI — revised position</div>
+      ${writeback.revised_problem?`<div class="pp-field"><div class="pp-label">Revised problem</div><div class="pp-text">${esc(writeback.revised_problem)}</div></div>`:''}
+      ${writeback.revised_proposal?`<div class="pp-field"><div class="pp-label">Revised proposal</div><div class="pp-text">${esc(writeback.revised_proposal)}</div></div>`:''}
+      ${writeback.what_changed?`<div class="pp-field"><div class="pp-label">What changed</div><div class="pp-text">${esc(writeback.what_changed)}</div></div>`:''}
+      ${writeback.what_to_verify?`<div class="pp-field"><div class="pp-label">What to verify</div><div class="pp-text">${esc(writeback.what_to_verify)}</div></div>`:''}
+    </div>`;
+  }
+  document.getElementById('pp-body').innerHTML = html;
+  document.getElementById('prop-panel').classList.add('open');
+  document.getElementById('panel-overlay').classList.add('show');
+}
+
+function closePropPanel(){
+  document.getElementById('prop-panel').classList.remove('open');
+  document.getElementById('panel-overlay').classList.remove('show');
+}
 
 function renderProposals(initials){
   const el = document.getElementById('proposals-wall');
