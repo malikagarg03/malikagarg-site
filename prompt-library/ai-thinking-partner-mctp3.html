@@ -400,33 +400,6 @@ footer{text-align:center;color:var(--grey);font-size:12.5px;margin-top:30px;}
     <label for="s0-mechanism">Proposed solution and how it would work — what are you proposing, and how does it actually solve the problem?</label>
     <textarea id="s0-mechanism" placeholder="e.g. A trained two-officer cell per district headquarters, assuming direct responsibility for digital evidence handling" oninput="autoSave0()"></textarea>
 
-    <label>How confident are you that this is the right approach?</label>
-    <div class="conf-scale">
-      <div class="conf-option">
-        <input type="radio" name="conf-init" id="ci1" value="1" onchange="autoSave0()">
-        <label class="conf-label" for="ci1">1<span class="conf-caption">Not at all<br>confident</span></label>
-      </div>
-      <div class="conf-option">
-        <input type="radio" name="conf-init" id="ci2" value="2" onchange="autoSave0()">
-        <label class="conf-label" for="ci2">2</label>
-      </div>
-      <div class="conf-option">
-        <input type="radio" name="conf-init" id="ci3" value="3" onchange="autoSave0()">
-        <label class="conf-label" for="ci3">3</label>
-      </div>
-      <div class="conf-option">
-        <input type="radio" name="conf-init" id="ci4" value="4" onchange="autoSave0()">
-        <label class="conf-label" for="ci4">4</label>
-      </div>
-      <div class="conf-option">
-        <input type="radio" name="conf-init" id="ci5" value="5" onchange="autoSave0()">
-        <label class="conf-label" for="ci5">5<span class="conf-caption">Very<br>confident</span></label>
-      </div>
-    </div>
-
-    <label for="s0-why" style="margin-top:18px;">Why do you believe this is the right approach?</label>
-    <textarea id="s0-why" placeholder="What experience, evidence or reasoning leads you to this proposal?" oninput="autoSave0()"></textarea>
-
     <div class="save-row">
       <button class="primary" onclick="saveAndDownloadProposal()">Save and download my proposal</button>
       <span class="saved-flag" id="flag-s0">Saved — file downloaded</span>
