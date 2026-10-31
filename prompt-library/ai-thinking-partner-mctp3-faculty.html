@@ -308,7 +308,7 @@ function render(){
   renderPoll('poll-test', _stages.filter(s=>s.stage==='test'&&s.poll_value).map(s=>s.poll_value), testLabels);
 
   // Final poll
-  const finalLabels = ['A: Same proposal, same reasoning','B: Same proposal, better grasp of risks','C: Modified part of my proposal','D: Substantially reconsidering'];
+  const finalLabels = ['A: AI confirmed my thinking — proceeding as planned','B: AI sharpened it — same direction, clearer on risks','C: AI exposed a gap — revising part of my approach','D: AI unsettled me — rethinking a core assumption'];
   renderPoll('poll-final', writebacks.filter(p=>p.final_poll).map(p=>p.final_poll), finalLabels);
 
   // Proposals wall
