@@ -173,55 +173,86 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,
       <div class="stat-card"><div class="stat-num" id="stat-writeback">—</div><div class="stat-label">Write-back done</div></div>
     </div>
 
-    <!-- PROPOSALS WALL (collapsible) -->
-    <div class="section-title section-toggle" id="proposals-toggle" onclick="toggleSection('proposals-toggle','proposals-body')">
+    <!-- PROPOSALS (collapsible, default closed) -->
+    <div class="section-title section-toggle collapsed" id="proposals-toggle" onclick="toggleSection('proposals-toggle','proposals-body')">
       Proposals <span class="toggle-arrow">▾</span>
     </div>
-    <div class="collapsible-body" id="proposals-body">
+    <div class="collapsible-body collapsed" id="proposals-body">
       <div class="proposals-grid" id="proposals-wall"></div>
     </div>
 
-    <!-- STAGE POLLS -->
-    <div class="section-title">Stage Polls</div>
-    <div class="panel" style="margin-bottom:14px;">
-      <h3>Stage 1 — Examine the Problem</h3>
-      <p class="panel-sub">What happened to your understanding of the problem?</p>
-      <div id="poll-frame"><p class="no-data">No responses yet</p></div>
+    <!-- STAGE 1 (collapsible, default closed) -->
+    <div class="section-title section-toggle collapsed" id="s1-toggle" onclick="toggleSection('s1-toggle','s1-body')">
+      Stage 1 — Examine the Problem <span class="toggle-arrow">▾</span>
     </div>
-    <div class="panel" style="margin-bottom:14px;">
-      <h3>Stage 2 — Open the Possibilities</h3>
-      <p class="panel-sub">How did AI's alternatives compare with your original proposal?</p>
-      <div id="poll-expand"><p class="no-data">No responses yet</p></div>
-    </div>
-    <div class="panel" style="margin-bottom:14px;">
-      <h3>Stage 3 — Manufacture Friction</h3>
-      <p class="panel-sub">What was your honest reaction to AI's strongest criticism?</p>
-      <div id="poll-challenge"><p class="no-data">No responses yet</p></div>
+    <div class="collapsible-body collapsed" id="s1-body">
+      <div class="panel" style="margin-bottom:4px;">
+        <p class="panel-sub" style="margin-bottom:22px;">What happened to your understanding of the problem?</p>
+        <div id="poll-frame"><p class="no-data">No responses yet</p></div>
+      </div>
     </div>
 
-    <!-- STAGE 4 -->
-    <div class="section-title">Stage 4 — What AI's Questions Made Participants Examine Most Closely</div>
-    <div class="panel" style="margin-bottom:14px;">
-      <div class="word-cloud" id="word-cloud"><p class="wc-zero">No responses yet</p></div>
+    <!-- STAGE 2 (collapsible, default closed) -->
+    <div class="section-title section-toggle collapsed" id="s2-toggle" onclick="toggleSection('s2-toggle','s2-body')">
+      Stage 2 — Open the Possibilities <span class="toggle-arrow">▾</span>
+    </div>
+    <div class="collapsible-body collapsed" id="s2-body">
+      <div class="panel" style="margin-bottom:4px;">
+        <p class="panel-sub" style="margin-bottom:22px;">How did AI's alternatives compare with your original proposal?</p>
+        <div id="poll-expand"><p class="no-data">No responses yet</p></div>
+      </div>
     </div>
 
-    <!-- STAGE 5 POLL -->
-    <div class="section-title">Stage 5 — What Did AI's Failure Scenarios Reveal?</div>
-    <div class="panel" style="margin-bottom:14px;">
-      <div id="poll-test"><p class="no-data">No responses yet</p></div>
+    <!-- STAGE 3 (collapsible, default closed) -->
+    <div class="section-title section-toggle collapsed" id="s3-toggle" onclick="toggleSection('s3-toggle','s3-body')">
+      Stage 3 — Manufacture Friction <span class="toggle-arrow">▾</span>
+    </div>
+    <div class="collapsible-body collapsed" id="s3-body">
+      <div class="panel" style="margin-bottom:4px;">
+        <p class="panel-sub" style="margin-bottom:22px;">What was your honest reaction to AI's strongest criticism?</p>
+        <div id="poll-challenge"><p class="no-data">No responses yet</p></div>
+      </div>
     </div>
 
-    <!-- FINAL POLL -->
-    <div class="section-title">Final Poll — Where Do Participants Stand Now?</div>
-    <div class="panel" style="margin-bottom:14px;">
-      <div id="poll-final"><p class="no-data">No responses yet</p></div>
+    <!-- STAGE 4 (collapsible, default closed) -->
+    <div class="section-title section-toggle collapsed" id="s4-toggle" onclick="toggleSection('s4-toggle','s4-body')">
+      Stage 4 — What Participants Examined Most Closely <span class="toggle-arrow">▾</span>
+    </div>
+    <div class="collapsible-body collapsed" id="s4-body">
+      <div class="panel" style="margin-bottom:4px;">
+        <div class="word-cloud" id="word-cloud"><p class="wc-zero">No responses yet</p></div>
+      </div>
     </div>
 
-    <!-- WRITTEN REFLECTIONS -->
-    <div class="section-title">Written Reflections</div>
-    <div class="panel">
-      <div class="reflect-tabs" id="reflect-tabs"></div>
-      <div id="reflect-content"></div>
+    <!-- STAGE 5 (collapsible, default closed) -->
+    <div class="section-title section-toggle collapsed" id="s5-toggle" onclick="toggleSection('s5-toggle','s5-body')">
+      Stage 5 — What Did AI's Failure Scenarios Reveal? <span class="toggle-arrow">▾</span>
+    </div>
+    <div class="collapsible-body collapsed" id="s5-body">
+      <div class="panel" style="margin-bottom:4px;">
+        <div id="poll-test"><p class="no-data">No responses yet</p></div>
+      </div>
+    </div>
+
+    <!-- FINAL POLL (collapsible, default closed) -->
+    <div class="section-title section-toggle collapsed" id="final-toggle" onclick="toggleSection('final-toggle','final-body')">
+      Final Poll — How Did AI Shift Your Thinking? <span class="toggle-arrow">▾</span>
+    </div>
+    <div class="collapsible-body collapsed" id="final-body">
+      <div class="panel" style="margin-bottom:4px;">
+        <div id="poll-final"><p class="no-data">No responses yet</p></div>
+      </div>
+    </div>
+
+    <!-- WRITTEN REFLECTIONS (collapsible, default closed) -->
+    <div class="section-title section-toggle collapsed" id="reflect-toggle" onclick="toggleSection('reflect-toggle','reflect-body')">
+      Written Reflections <span class="toggle-arrow">▾</span>
+    </div>
+    <div class="collapsible-body collapsed" id="reflect-body">
+      <div class="panel">
+        <div class="reflect-tabs" id="reflect-tabs"></div>
+        <div id="reflect-content"></div>
+      </div>
     </div>
 
   </div>
@@ -437,14 +468,21 @@ function closePropPanel(){
 function toggleSection(toggleId, bodyId){
   const toggle = document.getElementById(toggleId);
   const body = document.getElementById(bodyId);
-  const collapsed = toggle.classList.toggle('collapsed');
-  if(collapsed){
-    body.style.maxHeight = body.scrollHeight + 'px';
-    requestAnimationFrame(()=>{ body.style.maxHeight = '0'; body.classList.add('collapsed'); });
-  } else {
+  const isCollapsed = toggle.classList.contains('collapsed');
+  if(isCollapsed){
+    // open it
+    toggle.classList.remove('collapsed');
     body.classList.remove('collapsed');
     body.style.maxHeight = body.scrollHeight + 'px';
     setTimeout(()=>{ body.style.maxHeight = 'none'; }, 310);
+  } else {
+    // close it
+    body.style.maxHeight = body.scrollHeight + 'px';
+    requestAnimationFrame(()=>{
+      body.style.maxHeight = '0';
+      body.classList.add('collapsed');
+      toggle.classList.add('collapsed');
+    });
   }
 }
 
