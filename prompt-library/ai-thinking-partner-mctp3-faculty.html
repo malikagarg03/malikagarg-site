@@ -42,7 +42,7 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,
 
 .dash-body{max-width:1120px;margin:0 auto;padding:24px 20px 60px;}
 
-.section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--grey);margin:32px 0 14px;}
+.section-title{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--grey);margin:36px 0 16px;}
 
 /* Stat cards */
 .stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:4px;}
@@ -57,8 +57,8 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,
 
 /* Panel */
 .panel{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px 20px;}
-.panel h3{font-size:18px;font-weight:700;margin:0 0 6px;color:var(--dark);}
-.panel .panel-sub{font-size:14px;color:var(--grey);margin:0 0 20px;line-height:1.5;}
+.panel h3{font-size:22px;font-weight:700;margin:0 0 6px;color:var(--dark);}
+.panel .panel-sub{font-size:15px;color:var(--grey);margin:0 0 22px;line-height:1.5;}
 
 /* Collapsible section */
 .section-toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
@@ -68,14 +68,14 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,
 .collapsible-body.collapsed{max-height:0 !important;}
 
 /* Bar chart */
-.poll-group{margin-bottom:20px;}
+.poll-group{margin-bottom:24px;}
 .poll-group:last-child{margin-bottom:0;}
-.poll-opt-label{font-size:16px;color:var(--dark);margin-bottom:8px;line-height:1.5;}
-.poll-opt-label strong{color:var(--navy);margin-right:5px;}
-.bar-row{display:flex;align-items:center;gap:12px;}
-.bar-track{flex:1;background:#f1f5f9;border-radius:6px;height:36px;overflow:hidden;}
+.poll-opt-label{font-size:18px;color:var(--dark);margin-bottom:8px;line-height:1.5;}
+.poll-opt-label strong{color:var(--navy);margin-right:6px;font-size:20px;}
+.bar-row{display:flex;align-items:center;gap:14px;}
+.bar-track{flex:1;background:#f1f5f9;border-radius:6px;height:44px;overflow:hidden;}
 .bar-fill{height:100%;background:var(--gold);border-radius:6px;transition:width .4s ease;}
-.bar-count{font-size:15px;color:var(--grey);min-width:84px;text-align:right;font-weight:600;}
+.bar-count{font-size:17px;color:var(--grey);min-width:96px;text-align:right;font-weight:700;}
 
 /* Confidence chart */
 .conf-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
@@ -92,13 +92,13 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,
 .wc-zero{font-size:13px;color:var(--grey);}
 
 /* Proposals wall */
-.proposals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:4px;}
-.prop-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px 20px;}
-.prop-card-title{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:10px;line-height:1.4;}
-.prop-field{margin-bottom:8px;}
+.proposals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:4px;}
+.prop-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:20px 22px;}
+.prop-card-title{font-size:17px;font-weight:700;color:var(--navy);margin-bottom:12px;line-height:1.4;}
+.prop-field{margin-bottom:12px;}
 .prop-field:last-child{margin-bottom:0;}
-.prop-field-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--grey);margin-bottom:3px;}
-.prop-field-text{font-size:13px;color:var(--dark);line-height:1.55;}
+.prop-field-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--grey);margin-bottom:5px;}
+.prop-field-text{font-size:15px;color:var(--dark);line-height:1.6;}
 
 /* Reflections */
 .reflect-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
@@ -286,9 +286,9 @@ function render(){
 
   // Stage polls
   const pollLabels = {
-    frame:     ['A: Confirmed my problem definition','B: Articulated it more precisely','C: Identified an overlooked aspect','D: Made me question the problem itself'],
-    expand:    ['A: Variations of my idea','B: Different but not practically useful','C: One credible alternative worth considering','D: An alternative that may be better'],
-    challenge: ['A: It exposed a genuine weakness I had not considered','B: It felt plausible but I need more evidence to judge','C: It did not apply to my specific situation']
+    frame:     ['Confirmed my problem definition','Articulated it more precisely','Identified an overlooked aspect','Made me question the problem itself'],
+    expand:    ['Variations of my idea','Different but not practically useful','One credible alternative worth considering','An alternative that may be better'],
+    challenge: ['It exposed a genuine weakness I had not considered','It felt plausible but I need more evidence to judge','It did not apply to my specific situation']
   };
   ['frame','expand','challenge'].forEach(st=>{
     const vals = _stages.filter(s=>s.stage===st && s.poll_value).map(s=>s.poll_value);
@@ -304,11 +304,11 @@ function render(){
   renderCloud('word-cloud', catCounts, CAT_LABELS);
 
   // Stage 5 poll
-  const testLabels = ['A: A risk I had not considered at all','B: A risk I knew about but had underestimated','C: Risks I had already accounted for'];
+  const testLabels = ['A risk I had not considered at all','A risk I knew about but had underestimated','Risks I had already accounted for'];
   renderPoll('poll-test', _stages.filter(s=>s.stage==='test'&&s.poll_value).map(s=>s.poll_value), testLabels);
 
   // Final poll
-  const finalLabels = ['A: AI confirmed my thinking — proceeding as planned','B: AI sharpened it — same direction, clearer on risks','C: AI exposed a gap — revising part of my approach','D: AI unsettled me — rethinking a core assumption'];
+  const finalLabels = ['AI confirmed my thinking — proceeding as planned','AI sharpened it — same direction, clearer on risks','AI exposed a gap — revising part of my approach','AI unsettled me — rethinking a core assumption'];
   renderPoll('poll-final', writebacks.filter(p=>p.final_poll).map(p=>p.final_poll), finalLabels);
 
   // Proposals wall
