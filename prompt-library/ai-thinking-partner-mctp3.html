@@ -620,8 +620,6 @@ footer{text-align:center;color:var(--grey);font-size:12.5px;margin-top:30px;}
         <div class="recap-field"><strong>Project or problem title</strong><span id="recap-title"></span></div>
         <div class="recap-field"><strong>Problem statement</strong><span id="recap-problem"></span></div>
         <div class="recap-field"><strong>Proposed solution and mechanism</strong><span id="recap-mechanism"></span></div>
-        <div class="recap-field"><strong>Initial confidence</strong><span id="recap-confidence"></span></div>
-        <div class="recap-field"><strong>Why you believed this was right</strong><span id="recap-why"></span></div>
       </div>
 
       <label for="s6-problem">Revised problem statement — how do you now understand the problem?</label>
@@ -734,12 +732,10 @@ getOrCreatePID();
 // ---- Restore saved state on load ----
 window.addEventListener('DOMContentLoaded', ()=>{
   // Stage 0 text fields
-  ['s0-title','s0-problem','s0-mechanism','s0-why'].forEach(id=>{
+  ['s0-title','s0-problem','s0-mechanism'].forEach(id=>{
     const v = localStorage.getItem('m3_'+id);
     if(v) document.getElementById(id).value = v;
   });
-  const ci = localStorage.getItem('m3_conf_init');
-  if(ci){ const r = document.querySelector(`input[name="conf-init"][value="${ci}"]`); if(r) r.checked=true; }
 
   // Stage polls (radio)
   ['frame','expand','challenge'].forEach(st=>{
@@ -797,11 +793,9 @@ function restoreUnlock(stage){
 
 // ---- Autosave ----
 function autoSave0(){
-  ['s0-title','s0-problem','s0-mechanism','s0-why'].forEach(id=>{
+  ['s0-title','s0-problem','s0-mechanism'].forEach(id=>{
     localStorage.setItem('m3_'+id, document.getElementById(id).value);
   });
-  const ci = document.querySelector('input[name="conf-init"]:checked');
-  localStorage.setItem('m3_conf_init', ci ? ci.value : '');
   if(document.getElementById('box-writeback').classList.contains('show')) fillRecap();
 }
 
@@ -886,9 +880,6 @@ function fillRecap(){
   document.getElementById('recap-title').textContent = val('s0-title');
   document.getElementById('recap-problem').textContent = val('s0-problem');
   document.getElementById('recap-mechanism').textContent = val('s0-mechanism');
-  const ci = document.querySelector('input[name="conf-init"]:checked');
-  document.getElementById('recap-confidence').textContent = ci ? ci.value + ' / 5' : '[not answered]';
-  document.getElementById('recap-why').textContent = val('s0-why');
 }
 
 const WRAPUP_TEXT = "Let's stop the interview here. Ask me to state, in my own words, the most important thing I worked out through answering your questions and what it means for my proposal. Wait for my answer. Then briefly reflect back my reasoning, distinguishing what I concluded from what remains uncertain. Do not introduce new risks or recommendations.";
@@ -977,13 +968,10 @@ function downloadRtf(filename,content){
 async function saveAndDownloadProposal(){
   autoSave0();
   flash('flag-s0');
-  const ci = document.querySelector('input[name="conf-init"]:checked');
   await sbUpsertProposal('initial', {
     title: val('s0-title'),
     problem_statement: val('s0-problem'),
     solution_mechanism: val('s0-mechanism'),
-    confidence: ci ? parseInt(ci.value) : null,
-    why_confident: val('s0-why')
   });
   const stamp = new Date().toLocaleString();
   let doc = RTF_HEADER;
@@ -991,8 +979,6 @@ async function saveAndDownloadProposal(){
   doc += rtfFieldLabel('Project or problem title'); doc += rtfFieldValue(val('s0-title'));
   doc += rtfFieldLabel('Problem statement'); doc += rtfFieldValue(val('s0-problem'));
   doc += rtfFieldLabel('Proposed solution and mechanism'); doc += rtfFieldValue(val('s0-mechanism'));
-  doc += rtfFieldLabel('Initial confidence (1–5)'); doc += rtfFieldValue(ci ? ci.value+' / 5' : '[not answered]');
-  doc += rtfFieldLabel('Why I believe this is the right approach'); doc += rtfFieldValue(val('s0-why'));
   doc += '}';
   downloadRtf('my-proposal-before-mctp3.rtf', doc);
   gtag('event', 'proposal_download');
@@ -1001,7 +987,6 @@ async function saveAndDownloadProposal(){
 // ---- Download summary ----
 async function downloadSummary(){
   autoSave6();
-  const ci = document.querySelector('input[name="conf-init"]:checked');
   const cf = document.querySelector('input[name="conf-final"]:checked');
   const fp = document.querySelector('input[name="poll-final"]:checked');
   await sbUpsertProposal('writeback', {
@@ -1043,8 +1028,6 @@ async function downloadSummary(){
   doc += rtfFieldLabel('Project or problem title'); doc += rtfFieldValue(project);
   doc += rtfFieldLabel('Problem statement'); doc += rtfFieldValue(problem);
   doc += rtfFieldLabel('Proposed solution and mechanism'); doc += rtfFieldValue(mechanism);
-  doc += rtfFieldLabel('Initial confidence (1–5)'); doc += rtfFieldValue(ci ? ci.value+' / 5' : '[not answered]');
-  doc += rtfFieldLabel('Why I believed this was right'); doc += rtfFieldValue(val('s0-why'));
 
   doc += rtfSectionHeading('Stage Responses');
   doc += rtfFieldLabel('Stage 1 — What happened to your problem understanding?'); doc += rtfFieldValue(getPollLabel('frame'));
