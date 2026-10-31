@@ -311,19 +311,6 @@ function render(){
 
 function set(id, val){ const el=document.getElementById(id); if(el) el.textContent=val; }
 
-function renderConf(elId, type, vals){
-  const el = document.getElementById(elId);
-  if(!vals.length){ el.innerHTML='<p class="no-data">No data yet</p>'; return; }
-  const counts={1:0,2:0,3:0,4:0,5:0};
-  vals.forEach(v=>{ if(counts[v]!==undefined) counts[v]++; });
-  const max = Math.max(...Object.values(counts),1);
-  el.innerHTML = [1,2,3,4,5].map(n=>`
-    <div class="conf-row">
-      <div class="conf-num">${n}</div>
-      <div class="conf-track"><div class="conf-fill ${type}" style="width:${Math.round(counts[n]/max*100)}%"></div></div>
-      <div class="conf-count">${counts[n]}</div>
-    </div>`).join('');
-}
 
 function renderPoll(elId, vals, labels){
   const el = document.getElementById(elId);
@@ -422,13 +409,10 @@ function showPropPanel(pid){
     <div class="pp-field"><div class="pp-label">Problem</div><div class="pp-text">${esc(initial.problem_statement||'—')}</div></div>
     <div class="pp-field"><div class="pp-label">Proposed solution</div><div class="pp-text">${esc(initial.solution_mechanism||'—')}</div></div>
   </div>`;
-  if(writeback){
+  if(writeback && writeback.what_changed){
     html += `<div class="pp-section">
-      <div class="pp-section-head">After AI — revised position</div>
-      ${writeback.revised_problem?`<div class="pp-field"><div class="pp-label">Revised problem</div><div class="pp-text">${esc(writeback.revised_problem)}</div></div>`:''}
-      ${writeback.revised_proposal?`<div class="pp-field"><div class="pp-label">Revised proposal</div><div class="pp-text">${esc(writeback.revised_proposal)}</div></div>`:''}
-      ${writeback.what_changed?`<div class="pp-field"><div class="pp-label">What changed</div><div class="pp-text">${esc(writeback.what_changed)}</div></div>`:''}
-      ${writeback.what_to_verify?`<div class="pp-field"><div class="pp-label">What to verify</div><div class="pp-text">${esc(writeback.what_to_verify)}</div></div>`:''}
+      <div class="pp-section-head">What shifted after AI</div>
+      <div class="pp-field"><div class="pp-text">${esc(writeback.what_changed)}</div></div>
     </div>`;
   }
   document.getElementById('pp-body').innerHTML = html;
@@ -463,8 +447,8 @@ function exportCSV(){
   const rows = [];
 
   // Proposals
-  rows.push(['table','pid','stage','title','problem_statement','solution_mechanism','confidence','why_confident','revised_problem','revised_proposal','what_changed','what_to_verify','final_poll','transfer_question','created_at']);
-  _proposals.forEach(p=>rows.push(['proposals',p.pid,p.stage,p.title||'',p.problem_statement||'',p.solution_mechanism||'',p.confidence||'',p.why_confident||'',p.revised_problem||'',p.revised_proposal||'',p.what_changed||'',p.what_to_verify||'',p.final_poll||'',p.transfer_question||'',p.created_at||'']));
+  rows.push(['table','pid','stage','title','problem_statement','solution_mechanism','what_changed','final_poll','created_at']);
+  _proposals.forEach(p=>rows.push(['proposals',p.pid,p.stage,p.title||'',p.problem_statement||'',p.solution_mechanism||'',p.what_changed||'',p.final_poll||'',p.created_at||'']));
 
   rows.push([]);
   rows.push(['table','pid','stage','poll_value','reflection','created_at']);
