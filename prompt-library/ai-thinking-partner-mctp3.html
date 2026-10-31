@@ -711,12 +711,12 @@ const TEST_MODE = false;
 // ---- Passcodes (base64-encoded) ----
 // FRAME3 / EXPAND3 / CHAL3 / INTER3 / TEST3 / WRITE3
 const PASSCODES_B64 = {
-  frame:     "RlJBTUUz",
-  expand:    "RVhQQU5EMw==",
-  challenge: "Q0hBTDM=",
-  interview: "SU5URVIz",
-  test:      "VEVTVDM=",
-  writeback: "V1JJVEUz"
+  frame:     "RlJBTUU0NQ==",
+  expand:    "RVhQQU5EODg=",
+  challenge: "Q0hBTExFTkdFNzY=",
+  interview: "SU5URVJWSUVXNTg=",
+  test:      "VEVTVDQ1",
+  writeback: "V1JJVEVCQUNLNTY="
 };
 function decodeCode(stage){ return atob(PASSCODES_B64[stage]); }
 
