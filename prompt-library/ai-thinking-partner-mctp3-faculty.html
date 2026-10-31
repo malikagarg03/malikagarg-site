@@ -57,18 +57,25 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,
 
 /* Panel */
 .panel{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px 20px;}
-.panel h3{font-size:13.5px;font-weight:700;margin:0 0 4px;color:var(--dark);}
-.panel .panel-sub{font-size:12px;color:var(--grey);margin:0 0 14px;line-height:1.5;}
+.panel h3{font-size:16px;font-weight:700;margin:0 0 4px;color:var(--dark);}
+.panel .panel-sub{font-size:13px;color:var(--grey);margin:0 0 18px;line-height:1.5;}
+
+/* Collapsible section */
+.section-toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.section-toggle .toggle-arrow{font-size:16px;color:var(--grey);transition:transform .2s;}
+.section-toggle.collapsed .toggle-arrow{transform:rotate(-90deg);}
+.collapsible-body{overflow:hidden;transition:max-height .3s ease;}
+.collapsible-body.collapsed{max-height:0 !important;}
 
 /* Bar chart */
-.poll-group{margin-bottom:12px;}
+.poll-group{margin-bottom:16px;}
 .poll-group:last-child{margin-bottom:0;}
-.poll-opt-label{font-size:12px;color:var(--dark);margin-bottom:4px;line-height:1.4;}
-.poll-opt-label strong{color:var(--navy);margin-right:3px;}
-.bar-row{display:flex;align-items:center;gap:8px;}
-.bar-track{flex:1;background:#f1f5f9;border-radius:4px;height:20px;overflow:hidden;}
-.bar-fill{height:100%;background:var(--gold);border-radius:4px;transition:width .4s ease;}
-.bar-count{font-size:12px;color:var(--grey);min-width:56px;text-align:right;}
+.poll-opt-label{font-size:14px;color:var(--dark);margin-bottom:6px;line-height:1.5;}
+.poll-opt-label strong{color:var(--navy);margin-right:4px;}
+.bar-row{display:flex;align-items:center;gap:10px;}
+.bar-track{flex:1;background:#f1f5f9;border-radius:6px;height:30px;overflow:hidden;}
+.bar-fill{height:100%;background:var(--gold);border-radius:6px;transition:width .4s ease;}
+.bar-count{font-size:13px;color:var(--grey);min-width:72px;text-align:right;}
 
 /* Confidence chart */
 .conf-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
@@ -166,24 +173,30 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,
       <div class="stat-card"><div class="stat-num" id="stat-writeback">—</div><div class="stat-label">Write-back done</div></div>
     </div>
 
+    <!-- PROPOSALS WALL (collapsible) -->
+    <div class="section-title section-toggle" id="proposals-toggle" onclick="toggleSection('proposals-toggle','proposals-body')">
+      Proposals <span class="toggle-arrow">▾</span>
+    </div>
+    <div class="collapsible-body" id="proposals-body">
+      <div class="proposals-grid" id="proposals-wall"></div>
+    </div>
+
     <!-- STAGE POLLS -->
     <div class="section-title">Stage Polls</div>
-    <div class="grid-3">
-      <div class="panel">
-        <h3>Stage 1 — Examine the Problem</h3>
-        <p class="panel-sub">What happened to your understanding of the problem?</p>
-        <div id="poll-frame"><p class="no-data">No responses yet</p></div>
-      </div>
-      <div class="panel">
-        <h3>Stage 2 — Open the Possibilities</h3>
-        <p class="panel-sub">How did AI's alternatives compare with your original proposal?</p>
-        <div id="poll-expand"><p class="no-data">No responses yet</p></div>
-      </div>
-      <div class="panel">
-        <h3>Stage 3 — Manufacture Friction</h3>
-        <p class="panel-sub">What was your honest reaction to AI's strongest criticism?</p>
-        <div id="poll-challenge"><p class="no-data">No responses yet</p></div>
-      </div>
+    <div class="panel" style="margin-bottom:14px;">
+      <h3>Stage 1 — Examine the Problem</h3>
+      <p class="panel-sub">What happened to your understanding of the problem?</p>
+      <div id="poll-frame"><p class="no-data">No responses yet</p></div>
+    </div>
+    <div class="panel" style="margin-bottom:14px;">
+      <h3>Stage 2 — Open the Possibilities</h3>
+      <p class="panel-sub">How did AI's alternatives compare with your original proposal?</p>
+      <div id="poll-expand"><p class="no-data">No responses yet</p></div>
+    </div>
+    <div class="panel" style="margin-bottom:14px;">
+      <h3>Stage 3 — Manufacture Friction</h3>
+      <p class="panel-sub">What was your honest reaction to AI's strongest criticism?</p>
+      <div id="poll-challenge"><p class="no-data">No responses yet</p></div>
     </div>
 
     <!-- STAGE 4 -->
@@ -194,19 +207,15 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,
 
     <!-- STAGE 5 POLL -->
     <div class="section-title">Stage 5 — What Did AI's Failure Scenarios Reveal?</div>
-    <div class="panel" style="margin-bottom:14px;max-width:560px;">
+    <div class="panel" style="margin-bottom:14px;">
       <div id="poll-test"><p class="no-data">No responses yet</p></div>
     </div>
 
     <!-- FINAL POLL -->
     <div class="section-title">Final Poll — Where Do Participants Stand Now?</div>
-    <div class="panel" style="margin-bottom:14px;max-width:560px;">
+    <div class="panel" style="margin-bottom:14px;">
       <div id="poll-final"><p class="no-data">No responses yet</p></div>
     </div>
-
-    <!-- PROPOSALS WALL -->
-    <div class="section-title">Proposals</div>
-    <div class="proposals-grid" id="proposals-wall"></div>
 
     <!-- WRITTEN REFLECTIONS -->
     <div class="section-title">Written Reflections</div>
@@ -423,6 +432,20 @@ function showPropPanel(pid){
 function closePropPanel(){
   document.getElementById('prop-panel').classList.remove('open');
   document.getElementById('panel-overlay').classList.remove('show');
+}
+
+function toggleSection(toggleId, bodyId){
+  const toggle = document.getElementById(toggleId);
+  const body = document.getElementById(bodyId);
+  const collapsed = toggle.classList.toggle('collapsed');
+  if(collapsed){
+    body.style.maxHeight = body.scrollHeight + 'px';
+    requestAnimationFrame(()=>{ body.style.maxHeight = '0'; body.classList.add('collapsed'); });
+  } else {
+    body.classList.remove('collapsed');
+    body.style.maxHeight = body.scrollHeight + 'px';
+    setTimeout(()=>{ body.style.maxHeight = 'none'; }, 310);
+  }
 }
 
 function renderProposals(initials){
