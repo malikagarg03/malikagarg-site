@@ -620,43 +620,7 @@ footer{text-align:center;color:var(--grey);font-size:12.5px;margin-top:30px;}
         <div class="recap-field"><strong>Proposed solution and mechanism</strong><span id="recap-mechanism"></span></div>
       </div>
 
-      <label for="s6-problem">Revised problem statement — how do you now understand the problem?</label>
-      <textarea id="s6-problem" oninput="autoSave6()"></textarea>
-
-      <label for="s6-proposal">Revised proposal or approach — what would you now propose, or how has your thinking shifted?</label>
-      <textarea id="s6-proposal" oninput="autoSave6()"></textarea>
-
-      <label style="margin-top:18px;">Final confidence in your proposal</label>
-      <div class="conf-scale">
-        <div class="conf-option">
-          <input type="radio" name="conf-final" id="cf1" value="1" onchange="autoSave6()">
-          <label class="conf-label" for="cf1">1<span class="conf-caption">Not at all<br>confident</span></label>
-        </div>
-        <div class="conf-option">
-          <input type="radio" name="conf-final" id="cf2" value="2" onchange="autoSave6()">
-          <label class="conf-label" for="cf2">2</label>
-        </div>
-        <div class="conf-option">
-          <input type="radio" name="conf-final" id="cf3" value="3" onchange="autoSave6()">
-          <label class="conf-label" for="cf3">3</label>
-        </div>
-        <div class="conf-option">
-          <input type="radio" name="conf-final" id="cf4" value="4" onchange="autoSave6()">
-          <label class="conf-label" for="cf4">4</label>
-        </div>
-        <div class="conf-option">
-          <input type="radio" name="conf-final" id="cf5" value="5" onchange="autoSave6()">
-          <label class="conf-label" for="cf5">5<span class="conf-caption">Very<br>confident</span></label>
-        </div>
-      </div>
-
-      <label for="s6-changed" style="margin-top:18px;">What changed in your understanding — whether or not your proposal changed?</label>
-      <textarea id="s6-changed" oninput="autoSave6()"></textarea>
-
-      <label for="s6-verify">What do you now need to verify before you could confidently proceed?</label>
-      <textarea id="s6-verify" oninput="autoSave6()"></textarea>
-
-      <label style="margin-top:18px;">Compared with the beginning, where do you stand now?</label>
+      <label style="margin-top:4px;">Compared with the beginning, where do you stand now?</label>
       <div class="optionrow">
         <label class="radio"><input type="radio" name="poll-final" value="A" onchange="autoSave6()"> A. Same proposal, same reasoning.</label>
         <label class="radio"><input type="radio" name="poll-final" value="B" onchange="autoSave6()"> B. Same proposal, but I understand its assumptions and risks better.</label>
@@ -664,8 +628,8 @@ footer{text-align:center;color:var(--grey);font-size:12.5px;margin-top:30px;}
         <label class="radio"><input type="radio" name="poll-final" value="D" onchange="autoSave6()"> D. I am substantially reconsidering the problem or solution.</label>
       </div>
 
-      <label for="s6-question" style="margin-top:18px;">What is one question you would now ask before approving a similar proposal?</label>
-      <textarea id="s6-question" oninput="autoSave6()"></textarea>
+      <label for="s6-changed" style="margin-top:18px;">What is the one thing that shifted in your thinking through this exercise?</label>
+      <textarea id="s6-changed" oninput="autoSave6()"></textarea>
 
       <div class="save-row" style="margin-top:20px;">
         <button class="primary" onclick="downloadSummary()">Download Summary</button>
@@ -759,12 +723,8 @@ window.addEventListener('DOMContentLoaded', ()=>{
   if(trv) document.getElementById('reflect-test').value = trv;
 
   // Stage 6
-  ['s6-problem','s6-proposal','s6-changed','s6-verify','s6-question'].forEach(id=>{
-    const v = localStorage.getItem('m3_'+id);
-    if(v) document.getElementById(id).value = v;
-  });
-  const cf = localStorage.getItem('m3_conf_final');
-  if(cf){ const r = document.querySelector(`input[name="conf-final"][value="${cf}"]`); if(r) r.checked=true; }
+  const s6c = localStorage.getItem('m3_s6-changed');
+  if(s6c) document.getElementById('s6-changed').value = s6c;
   const fp = localStorage.getItem('m3_poll_final');
   if(fp){ const r = document.querySelector(`input[name="poll-final"][value="${fp}"]`); if(r) r.checked=true; }
 
@@ -814,11 +774,7 @@ function autoSavePoll(stage){
 }
 
 function autoSave6(){
-  ['s6-problem','s6-proposal','s6-changed','s6-verify','s6-question'].forEach(id=>{
-    localStorage.setItem('m3_'+id, document.getElementById(id).value);
-  });
-  const cf = document.querySelector('input[name="conf-final"]:checked');
-  localStorage.setItem('m3_conf_final', cf ? cf.value : '');
+  localStorage.setItem('m3_s6-changed', document.getElementById('s6-changed').value);
   const fp = document.querySelector('input[name="poll-final"]:checked');
   localStorage.setItem('m3_poll_final', fp ? fp.value : '');
 }
@@ -985,16 +941,10 @@ async function saveAndDownloadProposal(){
 // ---- Download summary ----
 async function downloadSummary(){
   autoSave6();
-  const cf = document.querySelector('input[name="conf-final"]:checked');
   const fp = document.querySelector('input[name="poll-final"]:checked');
   await sbUpsertProposal('writeback', {
-    revised_problem: val('s6-problem'),
-    revised_proposal: val('s6-proposal'),
-    confidence: cf ? parseInt(cf.value) : null,
     what_changed: val('s6-changed'),
-    what_to_verify: val('s6-verify'),
     final_poll: fp ? fp.value : null,
-    transfer_question: val('s6-question')
   });
   const stamp = new Date().toLocaleString();
   const fpLabel = fp ? fp.closest('label').textContent.trim() : '[not answered]';
@@ -1039,13 +989,8 @@ async function downloadSummary(){
   doc += rtfFieldLabel('Stage 5 — Most plausible failure reason and mitigation'); doc += rtfFieldValue(ls('m3_reflect_test'));
 
   doc += rtfSectionHeading('Final Position');
-  doc += rtfFieldLabel('Revised problem statement'); doc += rtfFieldValue(val('s6-problem'));
-  doc += rtfFieldLabel('Revised proposal or approach'); doc += rtfFieldValue(val('s6-proposal'));
-  doc += rtfFieldLabel('Final confidence (1–5)'); doc += rtfFieldValue(cf ? cf.value+' / 5' : '[not answered]');
-  doc += rtfFieldLabel('What changed in my understanding'); doc += rtfFieldValue(val('s6-changed'));
-  doc += rtfFieldLabel('What I now need to verify'); doc += rtfFieldValue(val('s6-verify'));
   doc += rtfFieldLabel('Where I stand now'); doc += rtfFieldValue(fpLabel);
-  doc += rtfFieldLabel('One question I would now ask before approving a similar proposal'); doc += rtfFieldValue(val('s6-question'));
+  doc += rtfFieldLabel('What shifted in my thinking'); doc += rtfFieldValue(val('s6-changed'));
 
   doc += rtfSectionHeading('The Prompts Used At Each Stage');
   [
