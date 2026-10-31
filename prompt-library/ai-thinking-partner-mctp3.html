@@ -586,7 +586,13 @@ footer{text-align:center;color:var(--grey);font-size:12.5px;margin-top:30px;}
           <button class="copybtn" onclick="copyPrompt('test',this)">Copy prompt</button>
           <div class="poll-section">
             <h4>After completing this stage:</h4>
-            <label for="reflect-test" style="font-weight:500;font-size:14px;margin:0 0 4px;">What is the most plausible reason this project fails, and what would you do differently?</label>
+            <p class="poll-q">What did AI's failure scenarios reveal?</p>
+            <div class="optionrow">
+              <label class="radio"><input type="radio" name="poll-test" value="A" onchange="autoSavePoll('test')"> A. A risk I had not considered at all.</label>
+              <label class="radio"><input type="radio" name="poll-test" value="B" onchange="autoSavePoll('test')"> B. A risk I knew about but had underestimated.</label>
+              <label class="radio"><input type="radio" name="poll-test" value="C" onchange="autoSavePoll('test')"> C. Risks I had already accounted for.</label>
+            </div>
+            <label for="reflect-test" style="font-weight:500;font-size:14px;margin:14px 0 4px;">What is the most plausible reason this project fails, and what would you do differently?</label>
             <textarea id="reflect-test" oninput="autoSavePoll('test')"></textarea>
             <div class="poll-save-row">
               <button class="savebtn" onclick="saveStageResponse('test')">Save response</button>
@@ -718,7 +724,9 @@ window.addEventListener('DOMContentLoaded', ()=>{
   const irv = localStorage.getItem('m3_reflect_interview');
   if(irv) document.getElementById('reflect-interview').value = irv;
 
-  // Stage 5 (no poll)
+  // Stage 5
+  const tpv = localStorage.getItem('m3_poll_test');
+  if(tpv){ const r = document.querySelector(`input[name="poll-test"][value="${tpv}"]`); if(r) r.checked=true; }
   const trv = localStorage.getItem('m3_reflect_test');
   if(trv) document.getElementById('reflect-test').value = trv;
 
@@ -764,6 +772,8 @@ function autoSavePoll(stage){
     localStorage.setItem('m3_poll_interview', JSON.stringify(cats));
     localStorage.setItem('m3_reflect_interview', document.getElementById('reflect-interview').value);
   } else if(stage === 'test'){
+    const tv = document.querySelector('input[name="poll-test"]:checked');
+    localStorage.setItem('m3_poll_test', tv ? tv.value : '');
     localStorage.setItem('m3_reflect_test', document.getElementById('reflect-test').value);
   } else {
     const pv = document.querySelector(`input[name="poll-${stage}"]:checked`);
@@ -788,6 +798,7 @@ async function saveStageResponse(stage){
     try{ poll_value = JSON.parse(localStorage.getItem('m3_poll_interview')||'[]').join(','); }catch(e){}
     reflection = localStorage.getItem('m3_reflect_interview')||'';
   } else if(stage === 'test'){
+    poll_value = localStorage.getItem('m3_poll_test')||null;
     reflection = localStorage.getItem('m3_reflect_test')||'';
   } else {
     poll_value = localStorage.getItem('m3_poll_'+stage)||null;

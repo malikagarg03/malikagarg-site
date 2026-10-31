@@ -192,6 +192,12 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,
       <div class="word-cloud" id="word-cloud"><p class="wc-zero">No responses yet</p></div>
     </div>
 
+    <!-- STAGE 5 POLL -->
+    <div class="section-title">Stage 5 — What Did AI's Failure Scenarios Reveal?</div>
+    <div class="panel" style="margin-bottom:14px;max-width:560px;">
+      <div id="poll-test"><p class="no-data">No responses yet</p></div>
+    </div>
+
     <!-- FINAL POLL -->
     <div class="section-title">Final Poll — Where Do Participants Stand Now?</div>
     <div class="panel" style="margin-bottom:14px;max-width:560px;">
@@ -287,6 +293,10 @@ function render(){
     s.poll_value.split(',').forEach(c=>{ if(c in catCounts) catCounts[c]++; });
   });
   renderCloud('word-cloud', catCounts, CAT_LABELS);
+
+  // Stage 5 poll
+  const testLabels = ['A: A risk I had not considered at all','B: A risk I knew about but had underestimated','C: Risks I had already accounted for'];
+  renderPoll('poll-test', _stages.filter(s=>s.stage==='test'&&s.poll_value).map(s=>s.poll_value), testLabels);
 
   // Final poll
   const finalLabels = ['A: Same proposal, same reasoning','B: Same proposal, better grasp of risks','C: Modified part of my proposal','D: Substantially reconsidering'];
