@@ -508,12 +508,11 @@ footer{text-align:center;color:var(--grey);font-size:12.5px;margin-top:30px;}
           <button class="copybtn" onclick="copyPrompt('challenge',this)">Copy prompt</button>
           <div class="poll-section">
             <h4>After completing this stage in your AI conversation:</h4>
-            <p class="poll-q">How did you respond to AI's strongest criticism?</p>
+            <p class="poll-q">What was your honest reaction to AI's strongest criticism?</p>
             <div class="optionrow">
-              <label class="radio"><input type="radio" name="poll-challenge" value="A" onchange="autoSavePoll('challenge')"> A. I agreed; it exposed a genuine weakness.</label>
-              <label class="radio"><input type="radio" name="poll-challenge" value="B" onchange="autoSavePoll('challenge')"> B. I disagreed; it misunderstood the situation.</label>
-              <label class="radio"><input type="radio" name="poll-challenge" value="C" onchange="autoSavePoll('challenge')"> C. I found it persuasive but need evidence to judge.</label>
-              <label class="radio"><input type="radio" name="poll-challenge" value="D" onchange="autoSavePoll('challenge')"> D. I challenged AI further and modified my assessment.</label>
+              <label class="radio"><input type="radio" name="poll-challenge" value="A" onchange="autoSavePoll('challenge')"> A. It exposed a genuine weakness I had not considered.</label>
+              <label class="radio"><input type="radio" name="poll-challenge" value="B" onchange="autoSavePoll('challenge')"> B. It felt plausible but I need more evidence to judge.</label>
+              <label class="radio"><input type="radio" name="poll-challenge" value="C" onchange="autoSavePoll('challenge')"> C. It did not apply to my specific situation.</label>
             </div>
             <label for="reflect-challenge" style="font-weight:500;font-size:14px;margin:14px 0 4px;">What was the strongest criticism, and how did you evaluate it?</label>
             <textarea id="reflect-challenge" oninput="autoSavePoll('challenge')"></textarea>
@@ -1004,7 +1003,7 @@ async function downloadSummary(){
   const pollLabels = {
     frame: {A:'A. AI largely confirmed my original problem definition.',B:'B. AI helped me articulate the problem more precisely.',C:'C. AI identified an important aspect I had overlooked.',D:'D. AI made me question whether I was solving the right problem.'},
     expand: {A:'A. Mostly variations of my existing idea.',B:'B. Different ideas, but not practically useful.',C:'C. At least one credible alternative worth considering.',D:'D. An alternative that may be better than my original solution.'},
-    challenge: {A:'A. I agreed; it exposed a genuine weakness.',B:'B. I disagreed; it misunderstood the situation.',C:'C. I found it persuasive but need evidence to judge.',D:'D. I challenged AI further and modified my assessment.'}
+    challenge: {A:'A. It exposed a genuine weakness I had not considered.',B:'B. It felt plausible but I need more evidence to judge.',C:'C. It did not apply to my specific situation.'}
   };
   function getPollLabel(stage){
     const v = localStorage.getItem('m3_poll_'+stage);
