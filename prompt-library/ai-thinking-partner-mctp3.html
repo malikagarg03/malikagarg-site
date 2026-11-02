@@ -848,7 +848,7 @@ function fillRecap(){
   document.getElementById('recap-mechanism').textContent = val('s0-mechanism');
 }
 
-const WRAPUP_TEXT = "Let's stop the interview here. Ask me to state, in my own words, the most important thing I worked out through answering your questions and what it means for my proposal. Wait for my answer. Then briefly reflect back my reasoning, distinguishing what I concluded from what remains uncertain. Do not introduce new risks or recommendations.";
+const WRAPUP_TEXT = "Let's stop the interview here. Based on our conversation, give me a full analysis of my proposal — what assumptions came up, which ones I was able to defend and which I struggled with, what the key gaps are, and what I should think most carefully about before finalising it. Be specific to what came up in our conversation only. Do not introduce anything new.";
 
 function buildPrompts(project, problem, mechanism, fundedClause){
   fundedClause = fundedClause || "was funded with the full ₹5 crore";
