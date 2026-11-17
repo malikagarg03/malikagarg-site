@@ -1,0 +1,9 @@
+{
+  "links": [
+    { "label": "eOffice", "url": "https://eoffice.ap.gov.in/" },
+    { "label": "CCTV Application", "url": "https://qa.ai4rtgs.com/login" },
+    { "label": "AI for AP Police Portal", "url": "https://ai.appolice.gov.in" },
+    { "label": "NIC Mail", "url": "https://mail.mgovcloud.in" },
+    { "label": "RTGS Lens", "url": "https://rtgslens.ap.gov.in/RTGSAngular/#/" }
+  ]
+}

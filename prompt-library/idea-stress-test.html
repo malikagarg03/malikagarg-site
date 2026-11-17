@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idea Stress-Test — Prompt Generator</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YZEYRQBYKC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YZEYRQBYKC');
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      padding: 0;
+    }
+
+    /* ── Header ── */
+    header {
+      background: #1e3a5f;
+      color: #fff;
+      padding: 18px 0 16px;
+    }
+
+    header .inner {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    header .tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #94a3b8;
+      margin-bottom: 3px;
+    }
+
+    header h1 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* ── Container ── */
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 24px 20px 60px;
+    }
+
+    /* ── Intro card ── */
+    .intro {
+      background: #1e3a5f;
+      color: #fff;
+      border-radius: 14px;
+      padding: 26px 22px;
+      margin-bottom: 16px;
+    }
+
+    .intro h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .intro p {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: #cbd5e1;
+      margin-bottom: 10px;
+    }
+
+    .intro p:last-child {
+      margin-bottom: 0;
+    }
+
+    .intro strong {
+      color: #fff;
+    }
+
+    .intro ul {
+      padding-left: 18px;
+      margin: 0;
+    }
+
+    .intro ul li {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      line-height: 1.7;
+      margin-bottom: 8px;
+    }
+
+    .intro ul li:last-child {
+      margin-bottom: 0;
+    }
+
+    .intro ul li strong {
+      color: #fff;
+    }
+
+    /* ── "I don't know" note ── */
+    .dont-know-note {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 10px;
+      padding: 11px 15px;
+      font-size: 0.855rem;
+      color: #0369a1;
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+
+    /* ── Role bar ── */
+    .role-bar {
+      margin-bottom: 18px;
+    }
+
+    .role-bar label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 6px;
+    }
+
+    .role-bar input {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: #0f172a;
+      background: #fff;
+    }
+
+    .role-bar input:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+
+    /* ── Form sections ── */
+    .form-section {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+
+    .form-section-title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #94a3b8;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 0.855rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #1e293b;
+    }
+
+    .label-optional {
+      font-weight: 400;
+      color: #94a3b8;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      color: #0f172a;
+      background: #fff;
+      transition: border-color 0.15s;
+      appearance: none;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 78px;
+    }
+
+    select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748b' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 13px center;
+      padding-right: 34px;
+    }
+
+    .field-hint {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-top: 5px;
+      font-weight: 400;
+    }
+
+    /* ── Generate button ── */
+    .btn-generate {
+      width: 100%;
+      padding: 14px;
+      background: #1e3a5f;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: background 0.15s;
+    }
+
+    .btn-generate:hover {
+      background: #162d4a;
+    }
+
+    /* ── Output section ── */
+    .output-section {
+      display: none;
+      margin-top: 24px;
+    }
+
+    .output-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #64748b;
+      margin-bottom: 10px;
+    }
+
+    .output-box {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 18px;
+      font-size: 0.875rem;
+      line-height: 1.75;
+      color: #1e293b;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .next-steps {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin-top: 14px;
+    }
+
+    .next-steps-title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #166534;
+      margin-bottom: 10px;
+    }
+
+    .next-steps ul {
+      padding-left: 18px;
+      margin: 0;
+    }
+
+    .next-steps ul li {
+      font-size: 0.875rem;
+      color: #14532d;
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+
+    .next-steps ul li:last-child {
+      margin-bottom: 0;
+    }
+
+    .btn-recopy {
+      margin-top: 14px;
+      padding: 9px 18px;
+      background: #fff;
+      border: 1px solid #86efac;
+      border-radius: 8px;
+      font-size: 0.855rem;
+      font-weight: 600;
+      color: #166534;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-recopy:hover {
+      background: #dcfce7;
+    }
+
+    .btn-recopy.copied {
+      background: #dcfce7;
+      color: #14532d;
+    }
+
+    /* ── AI open buttons ── */
+    .open-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #94a3b8;
+      margin-top: 18px;
+      margin-bottom: 10px;
+    }
+
+    .ai-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .ai-btn {
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-size: 0.855rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: opacity 0.15s;
+      display: inline-block;
+    }
+
+    .ai-btn:hover {
+      opacity: 0.85;
+    }
+
+    .ai-chatgpt    { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
+    .ai-claude     { background: #ffedd5; color: #7c2d12; border-color: #fdba74; }
+    .ai-gemini     { background: #dbeafe; color: #1e3a8a; border-color: #93c5fd; }
+    .ai-perplexity { background: #ede9fe; color: #4c1d95; border-color: #c4b5fd; }
+    .ai-share      { background: #f1f5f9; color: #0f172a; border-color: #cbd5e1; }
+
+    @media (max-width: 500px) {
+      header h1 {
+        font-size: 1.05rem;
+      }
+
+      .ai-buttons {
+        flex-direction: column;
+      }
+
+      .ai-btn {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="inner">
+      <div class="tag">Prompt Library</div>
+      <h1>Idea Stress-Test Prompt Generator</h1>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <div class="intro">
+      <h2>Before You Build It</h2>
+      <ul>
+        <li>You have an idea. That's a good sign — it means you're paying attention.</li>
+        <li>This page helps you stress-test it before you spend time, goodwill, or budget on it.</li>
+        <li>Fill in what you know below. This will build a structured prompt for an AI tool to push back on your idea honestly.</li>
+        <li><strong>You don't need complete answers.</strong> Write "I don't know" wherever you're unsure — that's useful too.</li>
+        <li>Takes about 90 seconds.</li>
+        <li>Whatever you type stays with you. There is no server behind this tool — your inputs never leave your device and are not stored, logged, or seen by anyone else. <strong>Feel free to be honest about what you know.</strong></li>
+      </ul>
+    </div>
+
+    <div class="dont-know-note">
+      <strong>You don't need complete answers.</strong> Write <em>"I don't know"</em> wherever you're unsure — that itself is useful context for the AI.
+    </div>
+
+    <!-- Role -->
+    <div class="role-bar">
+      <label for="role">Your role / posting</label>
+      <input type="text" id="role" placeholder="e.g. ASP, DSP, Circle Inspector, IPS Officer Trainee">
+    </div>
+
+    <!-- Section 1: The Idea -->
+    <div class="form-section">
+      <div class="form-section-title">The Idea</div>
+
+      <div class="form-group">
+        <label for="idea">What do you want to build or change?</label>
+        <textarea id="idea" placeholder="Describe the idea in your own words"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="who-helps">Who does this actually help?</label>
+        <input type="text" id="who-helps" placeholder="Be specific — not 'the department,' but the actual person">
+      </div>
+
+      <div class="form-group">
+        <label for="legal-basis">Does this require any legal authority or procedural basis to act? <span class="label-optional">(optional)</span></label>
+        <textarea id="legal-basis" placeholder="e.g. Can an officer actually do something when this system alerts them? Is there a legal or procedural basis for the action? Write 'I don't know' if unsure."></textarea>
+      </div>
+    </div>
+
+    <!-- Section 2: Context -->
+    <div class="form-section">
+      <div class="form-section-title">Context</div>
+
+      <div class="form-group">
+        <label for="what-exists">What already exists for this?</label>
+        <textarea id="what-exists" placeholder="Formal systems, informal workarounds, registers, WhatsApp groups — anything people already do to handle this problem. If this system would sit alongside something that already exists rather than replace it, note that here."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="why-use">Why will people actually use this? <span class="label-optional">(optional)</span></label>
+        <textarea id="why-use" placeholder="Be specific — not 'because it's useful' but: what exactly are they doing today that this removes or makes easier? If you can't answer this concretely, write 'I don't know' — that's important information."></textarea>
+      </div>
+    </div>
+
+    <!-- Section 3: Your Thinking -->
+    <div class="form-section">
+      <div class="form-section-title">Your Thinking</div>
+
+      <div class="form-group">
+        <label for="worry">What's your biggest worry about it, if you're honest? <span class="label-optional">(optional)</span></label>
+        <textarea id="worry" placeholder="The concern you haven't said out loud yet"></textarea>
+      </div>
+    </div>
+
+    <button class="btn-generate" onclick="generatePrompt()">Generate Prompt</button>
+
+    <!-- Output -->
+    <div class="output-section" id="output-section">
+
+      <div class="output-label">Your Prompt</div>
+      <div class="output-box" id="output-box"></div>
+
+      <div class="next-steps">
+        <div class="next-steps-title">What to do now</div>
+        <ul>
+          <li id="copy-status">✓ Your prompt has been <strong>automatically copied</strong> to your clipboard.</li>
+          <li>If it did not copy, use the button below to copy it manually.</li>
+          <li>Open any AI tool using the buttons below — ChatGPT, Claude, Gemini, or Perplexity.</li>
+          <li>Once it opens, <strong>paste the prompt</strong> — on mobile: long press → Paste. On desktop: Ctrl+V (or Cmd+V on Mac).</li>
+          <li>Read the response and work through the feedback.</li>
+        </ul>
+
+        <button class="btn-recopy" id="btn-recopy" onclick="recopyPrompt()">Copy Prompt Again</button>
+
+        <div class="open-label" style="margin-top: 18px;">Open in →</div>
+        <div class="ai-buttons">
+          <a class="ai-btn ai-chatgpt"    href="https://chatgpt.com"           target="_blank" rel="noopener">ChatGPT</a>
+          <a class="ai-btn ai-claude"     href="https://claude.ai"             target="_blank" rel="noopener">Claude</a>
+          <a class="ai-btn ai-gemini"     href="https://gemini.google.com"     target="_blank" rel="noopener">Gemini</a>
+          <a class="ai-btn ai-perplexity" href="https://www.perplexity.ai"     target="_blank" rel="noopener">Perplexity</a>
+          <button class="ai-btn ai-share" id="btn-share" style="display:none" onclick="sharePrompt()">Share via apps…</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    function val(id) {
+      return document.getElementById(id).value.trim() || "I don't know";
+    }
+
+    let generatedPrompt = '';
+
+    function generatePrompt() {
+      const role           = document.getElementById('role').value.trim() || 'a police officer';
+      const idea           = val('idea');
+      const whoHelps       = val('who-helps');
+      const legalBasis = document.getElementById('legal-basis').value.trim();
+      const whatExists = val('what-exists');
+      const whyUse     = document.getElementById('why-use').value.trim();
+      const worry      = document.getElementById('worry').value.trim();
+
+      const legalBasisLine = legalBasis
+        ? legalBasis
+        : '(Not stated — please flag this as a gap in your response)';
+
+      const whyUseLine = whyUse
+        ? whyUse
+        : '(Not stated — push back hard on this in your response, as it is the most common reason initiatives fail)';
+
+      const worryLine = worry || 'Not stated';
+
+      generatedPrompt =
+`I am ${role}. I have an idea I want to think through carefully before I commit to it.
+
+Here is the idea: ${idea}
+
+Who I think it helps: ${whoHelps}
+
+Legal/procedural basis to act on what this system surfaces: ${legalBasisLine}
+
+What already exists for this (systems, registers, informal workarounds): ${whatExists}
+
+Why I think people will actually use this: ${whyUseLine}
+
+My biggest worry about it: ${worryLine}
+
+Please evaluate this idea honestly and directly — not encouragingly. This is for an Indian Police Service officer, likely in a district posting. Push back where you see problems. Do not give generic startup or product advice. Evaluate through the lens of how Indian police stations actually work.
+
+Structure your response around these eight checks:
+
+1. WHOSE PROBLEM IS THIS?
+Is the problem felt by the person who will actually use the system day to day — the IO, the constable, the SHO — or mainly by a senior officer who wants visibility? If only a senior benefits, the system will likely die when that officer is transferred. Be specific about who gains and who carries the burden.
+
+2. DOES IT HELP OR ADD WORK — AND DOES IT DUPLICATE?
+Does this make an existing task easier, or does it create a new one? Does it force officers to maintain two parallel records — one in this system, and one in the existing station register or CCTNS? A new workflow that sits alongside an old one rather than replacing it doubles the work and usually dies. Flag this clearly if you see it.
+
+3. LEGAL AND PROCEDURAL BASIS
+Based on the information given — does this system generate alerts, flags, or actions that officers would need a legal basis to act on? If the legal/procedural basis field is blank or unclear, flag this as a gap that must be answered before building. Quoting a specific example: facial recognition that alerts officers to a criminal's location doesn't mean they can stop that person — there has to be a lawful basis for intervention.
+
+4. WERE USERS ACTUALLY CONSULTED?
+Does this seem designed around how officers and constables actually work in a thana — or around how someone imagines they work? What assumptions might be wrong about field realities: shift patterns, connectivity, device availability, competing priorities, hierarchy?
+
+5. IS IT EASY TO USE?
+Is access likely to be a problem — does this require a specific device, a control room, a login that times out? Is it simple enough that a tired, distracted constable at the end of a long shift would actually use it? Every extra step is a small tax. Too many taxes and the system gets abandoned.
+
+6. ADOPTION — WHAT WILL ACTUALLY DRIVE IT?
+Even if well designed, adoption doesn't happen on its own. What would realistically drive people to use this — genuine utility, or instruction from above? If a senior officer's transfer would stop usage, that's not adoption, that's compliance. What would need to be true for officers to use this without being told to?
+
+7. PROVING THE OUTCOME
+How would you know this is actually working — not just that it launched, but that the real outcome happened? Identify the difference between the launch metric (system is live, data is entered, alerts are sent) and the actual outcome (case solved, vehicle recovered, problem reduced). If you can't close that loop and document it, you can't prove the system did anything.
+
+8. THINKING AHEAD — COULD THIS OUTLAST YOU?
+You probably cannot institutionalise this right now, and that's completely normal. But ask: is this being built in a way that could be institutionalised later — with a proper budget, a vendor contract, and an owner who isn't you personally? Or does it depend on a single cooperative developer, a personal relationship, or your continued presence? Flag what would need to be in place eventually, without expecting it on day one.
+
+End your response with:
+THE WEAKEST PART OF THIS IDEA RIGHT NOW IS:
+[one sentence, direct, no hedging]`;
+
+      document.getElementById('output-box').textContent = generatedPrompt;
+
+      const outputSection = document.getElementById('output-section');
+      outputSection.style.display = 'block';
+
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'generate_prompt', { event_category: 'idea_stress_test' });
+      }
+
+      navigator.clipboard.writeText(generatedPrompt).catch(() => {
+        document.getElementById('copy-status').textContent =
+          '⚠ Could not auto-copy. Use the "Copy Prompt Again" button below.';
+      });
+
+      if (navigator.share) {
+        document.getElementById('btn-share').style.display = 'inline-block';
+      }
+
+      outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function recopyPrompt() {
+      if (!generatedPrompt) return;
+      navigator.clipboard.writeText(generatedPrompt).then(() => {
+        const btn = document.getElementById('btn-recopy');
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy Prompt Again';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    function sharePrompt() {
+      if (navigator.share && generatedPrompt) {
+        navigator.share({ text: generatedPrompt }).catch(() => {});
+      }
+    }
+  </script>
+
+</body>
+</html>

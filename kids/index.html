@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kids Resources — malikagarg.xyz</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YZEYRQBYKC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YZEYRQBYKC');
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+    }
+
+    header {
+      background: #1e3a5f;
+      color: #fff;
+      padding: 18px 0 16px;
+    }
+
+    header .inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    header .tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #94a3b8;
+      margin-bottom: 3px;
+    }
+
+    header h1 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    header a.home {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      text-decoration: none;
+    }
+
+    header a.home:hover {
+      color: #fff;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 24px 60px;
+    }
+
+    .intro {
+      margin-bottom: 32px;
+    }
+
+    .intro p {
+      font-size: 0.95rem;
+      color: #334155;
+      line-height: 1.7;
+      max-width: 600px;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #64748b;
+      margin-bottom: 14px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+      border-color: #94a3b8;
+    }
+
+    .card-emoji {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #0f172a;
+    }
+
+    .card-day {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #94a3b8;
+      margin-bottom: 8px;
+    }
+
+    .card-desc {
+      font-size: 0.875rem;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    footer {
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    footer a {
+      color: #94a3b8;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: #64748b;
+    }
+
+    @media (max-width: 600px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="inner">
+      <div>
+        <div class="tag">malikagarg.xyz</div>
+        <h1>Kids Resources</h1>
+      </div>
+      <a class="home" href="/">← Back to home</a>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <div class="intro">
+      <p>
+        Free interactive worksheets and learning resources for parents with young kids.
+        Made with curiosity in mind — no login, no signup, works on any device.
+      </p>
+    </div>
+
+    <div class="section-label">Worksheets — Human Body Series</div>
+    <div class="cards">
+
+      <a class="card" href="/kids/Day1_Interactive_Worksheet.html">
+        <span class="card-emoji">🧠</span>
+        <div class="card-day">Day 1</div>
+        <div class="card-title">Major Organs</div>
+        <div class="card-desc">An interactive introduction to the major organs of the human body.</div>
+      </a>
+
+      <a class="card" href="/kids/Day2_Interactive_Worksheet.html">
+        <span class="card-emoji">🦴</span>
+        <div class="card-day">Day 2</div>
+        <div class="card-title">Bones & Muscles</div>
+        <div class="card-desc">Explore the skeletal and muscular systems in a fun, interactive way.</div>
+      </a>
+
+      <a class="card" href="/kids/Day3_Interactive_Worksheet.html">
+        <span class="card-emoji">👀</span>
+        <div class="card-day">Day 3</div>
+        <div class="card-title">The Five Senses</div>
+        <div class="card-desc">Discover how we see, hear, taste, smell, and touch the world around us.</div>
+      </a>
+
+    </div>
+
+  </div>
+
+  <footer>
+    <a href="/">malikagarg.xyz</a>
+  </footer>
+
+</body>
+</html>

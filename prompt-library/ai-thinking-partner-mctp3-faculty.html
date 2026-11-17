@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Faculty Dashboard — MCTP-III</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+:root{
+  --navy:#1e3a5f;
+  --gold:#9c6b1f;
+  --gold-light:#f6ede0;
+  --dark:#1f2937;
+  --grey:#6b7280;
+  --border:#e2e8f0;
+  --bg:#f1f5f9;
+  --ok:#2f7a4a;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:var(--bg);color:var(--dark);line-height:1.5;}
+
+/* Login */
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+.login-box{background:#fff;border:1px solid var(--border);border-radius:16px;padding:40px 36px;width:100%;max-width:360px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.07);}
+.login-box .kicker{color:var(--gold);font-weight:700;letter-spacing:.08em;font-size:12px;text-transform:uppercase;margin-bottom:8px;}
+.login-box h1{font-size:20px;font-weight:700;margin:0 0 4px;}
+.login-box p{color:var(--grey);font-size:14px;margin:0 0 24px;}
+.login-box input{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:15px;font-family:inherit;margin-bottom:12px;text-align:center;letter-spacing:.05em;}
+.login-box input:focus{outline:none;border-color:var(--navy);}
+.login-box button{width:100%;background:var(--navy);color:#fff;border:none;padding:11px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;}
+.login-error{color:#b23b3b;font-size:13px;margin-top:10px;display:none;}
+
+/* Dashboard */
+#dashboard{display:none;}
+.dash-header{background:var(--navy);color:#fff;padding:14px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.dash-header-left{flex:1;}
+.dash-header-left .kicker{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#94a3b8;margin-bottom:2px;}
+.dash-header-left h1{font-size:18px;font-weight:700;margin:0;}
+.dash-meta{font-size:12.5px;color:#94a3b8;}
+.hdr-btn{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25);padding:7px 14px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;}
+.hdr-btn:hover{background:rgba(255,255,255,.25);}
+
+.dash-body{max-width:1120px;margin:0 auto;padding:24px 20px 60px;}
+
+.section-title{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--grey);margin:36px 0 16px;}
+
+/* Stat cards */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:4px;}
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px 18px;}
+.stat-num{font-size:34px;font-weight:700;color:var(--navy);line-height:1;}
+.stat-label{font-size:13px;color:var(--grey);margin-top:5px;}
+
+/* Grid layouts */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+@media(max-width:750px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+
+/* Panel */
+.panel{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px 20px;}
+.panel h3{font-size:22px;font-weight:700;margin:0 0 6px;color:var(--dark);}
+.panel .panel-sub{font-size:15px;color:var(--grey);margin:0 0 22px;line-height:1.5;}
+
+/* Collapsible section */
+.section-toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.section-toggle .toggle-arrow{font-size:16px;color:var(--grey);transition:transform .2s;}
+.section-toggle.collapsed .toggle-arrow{transform:rotate(-90deg);}
+.collapsible-body{overflow:hidden;transition:max-height .3s ease;}
+.collapsible-body.collapsed{max-height:0 !important;}
+
+/* Bar chart */
+.poll-group{margin-bottom:24px;}
+.poll-group:last-child{margin-bottom:0;}
+.poll-opt-label{font-size:18px;color:var(--dark);margin-bottom:8px;line-height:1.5;}
+.poll-opt-label strong{color:var(--navy);margin-right:6px;font-size:20px;}
+.bar-row{display:flex;align-items:center;gap:14px;}
+.bar-track{flex:1;background:#f1f5f9;border-radius:6px;height:44px;overflow:hidden;}
+.bar-fill{height:100%;background:var(--gold);border-radius:6px;transition:width .4s ease;}
+.bar-count{font-size:17px;color:var(--grey);min-width:96px;text-align:right;font-weight:700;}
+
+/* Confidence chart */
+.conf-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.conf-num{font-size:12px;font-weight:700;color:var(--grey);width:14px;text-align:center;}
+.conf-track{flex:1;background:#f1f5f9;border-radius:4px;height:18px;overflow:hidden;}
+.conf-fill{height:100%;border-radius:4px;transition:width .4s ease;}
+.conf-fill.initial{background:#3b82f6;}
+.conf-fill.final{background:var(--ok);}
+.conf-count{font-size:12px;color:var(--grey);min-width:32px;text-align:right;}
+
+/* Word cloud */
+.word-cloud{display:flex;flex-wrap:wrap;gap:10px;align-items:center;min-height:60px;}
+.wc-tag{background:var(--gold-light);border:1px solid #e4d3ae;border-radius:20px;padding:5px 14px;color:var(--dark);font-weight:600;line-height:1.3;cursor:default;}
+.wc-zero{font-size:13px;color:var(--grey);}
+
+/* Proposals wall */
+.proposals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:4px;}
+.prop-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:20px 22px;}
+.prop-card-title{font-size:17px;font-weight:700;color:var(--navy);margin-bottom:12px;line-height:1.4;}
+.prop-field{margin-bottom:12px;}
+.prop-field:last-child{margin-bottom:0;}
+.prop-field-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--grey);margin-bottom:5px;}
+.prop-field-text{font-size:15px;color:var(--dark);line-height:1.6;}
+
+/* Reflections */
+.reflect-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.r-tab{background:#f1f5f9;border:1px solid var(--border);border-radius:6px;padding:5px 11px;font-size:13px;font-weight:600;cursor:pointer;color:var(--grey);border:none;}
+.r-tab.active{background:var(--navy);color:#fff;}
+.reflect-pane{display:none;}
+.reflect-pane.show{display:block;}
+.reflect-item{border-bottom:1px solid var(--border);padding:10px 0;cursor:pointer;transition:background .1s;}
+.reflect-item:last-child{border-bottom:none;}
+.reflect-item:hover{background:#f8fafc;border-radius:6px;padding-left:6px;}
+.reflect-prop-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gold);margin-bottom:4px;}
+.reflect-text{font-size:16px;line-height:1.7;color:var(--dark);}
+.no-data{font-size:13.5px;color:var(--grey);padding:8px 0;}
+
+/* Proposal side panel */
+.prop-panel{position:fixed;top:0;right:0;width:380px;max-width:100vw;height:100vh;background:#fff;border-left:1px solid var(--border);box-shadow:-4px 0 24px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .25s ease;z-index:300;display:flex;flex-direction:column;}
+.prop-panel.open{transform:translateX(0);}
+.prop-panel-head{padding:14px 18px;border-bottom:1px solid var(--border);background:var(--navy);color:#fff;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.prop-panel-head .pp-title{flex:1;font-size:14px;font-weight:700;line-height:1.4;}
+.prop-panel-close{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:0;line-height:1;opacity:.8;}
+.prop-panel-close:hover{opacity:1;}
+.prop-panel-body{padding:18px 20px;overflow-y:auto;flex:1;}
+.pp-section{margin-bottom:18px;}
+.pp-section:last-child{margin-bottom:0;}
+.pp-section-head{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gold);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.pp-field{margin-bottom:12px;}
+.pp-field:last-child{margin-bottom:0;}
+.pp-label{font-size:11px;font-weight:700;color:var(--grey);margin-bottom:3px;}
+.pp-text{font-size:13.5px;color:var(--dark);line-height:1.6;}
+.panel-overlay{display:none;position:fixed;inset:0;z-index:299;}
+.panel-overlay.show{display:block;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="login-screen">
+  <div class="login-box">
+    <div class="kicker">MCTP-III</div>
+    <h1>Faculty Dashboard</h1>
+    <p>Enter your faculty passcode</p>
+    <input type="password" id="pwd-input" placeholder="Passcode" onkeydown="if(event.key==='Enter')checkLogin()">
+    <button onclick="checkLogin()">Enter</button>
+    <div class="login-error" id="login-error">Incorrect passcode.</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="dash-header">
+    <div class="dash-header-left">
+      <div class="kicker">MCTP-III · AI as Your Thinking Partner</div>
+      <h1>Faculty Dashboard</h1>
+    </div>
+    <div class="dash-meta">Updated: <span id="last-updated">—</span></div>
+    <button class="hdr-btn" onclick="loadDashboard()">↻ Refresh</button>
+    <button class="hdr-btn" onclick="exportCSV()">↓ Export CSV</button>
+  </div>
+
+  <div class="dash-body">
+
+    <!-- PARTICIPATION -->
+    <div class="section-title">Participation</div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num" id="stat-participants">—</div><div class="stat-label">Participants</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-proposals">—</div><div class="stat-label">Proposals saved</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-frame">—</div><div class="stat-label">Stage 1 done</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-expand">—</div><div class="stat-label">Stage 2 done</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-challenge">—</div><div class="stat-label">Stage 3 done</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-interview">—</div><div class="stat-label">Stage 4 done</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-test">—</div><div class="stat-label">Stage 5 done</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-writeback">—</div><div class="stat-label">Write-back done</div></div>
+    </div>
+
+    <!-- PROPOSALS (collapsible, default closed) -->
+    <div class="section-title section-toggle collapsed" id="proposals-toggle" onclick="toggleSection('proposals-toggle','proposals-body')">
+      Proposals <span class="toggle-arrow">▾</span>
+    </div>
+    <div class="collapsible-body collapsed" id="proposals-body">
+      <div class="proposals-grid" id="proposals-wall"></div>
+    </div>
+
+    <!-- STAGE 1 (collapsible, default closed) -->
+    <div class="section-title section-toggle collapsed" id="s1-toggle" onclick="toggleSection('s1-toggle','s1-body')">
+      Stage 1 — Examine the Problem <span class="toggle-arrow">▾</span>
+    </div>
+    <div class="collapsible-body collapsed" id="s1-body">
+      <div class="panel" style="margin-bottom:4px;">
+        <p class="panel-sub" style="margin-bottom:22px;">What happened to your understanding of the problem?</p>
+        <div id="poll-frame"><p class="no-data">No responses yet</p></div>
+      </div>
+    </div>
+
+    <!-- STAGE 2 (collapsible, default closed) -->
+    <div class="section-title section-toggle collapsed" id="s2-toggle" onclick="toggleSection('s2-toggle','s2-body')">
+      Stage 2 — Open the Possibilities <span class="toggle-arrow">▾</span>
+    </div>
+    <div class="collapsible-body collapsed" id="s2-body">
+      <div class="panel" style="margin-bottom:4px;">
+        <p class="panel-sub" style="margin-bottom:22px;">How did AI's alternatives compare with your original proposal?</p>
+        <div id="poll-expand"><p class="no-data">No responses yet</p></div>
+      </div>
+    </div>
+
+    <!-- STAGE 3 (collapsible, default closed) -->
+    <div class="section-title section-toggle collapsed" id="s3-toggle" onclick="toggleSection('s3-toggle','s3-body')">
+      Stage 3 — Manufacture Friction <span class="toggle-arrow">▾</span>
+    </div>
+    <div class="collapsible-body collapsed" id="s3-body">
+      <div class="panel" style="margin-bottom:4px;">
+        <p class="panel-sub" style="margin-bottom:22px;">What was your honest reaction to AI's strongest criticism?</p>
+        <div id="poll-challenge"><p class="no-data">No responses yet</p></div>
+      </div>
+    </div>
+
+    <!-- STAGE 4 (collapsible, default closed) -->
+    <div class="section-title section-toggle collapsed" id="s4-toggle" onclick="toggleSection('s4-toggle','s4-body')">
+      Stage 4 — What Participants Examined Most Closely <span class="toggle-arrow">▾</span>
+    </div>
+    <div class="collapsible-body collapsed" id="s4-body">
+      <div class="panel" style="margin-bottom:4px;">
+        <div class="word-cloud" id="word-cloud"><p class="wc-zero">No responses yet</p></div>
+      </div>
+    </div>
+
+    <!-- STAGE 5 (collapsible, default closed) -->
+    <div class="section-title section-toggle collapsed" id="s5-toggle" onclick="toggleSection('s5-toggle','s5-body')">
+      Stage 5 — What Did AI's Failure Scenarios Reveal? <span class="toggle-arrow">▾</span>
+    </div>
+    <div class="collapsible-body collapsed" id="s5-body">
+      <div class="panel" style="margin-bottom:4px;">
+        <div id="poll-test"><p class="no-data">No responses yet</p></div>
+      </div>
+    </div>
+
+    <!-- FINAL POLL (collapsible, default closed) -->
+    <div class="section-title section-toggle collapsed" id="final-toggle" onclick="toggleSection('final-toggle','final-body')">
+      Final Poll — How Did AI Shift Your Thinking? <span class="toggle-arrow">▾</span>
+    </div>
+    <div class="collapsible-body collapsed" id="final-body">
+      <div class="panel" style="margin-bottom:4px;">
+        <div id="poll-final"><p class="no-data">No responses yet</p></div>
+      </div>
+    </div>
+
+    <!-- WRITTEN REFLECTIONS (collapsible, default closed) -->
+    <div class="section-title section-toggle collapsed" id="reflect-toggle" onclick="toggleSection('reflect-toggle','reflect-body')">
+      Written Reflections <span class="toggle-arrow">▾</span>
+    </div>
+    <div class="collapsible-body collapsed" id="reflect-body">
+      <div class="panel">
+        <div class="reflect-tabs" id="reflect-tabs"></div>
+        <div id="reflect-content"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PROPOSAL SIDE PANEL -->
+<div class="panel-overlay" id="panel-overlay" onclick="closePropPanel()"></div>
+<div class="prop-panel" id="prop-panel">
+  <div class="prop-panel-head">
+    <div class="pp-title" id="pp-head-title">Proposal</div>
+    <button class="prop-panel-close" onclick="closePropPanel()">×</button>
+  </div>
+  <div class="prop-panel-body" id="pp-body"></div>
+</div>
+
+<script>
+const BATCH_ID = 'MCTP-III-NOV2026';
+const _SB_URL = 'https://rqfmxauytpoijezcrubh.supabase.co';
+const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJxZm14YXV5dHBvaWplemNydWJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4MzI0NjUsImV4cCI6MjEwODQwODQ2NX0.6SWkYJxaUFwC-FDGGdD3XKkgsru1BsJ2YacV-AMW2eg';
+const sb = window.supabase.createClient(_SB_URL, _SB_KEY);
+
+// Faculty passcode: FACULTY3
+const FACULTY_B64 = 'RkFDVUxUWTM=';
+
+let _proposals = [], _stages = [], _activeTab = 'frame';
+
+function checkLogin(){
+  const v = document.getElementById('pwd-input').value.trim().toUpperCase();
+  if(v === atob(FACULTY_B64).toUpperCase()){
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    loadDashboard();
+    setInterval(loadDashboard, 30000);
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+async function loadDashboard(){
+  const [pRes, sRes] = await Promise.all([
+    sb.from('proposals').select('*').eq('batch_id', BATCH_ID),
+    sb.from('stage_responses').select('*').eq('batch_id', BATCH_ID)
+  ]);
+  if(pRes.error || sRes.error){ console.error(pRes.error, sRes.error); return; }
+  _proposals = pRes.data || [];
+  _stages = sRes.data || [];
+  render();
+  document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+}
+
+function render(){
+  const initials  = _proposals.filter(p=>p.stage==='initial');
+  const writebacks = _proposals.filter(p=>p.stage==='writeback');
+  const allPids = new Set([..._proposals.map(p=>p.pid), ..._stages.map(s=>s.pid)]);
+
+  // Stats
+  set('stat-participants', allPids.size);
+  set('stat-proposals', initials.length);
+  set('stat-writeback', writebacks.length);
+  ['frame','expand','challenge','interview','test'].forEach(st=>
+    set('stat-'+st, _stages.filter(s=>s.stage===st).length));
+
+  // Stage polls
+  const pollLabels = {
+    frame:     ['Confirmed my problem definition','Articulated it more precisely','Identified an overlooked aspect','Made me question the problem itself'],
+    expand:    ['Variations of my idea','Different but not practically useful','One credible alternative worth considering','An alternative that may be better'],
+    challenge: ['It exposed a genuine weakness I had not considered','It felt plausible but I need more evidence to judge','It did not apply to my specific situation']
+  };
+  ['frame','expand','challenge'].forEach(st=>{
+    const vals = _stages.filter(s=>s.stage===st && s.poll_value).map(s=>s.poll_value);
+    renderPoll('poll-'+st, vals, pollLabels[st]);
+  });
+
+  // Stage 4 word cloud
+  const CAT_LABELS = {assumptions:'Assumptions',evidence:'Evidence / data',feasibility:'Feasibility',stakeholders:'Stakeholder needs',implementation:'How it works on ground',risks:'Risks not considered'};
+  const catCounts = Object.fromEntries(Object.keys(CAT_LABELS).map(k=>[k,0]));
+  _stages.filter(s=>s.stage==='interview' && s.poll_value).forEach(s=>{
+    s.poll_value.split(',').forEach(c=>{ if(c in catCounts) catCounts[c]++; });
+  });
+  renderCloud('word-cloud', catCounts, CAT_LABELS);
+
+  // Stage 5 poll
+  const testLabels = ['A risk I had not considered at all','A risk I knew about but had underestimated','Risks I had already accounted for'];
+  renderPoll('poll-test', _stages.filter(s=>s.stage==='test'&&s.poll_value).map(s=>s.poll_value), testLabels);
+
+  // Final poll
+  const finalLabels = ['AI confirmed my thinking — proceeding as planned','AI sharpened it — same direction, clearer on risks','AI exposed a gap — revising part of my approach','AI unsettled me — rethinking a core assumption'];
+  renderPoll('poll-final', writebacks.filter(p=>p.final_poll).map(p=>p.final_poll), finalLabels);
+
+  // Proposals wall
+  renderProposals(initials);
+
+  // Reflections
+  renderReflections(initials, writebacks);
+}
+
+function set(id, val){ const el=document.getElementById(id); if(el) el.textContent=val; }
+
+
+function renderPoll(elId, vals, labels){
+  const el = document.getElementById(elId);
+  if(!vals.length){ el.innerHTML='<p class="no-data">No responses yet</p>'; return; }
+  const opts = labels.map((_,i)=>String.fromCharCode(65+i));
+  const counts = Object.fromEntries(opts.map(o=>[o,0]));
+  vals.forEach(v=>{ if(v in counts) counts[v]++; });
+  const total = vals.length;
+  const max = Math.max(...Object.values(counts),1);
+  el.innerHTML = opts.map((opt,i)=>`
+    <div class="poll-group">
+      <div class="poll-opt-label"><strong>${opt}.</strong>${labels[i]||opt}</div>
+      <div class="bar-row">
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.round(counts[opt]/max*100)}%"></div></div>
+        <div class="bar-count">${counts[opt]} · ${total?Math.round(counts[opt]/total*100):0}%</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderCloud(elId, counts, labels){
+  const el = document.getElementById(elId);
+  const max = Math.max(...Object.values(counts),1);
+  const total = Object.values(counts).reduce((a,b)=>a+b,0);
+  if(!total){ el.innerHTML='<p class="wc-zero">No responses yet</p>'; return; }
+  el.innerHTML = Object.entries(counts)
+    .sort((a,b)=>b[1]-a[1])
+    .map(([k,n])=>{
+      if(!n) return '';
+      const sz = Math.round(12 + (n/max)*14);
+      return `<span class="wc-tag" style="font-size:${sz}px" title="${n} of ${total} participants">${labels[k]} <strong>${n}</strong></span>`;
+    }).join('');
+}
+
+// Reflections
+const R_STAGES = [
+  {key:'frame',     label:'Stage 1',      src:'stage'},
+  {key:'expand',    label:'Stage 2',      src:'stage'},
+  {key:'challenge', label:'Stage 3',      src:'stage'},
+  {key:'interview', label:'Stage 4',      src:'stage'},
+  {key:'test',      label:'Stage 5',      src:'stage'},
+  {key:'changed',   label:'What shifted', src:'prop_writeback'},
+];
+
+function renderReflections(initials, writebacks){
+  const colMap = k=>({why:'why_confident',changed:'what_changed',question:'transfer_question'}[k]||k);
+  const getData = ({key,src})=>{
+    if(src==='stage') return _stages.filter(s=>s.stage===key && s.reflection && s.reflection!=='[not filled in]').map(s=>({text:s.reflection,pid:s.pid}));
+    if(src==='prop_initial') return initials.filter(p=>p[colMap(key)] && p[colMap(key)]!=='[not filled in]').map(p=>({text:p[colMap(key)],pid:p.pid}));
+    if(src==='prop_writeback') return writebacks.filter(p=>p[colMap(key)] && p[colMap(key)]!=='[not filled in]').map(p=>({text:p[colMap(key)],pid:p.pid}));
+    return [];
+  };
+  const propTitle = pid=>{ const p=_proposals.find(x=>x.pid===pid&&x.stage==='initial'); return p&&p.title?p.title:null; };
+
+  const tabs = document.getElementById('reflect-tabs');
+  const content = document.getElementById('reflect-content');
+
+  tabs.innerHTML = R_STAGES.map(({key,label})=>{
+    const items = getData({key, src: R_STAGES.find(r=>r.key===key).src});
+    return `<button class="r-tab${key===_activeTab?' active':''}" onclick="switchTab('${key}',this)">${label} (${items.length})</button>`;
+  }).join('');
+
+  content.innerHTML = R_STAGES.map(({key,src})=>{
+    const items = getData({key,src});
+    return `<div class="reflect-pane${key===_activeTab?' show':''}" id="rpane-${key}">
+      ${items.length
+        ? items.map(r=>{
+            const title = propTitle(r.pid);
+            return `<div class="reflect-item" onclick="showPropPanel('${r.pid}')">
+              ${title?`<div class="reflect-prop-label">${esc(title)}</div>`:''}
+              <div class="reflect-text">${esc(r.text)}</div>
+            </div>`;
+          }).join('')
+        : '<p class="no-data">No responses yet.</p>'}
+    </div>`;
+  }).join('');
+}
+
+function switchTab(key, btn){
+  _activeTab = key;
+  document.querySelectorAll('.r-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.reflect-pane').forEach(p=>p.classList.remove('show'));
+  btn.classList.add('active');
+  const pane = document.getElementById('rpane-'+key);
+  if(pane) pane.classList.add('show');
+}
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function showPropPanel(pid){
+  const initial  = _proposals.find(p=>p.pid===pid && p.stage==='initial');
+  const writeback = _proposals.find(p=>p.pid===pid && p.stage==='writeback');
+  if(!initial){ return; }
+  document.getElementById('pp-head-title').textContent = initial.title || 'Proposal';
+  let html = `<div class="pp-section">
+    <div class="pp-section-head">Original proposal</div>
+    <div class="pp-field"><div class="pp-label">Problem</div><div class="pp-text">${esc(initial.problem_statement||'—')}</div></div>
+    <div class="pp-field"><div class="pp-label">Proposed solution</div><div class="pp-text">${esc(initial.solution_mechanism||'—')}</div></div>
+  </div>`;
+  if(writeback && writeback.what_changed){
+    html += `<div class="pp-section">
+      <div class="pp-section-head">What shifted after AI</div>
+      <div class="pp-field"><div class="pp-text">${esc(writeback.what_changed)}</div></div>
+    </div>`;
+  }
+  document.getElementById('pp-body').innerHTML = html;
+  document.getElementById('prop-panel').classList.add('open');
+  document.getElementById('panel-overlay').classList.add('show');
+}
+
+function closePropPanel(){
+  document.getElementById('prop-panel').classList.remove('open');
+  document.getElementById('panel-overlay').classList.remove('show');
+}
+
+function toggleSection(toggleId, bodyId){
+  const toggle = document.getElementById(toggleId);
+  const body = document.getElementById(bodyId);
+  const isCollapsed = toggle.classList.contains('collapsed');
+  if(isCollapsed){
+    // open it
+    toggle.classList.remove('collapsed');
+    body.classList.remove('collapsed');
+    body.style.maxHeight = body.scrollHeight + 'px';
+    setTimeout(()=>{ body.style.maxHeight = 'none'; }, 310);
+  } else {
+    // close it
+    body.style.maxHeight = body.scrollHeight + 'px';
+    requestAnimationFrame(()=>{
+      body.style.maxHeight = '0';
+      body.classList.add('collapsed');
+      toggle.classList.add('collapsed');
+    });
+  }
+}
+
+function renderProposals(initials){
+  const el = document.getElementById('proposals-wall');
+  if(!initials.length){ el.innerHTML='<p class="no-data">No proposals saved yet</p>'; return; }
+  el.innerHTML = initials.map(p=>`
+    <div class="prop-card">
+      <div class="prop-card-title">${esc(p.title||'Untitled')}</div>
+      <div class="prop-field">
+        <div class="prop-field-label">Problem</div>
+        <div class="prop-field-text">${esc(p.problem_statement||'—')}</div>
+      </div>
+      <div class="prop-field">
+        <div class="prop-field-label">Proposed Solution / Mechanism</div>
+        <div class="prop-field-text">${esc(p.solution_mechanism||'—')}</div>
+      </div>
+    </div>`).join('');
+}
+
+// CSV Export
+function exportCSV(){
+  const rows = [];
+
+  // Proposals
+  rows.push(['table','pid','stage','title','problem_statement','solution_mechanism','what_changed','final_poll','created_at']);
+  _proposals.forEach(p=>rows.push(['proposals',p.pid,p.stage,p.title||'',p.problem_statement||'',p.solution_mechanism||'',p.what_changed||'',p.final_poll||'',p.created_at||'']));
+
+  rows.push([]);
+  rows.push(['table','pid','stage','poll_value','reflection','created_at']);
+  _stages.forEach(s=>rows.push(['stage_responses',s.pid,s.stage,s.poll_value||'',s.reflection||'',s.created_at||'']));
+
+  const csv = rows.map(r=>r.map(c=>'"'+String(c||'').replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download='mctp3-faculty-export.csv';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>

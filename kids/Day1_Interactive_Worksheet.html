@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 1 — Major Organs! 🧠</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFF5F0;
+    --red:    #FF6B6B;
+    --orange: #FF8C69;
+    --teal:   #4ECDC4;
+    --yellow: #FFD166;
+    --blue:   #5B8DD9;
+    --purple: #C9B1FF;
+    --green:  #A8E6CF;
+    --pink:   #FF8B94;
+    --dark:   #2D3436;
+    --mid:    #636E72;
+    --card:   #ffffff;
+    --radius: 20px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 15%, #ffe0db 0%, transparent 38%),
+      radial-gradient(circle at 85% 85%, #e0f7fa 0%, transparent 38%);
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8C42 100%);
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute; bottom: -1px; left: 0; right: 0; height: 20px;
+    background: var(--bg);
+    clip-path: ellipse(55% 100% at 50% 100%);
+  }
+  .header h1 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 2.4rem; font-weight: 800;
+    color: white; position: relative;
+    text-shadow: 0 3px 10px rgba(0,0,0,0.18);
+  }
+  .header p {
+    color: rgba(255,255,255,0.9); font-size: 1.05rem;
+    font-weight: 600; margin-top: 4px; position: relative;
+  }
+  .float-icons {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none; overflow: hidden;
+  }
+  .float-icons span {
+    position: absolute; font-size: 1.8rem; opacity: 0.18;
+    animation: floatBob 3s ease-in-out infinite;
+  }
+  @keyframes floatBob {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+  }
+
+  /* SCORE BAR */
+  .score-bar {
+    background: white; margin: 0 16px;
+    border-radius: 0 0 18px 18px; padding: 13px 22px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 4px 16px rgba(255,107,107,0.13);
+  }
+  .score-bar .greeting { font-size: 1rem; color: var(--mid); font-weight: 700; }
+  .score-pill {
+    background: var(--yellow); border-radius: 40px;
+    padding: 6px 18px;
+    font-family: 'Baloo 2', cursive; font-weight: 800;
+    font-size: 1.1rem; color: var(--dark);
+  }
+
+  /* PROGRESS */
+  .progress-wrap { max-width: 740px; margin: 0 auto; padding: 12px 16px 0; }
+  .progress-bar-bg { background: #EEE; border-radius: 20px; height: 10px; overflow: hidden; }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--red), var(--orange));
+    border-radius: 20px; transition: width 0.5s ease; width: 0%;
+  }
+  .progress-label { font-size: 0.85rem; color: var(--mid); font-weight: 600; margin-top: 4px; text-align: right; }
+
+  /* MAIN */
+  .main { max-width: 740px; margin: 0 auto; padding: 22px 16px 0; }
+
+  /* SECTION */
+  .section {
+    background: var(--card); border-radius: var(--radius);
+    margin-bottom: 24px; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    animation: slideUp 0.4s ease both;
+  }
+  .section:nth-child(1) { animation-delay: 0.05s; }
+  .section:nth-child(2) { animation-delay: 0.15s; }
+  .section:nth-child(3) { animation-delay: 0.25s; }
+  .section:nth-child(4) { animation-delay: 0.35s; }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    padding: 14px 22px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-header .emoji { font-size: 1.7rem; }
+  .section-header h2 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.25rem; font-weight: 800; color: white;
+  }
+  .section-header p { color: rgba(255,255,255,0.9); font-size: 0.9rem; font-weight: 600; }
+  .section-body { padding: 22px; }
+
+  /* PART 1 — MATCH */
+  .match-cols {
+    display: flex; gap: 14px; flex-wrap: wrap;
+  }
+  .match-col { flex: 1; min-width: 140px; display: flex; flex-direction: column; gap: 10px; }
+
+  .match-item {
+    border-radius: 50px; padding: 13px 18px;
+    font-size: 1.05rem; font-weight: 700; text-align: center;
+    cursor: pointer; transition: all 0.2s;
+    border: 3px solid transparent;
+    user-select: none; position: relative;
+  }
+  .match-item:active { transform: scale(0.97); }
+  .match-item.selected { border-color: var(--red); transform: scale(1.05); box-shadow: 0 0 0 4px rgba(255,107,107,0.22); }
+  .match-item.matched  { cursor: default; }
+  .match-item.matched::after { content: '✓'; position: absolute; right: 14px; top: 50%; transform: translateY(-50%); }
+  .match-item.wrong-flash { animation: wFlash 0.4s ease; }
+  @keyframes wFlash { 0%,100%{} 50%{ filter: brightness(0.8); } }
+
+  .left-item  { color: #6A1B9A; }
+  .right-item { background: #FAFAFA; color: var(--dark); border: 2.5px dashed #DDD; }
+  .right-item.selected { border-color: var(--red); border-style: solid; }
+  .right-item.matched  { background: #E8F5E9; border-color: #81C784; border-style: solid; color: #2E7D32; }
+
+  #match-feedback {
+    text-align: center; min-height: 26px; margin-top: 10px;
+    font-size: 1rem; font-weight: 700; color: var(--red);
+  }
+
+  /* PART 2 — FILL BLANK */
+  .word-bank {
+    background: var(--yellow); border-radius: 14px;
+    padding: 12px 18px; margin-bottom: 20px;
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  }
+  .wb-label { font-weight: 800; font-size: 1rem; color: var(--dark); }
+  .word-chip {
+    background: white; border-radius: 30px; padding: 6px 16px;
+    font-size: 1rem; font-weight: 700; color: #C0392B;
+    cursor: pointer; border: 2.5px solid #E74C3C; transition: all 0.2s;
+    user-select: none;
+  }
+  .word-chip:hover:not(.used) { background: #E74C3C; color: white; transform: translateY(-2px); }
+  .word-chip.selected-chip    { background: #E74C3C; color: white; box-shadow: 0 0 0 4px rgba(231,76,60,0.25); }
+  .word-chip.used             { opacity: 0.38; cursor: default; text-decoration: line-through; }
+
+  .fill-sentence {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 18px; font-size: 1.1rem; font-weight: 600; color: var(--dark);
+    line-height: 1.8;
+  }
+  .num-badge {
+    background: var(--red); color: white; border-radius: 50%;
+    width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.95rem; flex-shrink: 0;
+  }
+  .blank-slot {
+    display: inline-block; min-width: 130px; padding: 5px 12px;
+    border: none; border-bottom: 3px solid var(--red);
+    background: #FFF0EE; border-radius: 8px 8px 0 0;
+    font-size: 1.05rem; font-weight: 700; color: var(--red);
+    text-align: center; cursor: pointer; transition: all 0.2s;
+    font-family: 'Nunito', sans-serif;
+  }
+  .blank-slot:empty::before { content: 'tap a word'; font-size: 0.8rem; color: #bbb; font-weight: 400; }
+  .blank-slot.correct-answer { background: #E8F5E9; border-bottom-color: #4CAF50; color: #2E7D32; }
+  .blank-slot.wrong-answer   { background: #FFEBEE; border-bottom-color: #E53935; color: #C62828; animation: wFlash 0.5s; }
+
+  /* PART 3 — TRUE FALSE */
+  .tf-row {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .tf-num {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 1rem; color: white;
+  }
+  .tf-q  { flex: 1; font-size: 1.05rem; font-weight: 600; color: var(--dark); min-width: 200px; }
+  .tf-btns { display: flex; gap: 8px; }
+  .tf-btn {
+    padding: 8px 20px; border-radius: 30px; font-size: 1rem;
+    font-weight: 800; cursor: pointer; border: 2.5px solid transparent;
+    transition: all 0.2s; font-family: 'Nunito', sans-serif;
+  }
+  .tf-btn.true-btn  { background: #E8F5E9; color: #2E7D32; border-color: #81C784; }
+  .tf-btn.false-btn { background: #FFEBEE; color: #C62828; border-color: #EF9A9A; }
+  .tf-btn:hover:not(:disabled) { transform: scale(1.08); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+  .tf-btn.selected-correct { background: #4CAF50 !important; color: white !important; border-color: #4CAF50 !important; }
+  .tf-btn.selected-wrong   { background: #E53935 !important; color: white !important; border-color: #E53935 !important; animation: shake 0.4s; }
+  .tf-btn.show-answer      { background: #A5D6A7; color: #1B5E20; border-color: #66BB6A; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}
+  }
+
+  /* PART 4 — BODY DIAGRAM */
+  .diagram-wrap {
+    display: flex; gap: 24px; flex-wrap: wrap; justify-content: center;
+    align-items: flex-start;
+  }
+  .body-svg-box { flex-shrink: 0; }
+
+  .organ-labels { flex: 1; min-width: 180px; display: flex; flex-direction: column; gap: 14px; justify-content: center; }
+  .organ-label-row { display: flex; align-items: center; gap: 10px; }
+  .organ-dot { width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; border: 2px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+  .organ-input {
+    border: 2.5px solid #DDD; border-radius: 12px;
+    padding: 9px 14px; font-size: 1rem; font-weight: 700;
+    font-family: 'Nunito', sans-serif; width: 150px;
+    transition: all 0.2s; color: var(--dark); background: #fafafa;
+  }
+  .organ-input:focus { outline: none; border-color: var(--red); background: white; }
+  .organ-input.correct { border-color: #4CAF50; background: #E8F5E9; color: #2E7D32; }
+  .organ-input.wrong   { border-color: #E53935; background: #FFEBEE; color: #C62828; }
+  .organ-hint { font-size: 0.82rem; color: var(--mid); }
+
+  /* FUN FACT */
+  .fun-fact {
+    background: linear-gradient(135deg, #FFF9C4, #FFF3E0);
+    border: 3px solid var(--yellow);
+    border-radius: var(--radius); padding: 20px 24px;
+    margin-bottom: 24px; display: flex; gap: 16px; align-items: flex-start;
+  }
+  .fun-fact .icon { font-size: 2.5rem; flex-shrink: 0; }
+  .fun-fact h3 { font-family: 'Baloo 2', cursive; font-size: 1.2rem; font-weight: 800; color: var(--dark); }
+  .fun-fact p  { font-size: 1rem; color: var(--dark); margin-top: 4px; line-height: 1.5; }
+
+  /* FINAL */
+  .score-display {
+    text-align: center; padding: 20px;
+    font-family: 'Baloo 2', cursive; font-size: 1.3rem;
+    font-weight: 800; color: var(--dark);
+  }
+  .result-stars { font-size: 2.2rem; letter-spacing: 4px; margin-bottom: 8px; }
+
+  /* CONFETTI */
+  .confetti-piece {
+    position: fixed; top: -20px; width: 12px; height: 12px;
+    border-radius: 3px; pointer-events: none; z-index: 999;
+    animation: confettiFall 2.5s ease-in forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  @media (max-width: 520px) {
+    .header h1 { font-size: 1.8rem; }
+    .match-cols { flex-direction: column; }
+    .diagram-wrap { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="float-icons">
+    <span style="top:10px;left:12px;animation-delay:0s">🧠</span>
+    <span style="top:8px;right:16px;animation-delay:0.4s">❤️</span>
+    <span style="bottom:22px;left:22px;animation-delay:0.8s">🫁</span>
+    <span style="bottom:20px;right:20px;animation-delay:0.2s">🫃</span>
+    <span style="top:14px;left:45%;animation-delay:0.6s">⭐</span>
+  </div>
+  <h1>🧠 Explore Your Body! ❤️</h1>
+  <p>Day 1 — Major Organs</p>
+</div>
+
+<div class="score-bar">
+  <div class="greeting">👋 Let's go, explorer!</div>
+  <div class="score-pill" id="score-pill">⭐ Score: 0 / 12</div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progress-fill"></div>
+  </div>
+  <div class="progress-label" id="progress-label">0 of 12 answered</div>
+</div>
+
+<div class="main">
+
+  <!-- ══ PART 1: MATCH ══ -->
+  <div class="section">
+    <div class="section-header" style="background:linear-gradient(135deg,#FF6B6B,#C0392B);">
+      <span class="emoji">❤️</span>
+      <div><h2>Part 1 — Match the Organ!</h2><p>Tap an organ, then tap what it does!</p></div>
+    </div>
+    <div class="section-body">
+      <div class="match-cols">
+        <div class="match-col">
+          <div class="match-item left-item" data-match="heart"   style="background:#FFEBEE;">Heart ❤️</div>
+          <div class="match-item left-item" data-match="lungs"   style="background:#E3F2FD;">Lungs 🫁</div>
+          <div class="match-item left-item" data-match="brain"   style="background:#EDE7F6;">Brain 🧠</div>
+          <div class="match-item left-item" data-match="stomach" style="background:#E8F5E9;">Stomach 🫃</div>
+        </div>
+        <div class="match-col">
+          <div class="match-item right-item" data-answer="brain"   >Helps you think and remember</div>
+          <div class="match-item right-item" data-answer="stomach" >Breaks down the food you eat</div>
+          <div class="match-item right-item" data-answer="heart"   >Pumps blood around your body</div>
+          <div class="match-item right-item" data-answer="lungs"   >Helps you breathe air</div>
+        </div>
+      </div>
+      <div id="match-feedback"></div>
+    </div>
+  </div>
+
+  <!-- ══ PART 2: FILL BLANK ══ -->
+  <div class="section">
+    <div class="section-header" style="background:linear-gradient(135deg,#4ECDC4,#00897B);">
+      <span class="emoji">✏️</span>
+      <div><h2>Part 2 — Fill in the Blank!</h2><p>Tap a word, then tap the blank to fill it!</p></div>
+    </div>
+    <div class="section-body">
+      <div class="word-bank">
+        <span class="wb-label">Word Bank:</span>
+        <span class="word-chip" data-word="heart">heart</span>
+        <span class="word-chip" data-word="lungs">lungs</span>
+        <span class="word-chip" data-word="brain">brain</span>
+        <span class="word-chip" data-word="stomach">stomach</span>
+      </div>
+      <div class="fill-sentence">
+        <span class="num-badge">1</span>
+        <span>We breathe with our</span>
+        <span class="blank-slot" data-correct="lungs" id="b1"></span>
+      </div>
+      <div class="fill-sentence">
+        <span class="num-badge">2</span>
+        <span>The</span>
+        <span class="blank-slot" data-correct="heart" id="b2"></span>
+        <span>pumps blood to all parts of our body.</span>
+      </div>
+      <div class="fill-sentence">
+        <span class="num-badge">3</span>
+        <span>When we eat, food goes into our</span>
+        <span class="blank-slot" data-correct="stomach" id="b3"></span>
+      </div>
+      <div class="fill-sentence">
+        <span class="num-badge">4</span>
+        <span>We use our</span>
+        <span class="blank-slot" data-correct="brain" id="b4"></span>
+        <span>to think, dream and remember.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PART 3: TRUE / FALSE ══ -->
+  <div class="section">
+    <div class="section-header" style="background:linear-gradient(135deg,#FFB347,#FF8C00);">
+      <span class="emoji">🤔</span>
+      <div><h2>Part 3 — True or False?</h2><p>Tap the right answer!</p></div>
+    </div>
+    <div class="section-body">
+      <div class="tf-row">
+        <div class="tf-num" style="background:#FF6B6B;">1</div>
+        <div class="tf-q">The heart helps us breathe.</div>
+        <div class="tf-btns">
+          <button class="tf-btn true-btn"  data-q="tf1" data-val="true"  data-correct="false">TRUE</button>
+          <button class="tf-btn false-btn" data-q="tf1" data-val="false" data-correct="false">FALSE</button>
+        </div>
+      </div>
+      <div class="tf-row">
+        <div class="tf-num" style="background:#4ECDC4;">2</div>
+        <div class="tf-q">The brain is inside your head.</div>
+        <div class="tf-btns">
+          <button class="tf-btn true-btn"  data-q="tf2" data-val="true"  data-correct="true">TRUE</button>
+          <button class="tf-btn false-btn" data-q="tf2" data-val="false" data-correct="true">FALSE</button>
+        </div>
+      </div>
+      <div class="tf-row">
+        <div class="tf-num" style="background:#C9B1FF;color:#2D3436;">3</div>
+        <div class="tf-q">The stomach helps break down food.</div>
+        <div class="tf-btns">
+          <button class="tf-btn true-btn"  data-q="tf3" data-val="true"  data-correct="true">TRUE</button>
+          <button class="tf-btn false-btn" data-q="tf3" data-val="false" data-correct="true">FALSE</button>
+        </div>
+      </div>
+      <div class="tf-row">
+        <div class="tf-num" style="background:#A8E6CF;color:#2D3436;">4</div>
+        <div class="tf-q">We have one lung inside our chest.</div>
+        <div class="tf-btns">
+          <button class="tf-btn true-btn"  data-q="tf4" data-val="true"  data-correct="false">TRUE</button>
+          <button class="tf-btn false-btn" data-q="tf4" data-val="false" data-correct="false">FALSE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PART 4: COLOUR & LABEL BODY ══ -->
+  <div class="section">
+    <div class="section-header" style="background:linear-gradient(135deg,#C9B1FF,#9C27B0);">
+      <span class="emoji">🫀</span>
+      <div><h2>Part 4 — Label the Body!</h2><p>Type the organ name in each box!</p></div>
+    </div>
+    <div class="section-body">
+      <div class="diagram-wrap">
+
+        <!-- BODY SVG -->
+        <div class="body-svg-box">
+          <svg width="170" height="310" viewBox="0 0 170 310" xmlns="http://www.w3.org/2000/svg">
+            <!-- Body fill -->
+            <!-- Head -->
+            <circle cx="85" cy="36" r="32" fill="#FFEAA7" stroke="#FDCB6E" stroke-width="2.5"/>
+            <!-- Eyes -->
+            <circle cx="74" cy="31" r="5" fill="#2D3436"/>
+            <circle cx="96" cy="31" r="5" fill="#2D3436"/>
+            <circle cx="75" cy="30" r="2" fill="white"/>
+            <circle cx="97" cy="30" r="2" fill="white"/>
+            <!-- Smile -->
+            <path d="M 76 44 Q 85 52 94 44" stroke="#FDCB6E" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <!-- Ears -->
+            <ellipse cx="53" cy="36" rx="7" ry="10" fill="#FFEAA7" stroke="#FDCB6E" stroke-width="2"/>
+            <ellipse cx="117" cy="36" rx="7" ry="10" fill="#FFEAA7" stroke="#FDCB6E" stroke-width="2"/>
+            <!-- Neck -->
+            <rect x="76" y="66" width="18" height="14" rx="5" fill="#FFEAA7" stroke="#FDCB6E" stroke-width="2"/>
+            <!-- Torso -->
+            <rect x="42" y="78" width="86" height="100" rx="22" fill="#FFEAA7" stroke="#FDCB6E" stroke-width="2.5"/>
+            <!-- Arms -->
+            <rect x="14" y="82" width="26" height="78" rx="13" fill="#FFEAA7" stroke="#FDCB6E" stroke-width="2"/>
+            <rect x="130" y="82" width="26" height="78" rx="13" fill="#FFEAA7" stroke="#FDCB6E" stroke-width="2"/>
+            <!-- Legs -->
+            <rect x="50" y="176" width="28" height="72" rx="14" fill="#FFEAA7" stroke="#FDCB6E" stroke-width="2"/>
+            <rect x="92" y="176" width="28" height="72" rx="14" fill="#FFEAA7" stroke="#FDCB6E" stroke-width="2"/>
+            <!-- Feet -->
+            <ellipse cx="64"  cy="253" rx="18" ry="9" fill="#FFEAA7" stroke="#FDCB6E" stroke-width="2"/>
+            <ellipse cx="106" cy="253" rx="18" ry="9" fill="#FFEAA7" stroke="#FDCB6E" stroke-width="2"/>
+
+            <!-- ORGAN DOTS -->
+            <!-- Brain (head) -->
+            <circle cx="85" cy="33" r="10" fill="#C9B1FF" stroke="white" stroke-width="2.5"/>
+            <text x="85" y="37" text-anchor="middle" font-size="10" font-family="Nunito" font-weight="800" fill="white">🧠</text>
+
+            <!-- Heart -->
+            <circle cx="72" cy="108" r="10" fill="#FF6B6B" stroke="white" stroke-width="2.5"/>
+            <text x="72" y="112" text-anchor="middle" font-size="10" font-family="Nunito" fill="white">❤</text>
+
+            <!-- Left Lung -->
+            <circle cx="60" cy="125" r="9" fill="#5B8DD9" stroke="white" stroke-width="2.5"/>
+            <!-- Right Lung -->
+            <circle cx="110" cy="125" r="9" fill="#5B8DD9" stroke="white" stroke-width="2.5"/>
+
+            <!-- Stomach -->
+            <circle cx="85" cy="148" r="10" fill="#4ECDC4" stroke="white" stroke-width="2.5"/>
+            <text x="85" y="152" text-anchor="middle" font-size="9" font-family="Nunito" fill="white">🫃</text>
+
+            <!-- Connector lines to labels (right side) -->
+            <line x1="85"  y1="33"  x2="135" y2="33"  stroke="#C9B1FF" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <line x1="72"  y1="108" x2="135" y2="108" stroke="#FF6B6B" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <line x1="110" y1="125" x2="135" y2="125" stroke="#5B8DD9" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <line x1="85"  y1="148" x2="135" y2="148" stroke="#4ECDC4" stroke-width="1.5" stroke-dasharray="4,3"/>
+          </svg>
+        </div>
+
+        <!-- LABEL INPUTS -->
+        <div class="organ-labels">
+          <div class="organ-label-row">
+            <div class="organ-dot" style="background:#C9B1FF;"></div>
+            <div>
+              <input class="organ-input" data-correct="brain"   placeholder="type here..." oninput="checkOrgan(this)">
+              <div class="organ-hint">Hint: helps you think 🧠</div>
+            </div>
+          </div>
+          <div class="organ-label-row">
+            <div class="organ-dot" style="background:#FF6B6B;"></div>
+            <div>
+              <input class="organ-input" data-correct="heart"   placeholder="type here..." oninput="checkOrgan(this)">
+              <div class="organ-hint">Hint: pumps your blood ❤️</div>
+            </div>
+          </div>
+          <div class="organ-label-row">
+            <div class="organ-dot" style="background:#5B8DD9;"></div>
+            <div>
+              <input class="organ-input" data-correct="lungs"   placeholder="type here..." oninput="checkOrgan(this)">
+              <div class="organ-hint">Hint: helps you breathe 🫁</div>
+            </div>
+          </div>
+          <div class="organ-label-row">
+            <div class="organ-dot" style="background:#4ECDC4;"></div>
+            <div>
+              <input class="organ-input" data-correct="stomach" placeholder="type here..." oninput="checkOrgan(this)">
+              <div class="organ-hint">Hint: digests your food 🍎</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FUN FACT -->
+  <div class="fun-fact">
+    <div class="icon">🤯</div>
+    <div>
+      <h3>Amazing Fun Fact!</h3>
+      <p>Your heart beats about <strong>100,000 times every single day!</strong> That's over 35 million times a year. Put your hand on your chest — can you feel it? 💓</p>
+    </div>
+  </div>
+
+  <!-- FINAL -->
+  <div class="section" id="final-section" style="display:none;">
+    <div class="section-header" style="background:linear-gradient(135deg,#FFD166,#FF8C69);">
+      <span class="emoji">🏆</span>
+      <div><h2>Your Result!</h2><p>Fantastic work, explorer!</p></div>
+    </div>
+    <div class="score-display" id="final-score-display"></div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+// ── STATE ─────────────────────────────────────────────
+let score = 0, answered = 0;
+const TOTAL = 12;
+
+function updateScore(pts, ans) {
+  score    += pts;
+  answered += ans;
+  document.getElementById('score-pill').textContent = `⭐ Score: ${score} / ${TOTAL}`;
+  const pct = Math.round(answered / TOTAL * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${answered} of ${TOTAL} answered`;
+  if (answered >= TOTAL) setTimeout(showFinal, 400);
+}
+
+// ── CONFETTI ──────────────────────────────────────────
+function confetti() {
+  const cols = ['#FF6B6B','#4ECDC4','#FFD166','#C9B1FF','#A8E6CF','#5B8DD9'];
+  for (let i = 0; i < 38; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.background = cols[Math.floor(Math.random() * cols.length)];
+    el.style.animationDelay = Math.random() * 0.7 + 's';
+    el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3200);
+  }
+}
+
+// ── PART 1: MATCH ─────────────────────────────────────
+let selectedLeft = null;
+
+document.querySelectorAll('.left-item').forEach(el => {
+  el.addEventListener('click', () => {
+    if (el.classList.contains('matched')) return;
+    document.querySelectorAll('.left-item').forEach(e => e.classList.remove('selected'));
+    document.querySelectorAll('.right-item:not(.matched)').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedLeft = el;
+    document.getElementById('match-feedback').textContent = '👉 Now tap what it does on the right!';
+    document.getElementById('match-feedback').style.color = '#FF8C00';
+  });
+});
+
+document.querySelectorAll('.right-item').forEach(el => {
+  el.addEventListener('click', () => {
+    if (!selectedLeft) {
+      document.getElementById('match-feedback').textContent = '👈 First tap an organ on the left!';
+      document.getElementById('match-feedback').style.color = '#E74C3C';
+      return;
+    }
+    if (el.classList.contains('matched')) return;
+
+    if (selectedLeft.dataset.match === el.dataset.answer) {
+      selectedLeft.classList.add('matched');
+      el.classList.add('matched');
+      const bg = selectedLeft.style.background;
+      selectedLeft.style.opacity = '0.7';
+      document.getElementById('match-feedback').textContent = '✅ Yes! Perfect match!';
+      document.getElementById('match-feedback').style.color = '#27AE60';
+      confetti();
+      updateScore(1, 1);
+    } else {
+      [selectedLeft, el].forEach(e => {
+        e.classList.add('wrong-flash');
+        setTimeout(() => e.classList.remove('wrong-flash'), 450);
+      });
+      document.getElementById('match-feedback').textContent = '❌ Not quite — try a different one!';
+      document.getElementById('match-feedback').style.color = '#E74C3C';
+    }
+    document.querySelectorAll('.left-item').forEach(e => e.classList.remove('selected'));
+    document.querySelectorAll('.right-item').forEach(e => e.classList.remove('selected'));
+    selectedLeft = null;
+  });
+});
+
+// ── PART 2: FILL BLANK ────────────────────────────────
+let selectedWord = null;
+
+document.querySelectorAll('.word-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    if (chip.classList.contains('used')) return;
+    document.querySelectorAll('.word-chip').forEach(c => c.classList.remove('selected-chip'));
+    chip.classList.add('selected-chip');
+    selectedWord = chip.dataset.word;
+  });
+});
+
+document.querySelectorAll('.blank-slot').forEach(slot => {
+  slot.addEventListener('click', () => {
+    if (!selectedWord || slot.dataset.filled) return;
+    const correct = slot.dataset.correct;
+
+    slot.textContent = selectedWord;
+    slot.dataset.filled = '1';
+    document.querySelectorAll('.word-chip').forEach(c => {
+      if (c.dataset.word === selectedWord) c.classList.add('used');
+    });
+
+    if (selectedWord === correct) {
+      slot.classList.add('correct-answer');
+      confetti();
+      updateScore(1, 1);
+    } else {
+      slot.classList.add('wrong-answer');
+      updateScore(0, 1);
+      setTimeout(() => {
+        slot.textContent = correct;
+        slot.classList.remove('wrong-answer');
+        slot.classList.add('correct-answer');
+      }, 1500);
+    }
+    document.querySelectorAll('.word-chip').forEach(c => c.classList.remove('selected-chip'));
+    selectedWord = null;
+  });
+});
+
+// ── PART 3: TRUE / FALSE ─────────────────────────────
+document.querySelectorAll('.tf-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const q = btn.dataset.q;
+    const siblings = document.querySelectorAll(`.tf-btn[data-q="${q}"]`);
+    if ([...siblings].some(s => s.disabled)) return;
+
+    siblings.forEach(s => {
+      s.disabled = true;
+      if (s.dataset.val === s.dataset.correct) s.classList.add('show-answer');
+    });
+
+    const correct = btn.dataset.val === btn.dataset.correct;
+    btn.classList.add(correct ? 'selected-correct' : 'selected-wrong');
+    if (correct) confetti();
+    updateScore(correct ? 1 : 0, 1);
+  });
+});
+
+// ── PART 4: ORGAN LABELS ─────────────────────────────
+const organAnswered = {};
+
+function checkOrgan(input) {
+  const correct = input.dataset.correct.toLowerCase();
+  const val = input.value.trim().toLowerCase();
+  input.classList.remove('correct', 'wrong');
+
+  if (val === correct) {
+    input.classList.add('correct');
+    input.readOnly = true;
+    if (!organAnswered[correct]) {
+      organAnswered[correct] = true;
+      confetti();
+      updateScore(1, 1);
+    }
+  }
+}
+
+// ── FINAL ─────────────────────────────────────────────
+function showFinal() {
+  const sec = document.getElementById('final-section');
+  sec.style.display = 'block';
+  sec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  const pct = score / TOTAL;
+  const stars = pct >= 0.9 ? '⭐⭐⭐' : pct >= 0.6 ? '⭐⭐' : '⭐';
+  const msg   = pct >= 0.9 ? "🎉 Superstar! You know your organs!"
+              : pct >= 0.6 ? "👍 Great job! Keep it up!"
+              : "💪 Good try! Review and try again!";
+
+  document.getElementById('final-score-display').innerHTML = `
+    <div class="result-stars">${stars}</div>
+    <div style="font-size:1.5rem;margin:10px 0;">${score} out of ${TOTAL} correct!</div>
+    <div style="font-size:1.05rem;font-weight:600;color:var(--mid);">${msg}</div>
+    <div style="margin-top:14px;font-size:1rem;color:var(--mid);">Day 2 is waiting — Bones & Muscles! 🦴💪</div>
+  `;
+  confetti();
+  setTimeout(confetti, 700);
+  setTimeout(confetti, 1400);
+}
+</script>
+</body>
+</html>

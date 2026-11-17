@@ -1,0 +1,271 @@
+HANDLING PROTESTS
+Training Class for Phase 1 IPS Probationers - SP Guntur, Andhra Pradesh
+
+Text version of the lecture slides, for pasting into AI tools that don't accept file uploads.
+
+--------------------------------------------------
+SLIDE 1
+--------------------------------------------------
+TRAINING CLASS FOR PHASE 1 IPS PROBATIONERS
+Handling Protests
+A tactical decision framework: tolerance, intelligence, force, and command
+Presented by : VAKUL JINDAL IPS, SP Guntur, Andhra Pradesh
+
+--------------------------------------------------
+SLIDE 2
+--------------------------------------------------
+OPENING SCENARIO
+You Are the ASP
+You are ASP of a subdivision.
+400 employees are protesting in front of the State Secretariat, demanding implementation of Pay Commission recommendations.
+Employees voted en masse for the ruling party on a promise: implementation within 6 months of coming to power.
+2 years have passed. The promise is unmet.
+An indefinite sit-in has been running peacefully for 28 days.
+Protestors now threaten self-immolation if the demand isn't met within 2 days.
+What is your response?
+
+--------------------------------------------------
+SLIDE 3
+--------------------------------------------------
+SAME PROTEST, FIVE DIFFERENT RESPONSES
+Know Your Tolerance Level
+Running example: Government Employees Association protest for pay revision — 500–800 members, outside the Collectorate, known repeat organizer, peaceful history.
+1
+Zero Tolerance
+No gathering permitted.
+Preventive detention of organizers before assembly.
+2
+Gathering Allowed, Not Disruption
+Assembly allowed at a designated point.
+Traffic and access cannot be disrupted.
+3
+Graduated Ceiling for Disruption
+Disruption tolerated up to a fixed limit (time / duration).
+Then forcible action is pre-authorized.
+4
+Leadership-Targeted
+Isolate/arrest key leaders with the calculation that followers disperse without direction.
+5
+Life-Risk Override
+Non-negotiable : a genuine risk to life triggers intervention regardless of the set ceiling.
+
+--------------------------------------------------
+SLIDE 4
+--------------------------------------------------
+TOLERANCE LEVEL
+Tolerance Can Shift Mid-Protest
+DAY 1
+Level 3 — graduated tolerance running as calibrated: 30-min traffic window, sit-in tolerated up to 3 days.
+Trigger:
+An opposition political party publicly announces support and plans to join the protest site.
+A service issue risks becoming a political flashpoint the moment a party attaches itself to it.
+DAY 2
+Tolerance hardens: Level 3 effectively becomes Level 1–2.
+Sit-in ceiling compresses — may need to end same-day
+Traffic-block window may shrink to zero
+Police posture visibly stiffens
+Tolerance must be actively RE-CONFIRMED with the competent authority whenever the situation materially changes — never assumed to hold same from the morning briefing.
+
+--------------------------------------------------
+SLIDE 5
+--------------------------------------------------
+WHAT YOU MUST KNOW BEFORE PLANNING TACTICS
+PRE – EVENT INTELLIGENCE
+Numbers & Composition
+Expected headcount, organizer identity, first-time group vs. repeat player with a known pattern.
+Stated vs. Actual Intent
+What organizers say publicly vs. what intelligence suggests. The gap between the two is where officers are caught unaware.
+Escalation Indicators
+Static gathering or foot rally? Effigy burning? Gherao or forcible-entry intent? Hunger strike — symbolic or relay, day-only or overnight?
+Violence Risk Markers
+Stone-pelting history, known troublemakers present, self-immolation threats, night-continuation plans.
+
+--------------------------------------------------
+SLIDE 6
+--------------------------------------------------
+PRE-EVENT INTELLIGENCE
+Good Intelligence Narrows Surprise — It Doesn't Eliminate It
+USUALLY KNOWABLE
+Expected headcount
+Organizer identity & affiliations
+Stated intent (public statements)
+Group's protest history
+HARD TO PREDICT IN ADVANCE
+Whether stone-pelting actually breaks out
+Whether a self-immolation threat is genuine or rhetorical
+Whether a peaceful gathering turns violent
+A third party (e.g. a political group) attaching to the cause
+An SP who over-trusts the briefing and under-prepares for the unbriefed scenario is more dangerous than one who assumes some uncertainty going in.
+
+--------------------------------------------------
+SLIDE 7
+--------------------------------------------------
+SYNTHESIS
+Synthesis - One Decision Chain
+TOLERANCE
+What government wants
+→
+INTELLIGENCE
+What's actually happening
+→
+TACTICAL PLAN
+Force, staffing, standby
+DAY 1
+Level 3 tolerance + low-risk intelligence → moderate barricading, modeate sized force, medical & night-shift standby prepared. No forward-deployed lathi/tear gas.
+DAY 2
+Intelligence shift (opposition support) → tolerance re-confirmed and hardens → posture stiffens, barricades reposition. Plan is REVISED, not just continued.
+
+--------------------------------------------------
+SLIDE 8
+--------------------------------------------------
+FORCE CONTINUUM
+Force Escalation Ladder
+Always start at the lowest rung necessary. Document why you moved to the next one.
+1
+Presence
+Visible deployment, no active intervention.
+2
+Verbal warning / dialogue
+Direct communication with organizers on compliance.
+3
+Formal dispersal order
+Issued under legal authority when informal compliance fails.
+4
+Arrest of leaders
+Remove leadership under law; crowd typically disperses on its own once leaders are gone.
+5
+Mild physical force
+Minimum force to clear a specific obstruction, if the crowd still hasn't dispersed.
+6
+Baton / tear gas / water cannon
+Only when lower rungs have genuinely failed.
+7
+Firing
+Absolute last resort. The most heavily scrutinized in any inquiry.
+
+--------------------------------------------------
+SLIDE 9
+--------------------------------------------------
+FORCE CONTINUUM
+Two Different Questions
+TOLERANCE ASKS:
+“How much am I permitted to let this go on?”
+Set by government / administration. Governs deployment posture and thresholds for action.
+PROPORTIONALITY ASKS:
+“Given I'm acting, how much force does this moment justify?”
+Never changes because tolerance hardened. Hardened tolerance changes how soon you move through the lower rungs — not which rungs you may skip.
+Confusing the two — “government wants a hard line, therefore I can use more force than warranted” — is exactly the reasoning that fails at inquiry.
+
+--------------------------------------------------
+SLIDE 10
+--------------------------------------------------
+WHO TALKS TO WHOM, AND WHY IT MATTERS
+Command and Communication
+1
+Organizer Liaison
+A designated senior officer maintains direct, continuous contact with protest leadership — before and throughout.
+2
+Clear Chain of Command
+One clear chain of command for the deployed force. Never ambiguous, never diffused across officers.
+3
+Upward Reporting
+Continuous flow to the SP / competent authority — especially anything that should trigger a tolerance re-check.
+4
+Media Spokesperson
+A designated voice. In its absence, rumours and video clips outrun the official version within minutes.
+
+--------------------------------------------------
+SLIDE 11
+--------------------------------------------------
+SECTION 9 · CLOSING THE LOOP
+Back to the Secretariat
+ASP, subdivision. 400 employees, 28th day of sit-in outside the Secretariat, demand is Pay Commission implementation on a broken 2-year-old promise. Self-immolation threat if unmet in 2 days.
+What do you do?
+There is no single correct answer — only a range, anchored to tolerance and risk.
+
+--------------------------------------------------
+SLIDE 12
+--------------------------------------------------
+SECTION 9 · CLOSING THE LOOP
+A Range of Responses — Each Correct Under Different Conditions
+A. Wait and watch
+No concession; prepare for forcible removal if the threat of self immolation materializes.
+B. Facilitate talks
+Push the underlying policy decision urgently to top political leadership.
+C. Divide and Rule
+Isolate/remove the persons threatening; negotiate main demand with moderate group on a separate track.
+D. Disperse Before Day 30
+Forcibly clear the sit-in to remove the opportunity for self-immolation.
+Situation 1:
+Demand for pay revision is likely to be met by Government.
+The demands are seen to be reasonable by public at large.
+
+--------------------------------------------------
+SLIDE 13
+--------------------------------------------------
+SECTION 9 · CLOSING THE LOOP
+A Range of Responses — Each Correct Under Different Conditions
+A. Wait and watch
+No concession; prepare for forcible removal if the threat of self immolation materializes.
+B. Facilitate talks
+Push the underlying policy decision urgently to top political leadership.
+C. Divide and Rule
+Isolate/remove the persons threatening; negotiate main demand with moderate group on a separate track.
+D. Disperse Before Day 30
+Forcibly clear the sit-in to remove the opportunity for self-immolation.
+Situation 2:
+Government is not in a position to meet the demand.
+The protestors are not getting much traction in public view.
+
+--------------------------------------------------
+SLIDE 14
+--------------------------------------------------
+SECTION 9 · CLOSING THE LOOP
+A Range of Responses — Each Correct Under Different Conditions
+A. Wait and watch
+No concession; prepare for forcible removal if the threat of self immolation materializes.
+B. Facilitate talks
+Push the underlying policy decision urgently to top political leadership.
+C. Divide and Rule
+Isolate/remove the persons threatening; negotiate main demand with moderate group on a separate track.
+D. Disperse Before Day 30
+Forcibly clear the sit-in to remove the opportunity for self-immolation.
+Situation 3:
+Government is not in a position to meet the demand.
+The protest is beginning to gain public traction.
+The extreme group threatening self immolation is not having wide support among protestors.
+
+--------------------------------------------------
+SLIDE 15
+--------------------------------------------------
+SECTION 9 · CLOSING THE LOOP
+A Range of Responses — Each Correct Under Different Conditions
+A. Wait and watch
+No concession; prepare for forcible removal if the threat of self immolation materializes.
+B. Facilitate talks
+Push the underlying policy decision urgently to top political leadership.
+C. Divide and Rule
+Isolate/remove the persons threatening; negotiate main demand with moderate group on a separate track.
+D. Disperse Before Day 30
+Forcibly clear the sit-in to remove the opportunity for self-immolation.
+Situation 4:
+Government is not in a position to meet the demand.
+Verified Intelligence input that extreme group threatening self immolation has completely assumed control and protest is about to turn violent
+
+--------------------------------------------------
+SLIDE 16
+--------------------------------------------------
+SECTION 9 · CLOSING THE LOOP
+The Correct Response?
+None of the four responses can be fully chosen without knowing two things :
+What is government's tolerance level for this specific issue?
+Is the demand itself something that can realistically be met?
+There's no answer key at the back of this presentation.
+
+--------------------------------------------------
+SLIDE 17
+--------------------------------------------------
+THE FRAMEWORK
+Tolerance  →  Intelligence  →  Force  →  Command
+What gets you through a genuine dilemma isn't a memorized answer — it's a decision made deliberately and defensibly, not by instinct under pressure.
+Questions & Discussion
